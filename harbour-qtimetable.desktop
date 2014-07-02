@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Name=qtimetable
+Icon=qtimetable
+Exec=harbour-qtimetable
