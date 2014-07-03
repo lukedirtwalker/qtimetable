@@ -1,34 +1,25 @@
 #include "stopitem.h"
+
+#include <QDebug>
+
 #include "../domin/station.h"
 #include "../domin/address.h"
 
 StopItem::StopItem(QDomNode domBasicStop, QDateTime date)
+    : hasDelay_{false}, hasArrTime_{false}, hasDepTime_{false},
+      hasDepDelay_{false}, hasArrDelay_{false}, hasChangedPlatform_{false},
+      hasChangedArrPlatform_{false}, hasChangedDepPlatform_{false},
+      location_{nullptr}, utilisationFirst_{0}, utilisationSecond_{0}
 {
-    this->mLocation = NULL;
-    this->mUtilisationFirst = 0;
-    this->mUtilisationSecond = 0;
-    this->mHasDelay = false;
-    this->mHasArrDelay = false;
-    this->mHasDepDelay = false;
-    this->mHasArrTime = false;
-    this->mHasDepTime = false;
-    this->mHasChangedPlatform = false;
-    this->mHasChangedArrPlatform = false;
-    this->mHasChangedDepPlatform = false;
-
     QDomNode curNode = domBasicStop.firstChild();
 
     while(!curNode.isNull())
     {
         QString tagName = curNode.toElement().tagName();
-        if(this->mLocation == NULL && tagName == "Station")
-        {
-            this->mLocation = new Station(curNode);
-        }
-        else if(this->mLocation == NULL && tagName == "Address")
-        {
-            this->mLocation = new Address(curNode);
-        }
+        if(!location_ && tagName == "Station")
+            location_ = new Station(curNode);
+        else if(!location_ && tagName == "Address")
+            location_ = new Address(curNode);
         else if(tagName == "Arr")
         {
             QDateTime dateCopy = QDateTime(date.date());
@@ -46,14 +37,13 @@ StopItem::StopItem(QDomNode domBasicStop, QDateTime date)
                 {
                     t = QTime::fromString(d,"hh:mm");
                 }
-                this->mArrTime = dateCopy.addSecs(days*24*60*60+t.hour()*60*60+t.minute()*60+t.second());
-                this->mHasArrTime = true;
-                this->mTime = this->mArrTime;
+                arrTime_ = dateCopy.addSecs(days*24*60*60+t.hour()*60*60+t.minute()*60+t.second());
+                hasArrTime_ = true;
+                time_ = arrTime_;
             }
-            this->mArrPlatform = curNode.toElement().elementsByTagName("Platform").at(0).toElement().elementsByTagName("Text").at(0).toElement().text().toLatin1();
-            while(this->mArrPlatform.endsWith( ' ' )) this->mArrPlatform.chop(1);
+            arrPlatform_ = curNode.toElement().elementsByTagName("Platform").at(0).toElement().elementsByTagName("Text").at(0).toElement().text().trimmed().toLatin1();
 
-            this->mPlatform = this->mArrPlatform;
+            platform_ = arrPlatform_;
         }
         else if(tagName == "Dep")
         {
@@ -69,16 +59,14 @@ StopItem::StopItem(QDomNode domBasicStop, QDateTime date)
                     days = d.left(2).toInt();
                 }
                 else
-                {
                     t = QTime::fromString(d,"hh:mm");
-                }
-                this->mDepTime = dateCopy.addSecs(days*24*60*60+t.hour()*60*60+t.minute()*60+t.second());
-                this->mHasDepTime = true;
-                this->mTime = this->mDepTime;
+                depTime_ = dateCopy.addSecs(days*24*60*60+t.hour()*60*60+t.minute()*60+t.second());
+                hasDepTime_ = true;
+                time_ = depTime_;
             }
-            this->mDepPlatform = curNode.toElement().elementsByTagName("Platform").at(0).toElement().elementsByTagName("Text").at(0).toElement().text().toLatin1();
-            while(this->mDepPlatform.endsWith( ' ' )) this->mDepPlatform.chop(1);
-            this->mPlatform = this->mDepPlatform;
+            depPlatform_ = curNode.toElement().elementsByTagName("Platform").at(0).toElement().elementsByTagName("Text").at(0).toElement().text().toLatin1();
+            while(depPlatform_.endsWith( ' ' )) depPlatform_.chop(1);
+            platform_ = depPlatform_;
         }
         else if(tagName == "StopPrognosis")
         {
@@ -94,12 +82,11 @@ StopItem::StopItem(QDomNode domBasicStop, QDateTime date)
                         QString tagName = p.toElement().tagName();
                         if(tagName == "Platform")
                         {
-                            this->mDepPlatform = p.toElement().elementsByTagName("Text").at(0).toElement().text().toLatin1();
-                            while(this->mDepPlatform.endsWith(' ')) this->mDepPlatform.chop(1);
-                            this->mHasChangedDepPlatform = !this->mDepPlatform.isEmpty();
+                            depPlatform_ = p.toElement().elementsByTagName("Text").at(0).toElement().text().trimmed().toLatin1();
+                            hasChangedDepPlatform_ = !depPlatform_.isEmpty();
 
-                            this->mPlatform = this->mDepPlatform;
-                            this->mHasChangedPlatform = !this->mPlatform.isEmpty();
+                            platform_ = depPlatform_;
+                            hasChangedPlatform_ = !platform_.isEmpty();
                         }
                         else if(tagName == "Time")
                         {
@@ -108,11 +95,9 @@ StopItem::StopItem(QDomNode domBasicStop, QDateTime date)
                             QTime t = QTime::fromString(d.mid(3),"hh:mm:ss");
                             int days = d.left(2).toInt();
                             QDateTime dt = dateCopy.addSecs(days*24*60*60+t.hour()*60*60+t.minute()*60+t.second());
-                            this->mHasDepDelay = true;
-                            this->mDepDelay = Duration(this->mDepTime.secsTo(dt));
-
-                            this->mHasDelay = true;
-                            this->mDelay = this->mDepDelay;
+                            hasDepDelay_ = true;
+                            delay_ = Duration(depTime_.secsTo(dt));
+                            hasDelay_ = true;
                         }
                         p = p.nextSibling();
                     }
@@ -125,12 +110,11 @@ StopItem::StopItem(QDomNode domBasicStop, QDateTime date)
                         QString tagName = p.toElement().tagName();
                         if(tagName == "Platform")
                         {
-                            this->mArrPlatform = p.toElement().elementsByTagName("Text").at(0).toElement().text().toLatin1();
-                            while(this->mArrPlatform.endsWith(' ')) this->mArrPlatform.chop(1);
-                            this->mHasChangedArrPlatform = !this->mArrPlatform.isEmpty();
+                            arrPlatform_ = p.toElement().elementsByTagName("Text").at(0).toElement().text().trimmed().toLatin1();
+                            hasChangedArrPlatform_ = !arrPlatform_.isEmpty();
 
-                            this->mPlatform = this->mArrPlatform;
-                            this->mHasChangedPlatform = !this->mPlatform.isEmpty();
+                            platform_ = arrPlatform_;
+                            hasChangedPlatform_ = !platform_.isEmpty();
                         }
                         else if(tagName == "Time")
                         {
@@ -139,38 +123,32 @@ StopItem::StopItem(QDomNode domBasicStop, QDateTime date)
                             QTime t = QTime::fromString(d.mid(3),"hh:mm:ss");
                             int days = d.left(2).toInt();
                             QDateTime dt = dateCopy.addSecs(days*24*60*60+t.hour()*60*60+t.minute()*60+t.second());
-                            this->mHasArrDelay = true;
-                            this->mArrDelay = Duration(this->mArrTime.secsTo(dt));
-
-                            this->mHasDelay = true;
-                            this->mDelay = this->mArrDelay;
+                            hasArrDelay_ = true;
+                            delay_ = Duration(arrTime_.secsTo(dt));
+                            hasDelay_ = true;
                         }
                         p = p.nextSibling();
                     }
                 }
                 else if(tagName == "Capacity1st")
-                {
-                    this->mUtilisationFirst = n.toElement().text().toInt();
-                }
+                    utilisationFirst_ = n.toElement().text().toInt();
                 else if(tagName == "Capacity2nd")
-                {
-                    this->mUtilisationSecond = n.toElement().text().toInt();
-                }
+                    utilisationSecond_ = n.toElement().text().toInt();
                 n = n.nextSibling();
             }
         }
         curNode = curNode.nextSibling();
     }
-    if(this->mLocation == NULL)
+    if(!location_)
     {
-        this->mLocation = new Location();
-//        TODO Debugger::getInstance()->print("WARNING: STOP HAS NEITHER ADDRESS NOR STATION");
+        location_ = new Location();
+        qDebug() << "WARNING: STOP HAS NEITHER ADDRESS NOR STATION";
     }
 }
 
 StopItem::~StopItem()
 {
-    delete this->mLocation;
+    delete location_;
 }
 
 QString StopItem::getId() const
@@ -182,14 +160,14 @@ QVariant StopItem::data(int role) const
 {
     switch(role)
     {
-        case StationRole: return this->getName();
-        case PlatformRole: return this->getPlatform();
-        case ArrivalTimeRole: return this->getArrTime();
-        case DepartureTimeRole: return this->getDepTime();
-        case UtilisationFirstRole: return this->getUtilisationFirst();
-        case UtilisationSecondRole: return this->getUtilisationSecond();
-        case HasArrivalTimeRole: return this->hasArrTime();
-        case HasDepartureTimeRole: return this->hasDepTime();
+        case StationRole: return location_->getName();
+        case PlatformRole: return platform_;
+        case ArrivalTimeRole: return arrTime_;
+        case DepartureTimeRole: return depTime_;
+        case UtilisationFirstRole: return utilisationFirst_;
+        case UtilisationSecondRole: return utilisationSecond_;
+        case HasArrivalTimeRole: return hasArrTime_;
+        case HasDepartureTimeRole: return hasDepTime_;
         default: return QVariant();
     }
 }
@@ -208,136 +186,69 @@ QHash<int, QByteArray> StopItem::roleNames() const
     return names;
 }
 
-QDateTime StopItem::getTime()
-{
-    return this->mTime;
-}
-
 QString StopItem::getPlatform() const
 {
-    return this->mPlatform;
+    return platform_;
 }
 
 int StopItem::getUtilisationFirst() const
 {
-    return this->mUtilisationFirst;
+    return utilisationFirst_;
 }
 
 int StopItem::getUtilisationSecond() const
 {
-    return this->mUtilisationSecond;
+    return utilisationSecond_;
 }
 
 double StopItem::getLatitude() const
 {
-    switch(this->mLocation->getType())
-    {
-        case ADDRESS:
-        {
-            Address *a = (Address*) this->mLocation;
-            return a->getLatitude().toDouble()/1000000;
-        }
-        case STATION:
-        {
-            Station *s = (Station*) this->mLocation;
-            return s->getLatitude().toDouble()/1000000;
-        }
-    }
+    auto type = location_->getType();
+    if(ADDRESS == type)
+            return static_cast<Address*>(location_)->getLatitude().toDouble()/1000000;
+    else if(STATION == type)
+            return static_cast<Station*>(location_)->getLatitude().toDouble()/1000000;
     return 0;
 }
 
 double StopItem::getLongitude() const
 {
-    switch(this->mLocation->getType())
-    {
-        case ADDRESS:
-        {
-            Address *a = (Address*) this->mLocation;
-            return a->getLongitude().toDouble()/1000000;
-        }
-        case STATION:
-        {
-            Station *s = (Station*) this->mLocation;
-            return s->getLongitude().toDouble()/1000000;
-        }
-    }
+    auto type = location_->getType();
+    if(ADDRESS == type)
+            return static_cast<Address*>(location_)->getLongitude().toDouble()/1000000;
+    else if(STATION == type)
+            return static_cast<Station*>(location_)->getLongitude().toDouble()/1000000;
     return 0;
 }
 
 QString StopItem::getDelay() const
 {
-    return this->mDelay.toString();
+    return delay_.toString();
 }
 
 QString StopItem::getName() const
 {
-    return this->mLocation->getName();
+    return location_->getName();
 }
 
-QString StopItem::getExternalId()
+QString StopItem::getExternalId() const
 {
-    switch(this->mLocation->getType())
-    {
-        case STATION:
-        {
-            Station *s = (Station*) this->mLocation;
-            return s->getExternalID();
-        }
-    }
+    if(STATION == location_->getType())
+        return static_cast<Station*>(location_)->getExternalID();
     return QString();
 }
 
 bool StopItem::hasDelay()
 {
-    return this->mHasDelay;
-}
-
-bool StopItem::hasArrTime() const
-{
-    return this->mHasArrTime;
-}
-
-bool StopItem::hasDepTime() const
-{
-    return this->mHasDepTime;
-}
-
-QDateTime StopItem::getArrTime() const
-{
-    return this->mArrTime;
-}
-
-QDateTime StopItem::getDepTime() const
-{
-    return this->mDepTime;
-}
-
-QString StopItem::getArrPlatform() const
-{
-    return this->mArrPlatform;
-}
-
-QString StopItem::getDepPlatform() const
-{
-    return this->mDepPlatform;
-}
-
-QString StopItem::getArrDelay() const
-{
-    return this->mArrDelay.toString();
-}
-
-QString StopItem::getDepDelay() const
-{
-    return this->mDepDelay.toString();
+    return hasDelay_;
 }
 
 bool StopItem::hasChangedPlatform()
 {
-    return this->mHasChangedPlatform;
+    return hasChangedPlatform_;
 }
 
 void StopItem::setDateTime(QDateTime t)
 {
-    this->mTime = t;
+    time_ = t;
 }

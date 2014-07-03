@@ -8,7 +8,6 @@
 #include <QDomNode>
 #include <QDateTime>
 
-
 class StopItem : public ListItem
 {
     Q_OBJECT
@@ -29,22 +28,10 @@ public:
     double getLongitude() const;
     QString getDelay() const;
     QString getName() const;
-    bool hasArrTime() const;
-    bool hasDepTime() const;
-    QDateTime getArrTime() const;
-    QDateTime getDepTime() const;
-    QString getArrPlatform() const;
-    QString getDepPlatform() const;
-    QString getArrDelay() const;
-    QString getDepDelay() const;
 
-    QString getExternalId();
-    QDateTime getTime();
+    QString getExternalId() const;
+    inline QDateTime getTime() const;
     bool hasDelay();
-    bool hasArrDelay();
-    bool hasDepDelay();
-    bool hasChangedArrPlatform();
-    bool hasChangedDepPlatform();
     bool hasChangedPlatform();
 
     void setDateTime(QDateTime t);
@@ -61,26 +48,26 @@ public:
 
 
 private:
-    bool mHasDelay;
-    bool mHasArrTime;
-    bool mHasDepTime;
-    bool mHasDepDelay;
-    bool mHasArrDelay;
-    bool mHasChangedPlatform;
-    bool mHasChangedArrPlatform;
-    bool mHasChangedDepPlatform;
-    QString mPlatform;
-    QString mArrPlatform;
-    QString mDepPlatform;
-    Location *mLocation;
-    int mUtilisationFirst;
-    int mUtilisationSecond;
-    QDateTime mTime;
-    QDateTime mArrTime;
-    QDateTime mDepTime;
-    Duration mDelay;
-    Duration mArrDelay;
-    Duration mDepDelay;
+    bool hasDelay_;
+    bool hasArrTime_;
+    bool hasDepTime_;
+    bool hasDepDelay_;
+    bool hasArrDelay_;
+    bool hasChangedPlatform_;
+    bool hasChangedArrPlatform_;
+    bool hasChangedDepPlatform_;
+    QString platform_;
+    QString arrPlatform_;
+    QString depPlatform_;
+    Location *location_;
+    int utilisationFirst_;
+    int utilisationSecond_;
+    QDateTime time_;
+    QDateTime arrTime_;
+    QDateTime depTime_;
+    Duration delay_;
 };
+
+inline QDateTime StopItem::getTime() const { return time_;}
 
 #endif // STOP_H
