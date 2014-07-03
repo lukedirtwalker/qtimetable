@@ -18,20 +18,19 @@ class ThreadedDbHandler : public QObject
 public:
     ThreadedDbHandler(QSqlDatabase *db, const QString &comp);
     ~ThreadedDbHandler();
-    void interrupt();
 
-//public slots:
-    void run(const QString &comp, ResultListModel *model);
+public slots:
+    void run();
 
 signals:
-    void finished(const ResultListType items);
+    void finished();
+    void foundResults(const ResultListType items);
 
 private:
     QSqlQuery *q_;
     QString comp_;
     QList<LocationItem*> items_;
-//    ResultListType endItems_;
-    bool interrupted_;
+    ResultListType endItems_;
 
     //db queries
     int queryCityName(const QString &query,bool searchMiddle,int numResults);

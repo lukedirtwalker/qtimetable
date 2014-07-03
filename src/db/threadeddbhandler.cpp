@@ -2,45 +2,39 @@
 
 ThreadedDbHandler::~ThreadedDbHandler()
 {
-    qDebug() << "Bye Bye from me";
     delete q_;
 }
 
 ThreadedDbHandler::ThreadedDbHandler(QSqlDatabase *db, const QString &comp)
-    : QObject(), comp_(comp), interrupted_{false}
+    : QObject(), comp_(comp)
 {
     q_ = new QSqlQuery(*db);
 }
 
-void ThreadedDbHandler::run(const QString &comp, ResultListModel *model)
+void ThreadedDbHandler::run()
 {
-    qDeleteAll(items_);
-    items_.clear();
-    comp_ = QString(comp);
-    //    qDebug() << "RUN STARTED";
     if(comp_ != ""){
 //       TODO endItems_.append(new SearchItem(comp_));
         QString comparer = replacer(comp_);
         int len = comparer.length();
         int i=20;
-        if(i>0 && !interrupted_)
+        if(i>0)
             i-=queryCityName(comparer,false,i);
-        if(i>0 && len > 1 && !interrupted_)
+        if(i>0 && len > 1)
             i-=queryCityName(comparer,true,i);
-        if(i>0 && !interrupted_)
+        if(i>0)
             i-=queryStationName(comparer,false,i);
-        if(i>0 && len > 1 && !interrupted_)
+        if(i>0 && len > 1)
             i-=queryStationName(comparer,true,i);
     }
 
     //sort list
     qStableSort(items_.begin(),items_.end(),dereferencedLessThan<LocationItem>);
     foreach(LocationItem *item, items_)
-//        endItems_.append(item);
-        model->appendRow(item);
-//    if(!interrupted_)
-//    emit finished(endItems_);
-//    model->appendRows(items_);
+        endItems_.append(item);
+    emit foundResults(endItems_);
+
+    emit finished();
 }
 
 int ThreadedDbHandler::queryCityName(const QString &query, bool searchMiddle, int numResults)
@@ -81,7 +75,7 @@ int ThreadedDbHandler::queryCityName(const QString &query, bool searchMiddle, in
     }
     for(i=0; i< numResults; i++)
     {
-        if(q_->next() && !interrupted_)
+        if(q_->next())
         {
             items_.append(new LocationItem(q_->value(0).toInt(),q_->value(1).toInt(),q_->value(2).toString(),"","",q_->value(3).toBool()));
         }
@@ -118,7 +112,7 @@ int ThreadedDbHandler::queryStationName(const QString &query, bool searchMiddle,
     }
     for(i=0; i< numResults; i++)
     {
-        if(q_->next() && !interrupted_)
+        if(q_->next())
         {
             items_.append(new LocationItem(q_->value(0).toInt(),q_->value(1).toInt(),q_->value(2).toString(),"","",q_->value(3).toBool()));
         }
@@ -154,9 +148,4 @@ QString ThreadedDbHandler::replacer(QString query)
     ret.replace('(',QString(" "));
     ret.replace(')',QString(" "));
     return ret;
-}
-
-void ThreadedDbHandler::interrupt()
-{
-    interrupted_ = true;
 }

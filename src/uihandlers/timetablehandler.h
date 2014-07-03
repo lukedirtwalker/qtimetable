@@ -29,9 +29,6 @@ private:
     QQmlContext *qmlContext_;
 
     DatabaseHandler *dbHandler_;
-    ThreadedDbHandler *queryHandler_;
-    QThread *queryThread_;
-
 
     ResultListModel *depStationModel_, *arrStationModel_, *viaStationModel_;
     LocationItem *depStation_, *arrStation_, *viaStation_;
