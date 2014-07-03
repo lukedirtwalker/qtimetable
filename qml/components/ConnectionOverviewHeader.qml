@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Item{
+Item {
     property alias fromStationText: fromStation.text
     property alias date: dateValue.text
     property alias toStationText: toStation.text
@@ -20,13 +20,14 @@ Item{
         anchors.left: parent.left
         anchors.right: parent.right
         height: Theme.itemSizeSmall
-        anchors.margins: Theme.paddingMedium
+        anchors.margins: Theme.paddingLarge
         Label{
             id:fromLabel
             anchors.left: parent.left
             anchors.top: parent.top
             text: qsTr("From")
             font.pixelSize: Theme.fontSizeSmall
+            color: Theme.highlightColor
             visible: hasDep
         }
 
@@ -35,7 +36,7 @@ Item{
             anchors.left: parent.left
             anchors.top: fromLabel.bottom
             font.pixelSize: Theme.fontSizeLarge
-            width: 100 // TODO
+            width: parent.width * 0.75
             elide: Text.ElideRight
         }
 
@@ -45,6 +46,7 @@ Item{
             anchors.top: parent.top
             text: qsTr("Date")
             font.pixelSize: Theme.fontSizeSmall
+            color: Theme.highlightColor
         }
 
         Label{
@@ -61,14 +63,15 @@ Item{
         anchors.left: parent.left
         anchors.right: parent.right
         height: Theme.itemSizeSmall
-        anchors.rightMargin: Theme.paddingMedium
-        anchors.leftMargin: Theme.paddingMedium
+        anchors.rightMargin: Theme.paddingLarge
+        anchors.leftMargin: Theme.paddingLarge
         Label{
             id:toLabel
             anchors.left: parent.left
             anchors.top: parent.top
             text: qsTr("To")
             font.pixelSize: Theme.fontSizeSmall
+            color: Theme.highlightColor
             visible: hasArrival
         }
 
@@ -77,7 +80,7 @@ Item{
             anchors.left: parent.left
             anchors.top: toLabel.bottom
             font.pixelSize: Theme.fontSizeLarge
-            width: 100 // TODO
+            width: parent.width * 0.75
             elide: Text.ElideRight
         }
 
@@ -87,6 +90,7 @@ Item{
             anchors.top: parent.top
             text: qsTr("Time")
             font.pixelSize: Theme.fontSizeSmall
+            color: Theme.highlightColor
         }
 
         Label{
@@ -97,4 +101,3 @@ Item{
         }
     }
 }
-

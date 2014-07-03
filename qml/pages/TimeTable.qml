@@ -32,18 +32,21 @@ Page {
             }
 
             TimeTableInput {
+                id: fromStation
                 labelText: qsTr("From")
                 stationText: qsTr("Location")
                 type: 0 // dep
                 listModel: depStationModel
             }
             TimeTableInput {
+                id: toStation
                 labelText: qsTr("To")
                 stationText: qsTr("Location")
                 type: 1 // arr
                 listModel: arrStationModel
             }
             TimeTableInput {
+                id: viaStation
                 labelText: qsTr("Via")
                 stationText: qsTr("Location")
                 type: 2 // via
@@ -104,7 +107,12 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
                     timeTableHandler.lookupConnection()
-                    pageStack.push(Qt.resolvedUrl("ConnectionOverview.qml"), {"model" : connectionModel})
+                    pageStack.push(Qt.resolvedUrl("ConnectionOverview.qml"),
+                                   {"model" : connectionModel,
+                                       "from": fromStation.text,
+                                       "to": toStation.text,
+                                       "date": Qt.formatDate(timeHandler.getCurrentDate(), "dd.MM"),
+                                       "time": timeButton.value})
                 }
             }
 

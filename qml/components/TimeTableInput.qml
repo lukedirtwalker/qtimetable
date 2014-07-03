@@ -6,6 +6,7 @@ Column{
     width: parent.width
     height: Theme.itemSizeLarge
 
+    property alias text: station.text
     property alias labelText: label.text
     property alias stationText: station.placeholderText
     property int type

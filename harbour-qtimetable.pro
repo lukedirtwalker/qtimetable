@@ -64,8 +64,8 @@ OTHER_FILES += qml/qtimetable.qml \
     qml/components/SearchListItem.qml \
     qml/components/DeletableTextField.qml \
     qml/pages/ConnectionOverview.qml \
-    qml/components/ConnectionDetailItem.qml \
-    qml/components/ConnectionOverviewItem.qml
+    qml/components/ConnectionOverviewItem.qml \
+    qml/components/ConnectionOverviewHeader.qml
 HEADERS += \
     src/listitems/locationitem.h \
     src/listmodels/resultlistmodel.h \
