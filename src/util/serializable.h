@@ -7,13 +7,11 @@
 class Serializable
 {
 public:
-    Serializable() {}
+    Serializable(QString elemName = "") : domStaticElementName_(elemName) {}
 
     virtual QDomElement toXML(QDomDocument &query);
 
 protected:
-    virtual void initXMLFields() = 0;
-
     QString domStaticElementName_;
     QMap<QString, QString> domStaticElementAttributes_;
 };

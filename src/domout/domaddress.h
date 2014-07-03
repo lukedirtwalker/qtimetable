@@ -9,8 +9,6 @@ class DomAddress : public Serializable
 public:
     DomAddress(QString name, QString latitude, QString longitude);
 
-private:
-    void initXMLFields();
 };
 
 #endif // DOMADDRESS_H

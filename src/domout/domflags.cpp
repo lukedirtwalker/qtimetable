@@ -1,30 +1,13 @@
 #include "domflags.h"
 
-DomFlags::DomFlags(eTimeType type)
+DomFlags::DomFlags(eTimeType type) : Serializable("RFlags")
 {
-    this->initXMLFields();
-    switch(type)
-    {
-    case F:
+    if(F == type) {
         domStaticElementAttributes_["b"] = "0";
         domStaticElementAttributes_["f"] = "4";
-        break;
-    case B:
+    } else {
         domStaticElementAttributes_["b"] = "4";
         domStaticElementAttributes_["f"] = "0";
-        break;
     }
-}
-
-DomFlags::DomFlags()
-{
-    this->initXMLFields();
-}
-
-void DomFlags::initXMLFields()
-{
-    domStaticElementName_ = "RFlags";
-    domStaticElementAttributes_.insert("b","0");
-    domStaticElementAttributes_.insert("f","4");
     domStaticElementAttributes_.insert("sMode","N");
 }

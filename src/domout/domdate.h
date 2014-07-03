@@ -8,11 +8,8 @@
 class DomDate : public Serializable
 {
 public:
-    DomDate();
     DomDate(QDateTime date, bool isArrival);
 
-private:
-    virtual void initXMLFields();
 };
 
 #endif // DOMDATE_H

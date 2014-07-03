@@ -6,11 +6,8 @@
 class DomStation : public Serializable
 {
 public:
-    DomStation();
     DomStation(QString name, QString id);
 
-private:
-    void initXMLFields();
 };
 
 #endif // DOMSTATION_H

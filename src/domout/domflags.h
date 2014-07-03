@@ -7,11 +7,8 @@
 class DomFlags : public Serializable
 {
 public:
-    DomFlags();
     DomFlags(eTimeType type);
 
-private:
-    virtual void initXMLFields();
 };
 
 #endif // FLAGS_H
