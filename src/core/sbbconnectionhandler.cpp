@@ -162,25 +162,16 @@ void SBBConnectionHandler::parseXMLResponse(QDomDocument xml)
     for(auto con : domConnections)
         newSBBConnections.append(new ConnectionItem(con));
 
-    switch(state_)
+    if(H_STARTED == state_)
+        SBBConnections_ = newSBBConnections;
+    else if(H_EARLIER == state_)
     {
-        case H_STARTED:
-        {
-            SBBConnections_ = newSBBConnections;
-            break;
-        }
-        case H_EARLIER:
-        {
-            newSBBConnections.append(SBBConnections_);
-            SBBConnections_ = newSBBConnections;
-            break;
-        }
-        case H_LATER:
-        {
-            SBBConnections_.append(newSBBConnections);
-            break;
-        }
+        newSBBConnections.append(SBBConnections_);
+        SBBConnections_ = newSBBConnections;
     }
+    else if(H_LATER == state_)
+        SBBConnections_.append(newSBBConnections);
+
     newSBBConnections.clear();
     emit parsingFinished(AOK);
 }

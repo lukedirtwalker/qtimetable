@@ -4,10 +4,8 @@
 #include <QObject>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QUrl>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
 
-#include "../net/sbbrequest.h"
+class SBBRequest;
 
 class SBBServerCommunication : public QObject
 {

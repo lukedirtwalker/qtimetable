@@ -1,5 +1,11 @@
 #include "sbbhandler.h"
 
+#include <QDomNode>
+#include <QDomDocument>
+#include <QNetworkReply>
+
+#include "../net/sbbrequest.h"
+
 SBBHandler::SBBHandler() : pendingRequest_{nullptr}, state_{H_STOPPED}
 {}
 

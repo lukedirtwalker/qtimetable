@@ -1,41 +1,12 @@
 #include "sbbrequest.h"
 
-SBBRequest::SBBRequest() : query_{nullptr}, reply_{nullptr}, contentType_{""},
-    handler_{nullptr}
+SBBRequest::SBBRequest(SBBQuery *query, QString contentType, SBBHandler *handler)
+    : query_(query), reply_{nullptr} , contentType_(contentType),
+      handler_(handler)
 {}
 
 SBBRequest::~SBBRequest()
 {
     if(query_)
         delete query_;
-}
-
-SBBRequest::SBBRequest(SBBQuery *query, QString contentType, SBBHandler *handler)
-    : reply_{nullptr}, query_(query), contentType_(contentType),
-      handler_(handler)
-{}
-
-SBBQuery *SBBRequest::getSBBQuery()
-{
-    return query_;
-}
-
-QString SBBRequest::getContentType()
-{
-    return contentType_;
-}
-
-void SBBRequest::setReply(QNetworkReply *r)
-{
-    reply_ = r;
-}
-
-QNetworkReply *SBBRequest::getReply()
-{
-    return reply_;
-}
-
-SBBHandler *SBBRequest::getHandler()
-{
-    return handler_;
 }

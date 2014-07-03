@@ -4,6 +4,8 @@
 #include "../net/sbbservercommunication.h"
 #include "../util/globalshared.h"
 
+class QDomDocument;
+
 typedef enum {H_STOPPED,H_STARTED,H_EARLIER,H_LATER,H_READY} eSBBHandlerState;
 
 class SBBHandler : public QObject

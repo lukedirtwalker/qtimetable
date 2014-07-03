@@ -1,5 +1,10 @@
 #include "sbbservercommunication.h"
+
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
+
 #include "../core/sbbhandler.h"
+#include "../net/sbbrequest.h"
 
 SBBServerCommunication::SBBServerCommunication()
     : serverUrl_{QUrl("http://xmlfahrplan.sbb.ch/bin/extxml.exe/")}
@@ -8,23 +13,26 @@ SBBServerCommunication::SBBServerCommunication()
 void SBBServerCommunication::sendRequest(SBBRequest *request)
 {
     QNetworkRequest netRequest(serverUrl_);
-    netRequest.setHeader(QNetworkRequest::ContentTypeHeader,request->getContentType());
-    QNetworkReply *r = networkAccessManager_.post(netRequest,request->getSBBQuery()->toXML().toString().toLatin1());
+    netRequest.setHeader(QNetworkRequest::ContentTypeHeader,
+                         request->getContentType());
+    QNetworkReply *r = networkAccessManager_
+            .post(netRequest, request->getSBBQuery()->toXML().toString().toLatin1());
     request->setReply(r);
-    SBBHandler *h = request->getHandler();
-    connect(r,SIGNAL(finished()),h,SLOT(parseResponse()));
 
-    //Debugger::getInstance()->visualizeXML(request->getSBBQuery()->toXML().documentElement().toElement());
+    connect(r, &QNetworkReply::finished,
+            request->getHandler(), &SBBHandler::parseResponse);
 }
 
 void SBBServerCommunication::abortRequest(SBBRequest *r)
 {
-    if(r->getReply() == NULL)
+    auto reply = r->getReply();
+    if(!reply)
         return;
-    if(r->getReply()->isRunning())
+    if(reply->isRunning())
     {
-        disconnect(r->getReply(),SIGNAL(finished()),r->getHandler(),SLOT(parseResponse()));
-        r->getReply()->abort();
+        disconnect(reply, &QNetworkReply::finished,
+                   r->getHandler(), &SBBHandler::parseResponse);
+        reply->abort();
     }
-    r->getReply()->deleteLater();
+    reply->deleteLater();
 }
