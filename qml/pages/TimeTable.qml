@@ -103,6 +103,7 @@ Page {
                 text: qsTr("Search")
                 onClicked: {
                     timeTableHandler.lookupConnection()
+                    pageStack.push(Qt.resolvedUrl("ConnectionOverview.qml"), {"model" : connectionModel})
                 }
             }
 

@@ -1,7 +1,7 @@
 #ifndef SBBCONNECTIONHANDLER_H
 #define SBBCONNECTIONHANDLER_H
 
-//#include "../listitems/connectionitem.h"
+#include "../listitems/connectionitem.h"
 #include "sbbhandler.h"
 
 class LocationItem;
@@ -26,7 +26,7 @@ public:
     void searchLater();
     void stopConnectionSearch();
 
-   // QList<ConnectionItem*> getAvailableConnections();
+    QList<ConnectionItem*> getAvailableConnections();
 
 public slots:
     virtual void parseXMLResponse(QDomDocument xml);
@@ -35,7 +35,7 @@ public slots:
 
 private:
     QString mSearchContext;
-  //  QList<ConnectionItem*> mSBBConnections;
+    QList<ConnectionItem*> mSBBConnections;
 };
 
 #endif // SBBCONNECTIONHANDLER_H

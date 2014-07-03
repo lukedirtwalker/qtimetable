@@ -155,8 +155,8 @@ void SBBConnectionHandler::stopConnectionSearch()
     if(this->getState() != H_STOPPED)
     {
         this->stopRequest();
-//        qDeleteAll(this->mSBBConnections);
-//        this->mSBBConnections.clear();
+        qDeleteAll(this->mSBBConnections);
+        this->mSBBConnections.clear();
         this->setState(H_STOPPED);
     }
 }
@@ -189,48 +189,48 @@ void SBBConnectionHandler::parseXMLResponse(QDomDocument xml)
         return;
     }
 
-   // QList<ConnectionItem*> newSBBConnections;
+    QList<ConnectionItem*> newSBBConnections;
     for(int i=0;i<nConnections;i++)
     {
         QDomNode domConnection = domConnections.at(i);
-//        ConnectionItem *c = new ConnectionItem(domConnection);
-//        newSBBConnections.append(c);
+        ConnectionItem *c = new ConnectionItem(domConnection);
+        newSBBConnections.append(c);
     }
 
     switch(this->getState())
     {
         case H_STARTED:
         {
-//            this->mSBBConnections = newSBBConnections;
+            this->mSBBConnections = newSBBConnections;
             break;
         }
-//        case H_EARLIER:
-//        {
-//            QListIterator<ConnectionItem*> it(newSBBConnections);
-//            QList<ConnectionItem*> tmp = this->mSBBConnections;
-//            this->mSBBConnections.clear();
-//            while(it.hasNext())
-//            {
-//                this->mSBBConnections.append(it.next());
-//            }
-//            it = QListIterator<ConnectionItem*>(tmp);
-//            while(it.hasNext())
-//            {
-//                this->mSBBConnections.append(it.next());
-//            }
-//            break;
-//        }
-//        case H_LATER:
-//        {
-//            QListIterator<ConnectionItem*> it(newSBBConnections);
-//            while(it.hasNext())
-//            {
-//                this->mSBBConnections.append(it.next());
-//            }
-//            break;
-//        }
+        case H_EARLIER:
+        {
+            QListIterator<ConnectionItem*> it(newSBBConnections);
+            QList<ConnectionItem*> tmp = this->mSBBConnections;
+            this->mSBBConnections.clear();
+            while(it.hasNext())
+            {
+                this->mSBBConnections.append(it.next());
+            }
+            it = QListIterator<ConnectionItem*>(tmp);
+            while(it.hasNext())
+            {
+                this->mSBBConnections.append(it.next());
+            }
+            break;
+        }
+        case H_LATER:
+        {
+            QListIterator<ConnectionItem*> it(newSBBConnections);
+            while(it.hasNext())
+            {
+                this->mSBBConnections.append(it.next());
+            }
+            break;
+        }
     }
-//    newSBBConnections.clear();
+    newSBBConnections.clear();
     qDebug() << "parsing done!";
     emit this->parsingFinished(AOK);
 }
@@ -254,7 +254,7 @@ void SBBConnectionHandler::parseNoTypeResponse(QByteArray data)
     emit this->parsingFinished(NOTYPE_ERROR);
 }
 
-//QList<ConnectionItem*> SBBConnectionHandler::getAvailableConnections()
-//{
-//    return this->mSBBConnections;
-//}
+QList<ConnectionItem*> SBBConnectionHandler::getAvailableConnections()
+{
+    return this->mSBBConnections;
+}

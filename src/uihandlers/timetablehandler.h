@@ -5,6 +5,7 @@
 #include <QQmlContext>
 
 #include "../listmodels/stationlistmodel.h"
+#include "../listmodels/connectionlistmodel.h"
 #include "../db/db.h"
 #include "../core/sbbconnectionhandler.h"
 
@@ -25,6 +26,8 @@ public slots:
     void arrLookupFinished(StationListType items);
     void viaLookupFinished(StationListType items);
 
+    void connectionLookedUp(eStatusID id);
+
 private:
     QQmlContext *qmlContext_;
 
@@ -32,7 +35,10 @@ private:
 
     StationListModel *depStationModel_, *arrStationModel_, *viaStationModel_;
     LocationItem *depStation_, *arrStation_, *viaStation_;
-    SBBConnectionHandler *connHandler;
+
+    ConnectionListModel *connections_;
+
+    SBBConnectionHandler *connHandler_;
 };
 
 #endif // TIMETABLEHANDLER_H

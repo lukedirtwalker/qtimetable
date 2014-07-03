@@ -17,7 +17,13 @@ TimeTableHandler::TimeTableHandler(QQmlContext *ctxt,
     qmlContext_->setContextProperty("arrStationModel", arrStationModel_);
     qmlContext_->setContextProperty("viaStationModel", viaStationModel_);
 
-    connHandler = new SBBConnectionHandler();
+    connections_ = new ConnectionListModel();
+
+    qmlContext_->setContextProperty("connectionModel", connections_);
+
+    connHandler_ = new SBBConnectionHandler();
+    connect(connHandler_, &SBBConnectionHandler::parsingFinished,
+            this, &TimeTableHandler::connectionLookedUp);
 }
 
 void TimeTableHandler::startQuery(const QString &compare, const int type)
@@ -89,7 +95,7 @@ void TimeTableHandler::lookupConnection()
 {
     // TODO
     if(depStation_ && arrStation_) {
-        connHandler->startConnectionSearch(depStation_, arrStation_, QDateTime::currentDateTime(), false);
+        connHandler_->startConnectionSearch(depStation_, arrStation_, QDateTime::currentDateTime(), false);
     }
 }
 
@@ -106,4 +112,32 @@ void TimeTableHandler::arrLookupFinished(StationListType items)
 void TimeTableHandler::viaLookupFinished(StationListType items)
 {
     viaStationModel_->appendRows(items);
+}
+
+void TimeTableHandler::connectionLookedUp(eStatusID id)
+{
+    if(XML_ERROR_RESPONSE == id || HTML_ERROR_RESPONSE == id)
+    {
+        QString msg = connHandler_->getErrorMessage();
+//        TODO emit lookupConnectionError(msg);
+    }
+    else if(NO_CONNECTIONS_RESPONSE == id)
+    {
+//      TODO   emit this->noConnectionsFound();
+    }
+    else
+    {
+
+        QList<ConnectionItem*> connections = connHandler_->getAvailableConnections();
+        foreach (ConnectionItem *cur, connections)
+        {
+            if(cur->hasConnectionStateInformation())
+                cur->setConnectionStateInfo(1);
+            else
+                cur->setConnectionStateInfo(0);
+//            this->connections_->appendRow(cur);
+        }
+        connections_->clear();
+        connections_->appendRows(connections);
+    }
 }

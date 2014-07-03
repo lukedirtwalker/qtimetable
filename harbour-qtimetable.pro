@@ -39,7 +39,15 @@ SOURCES += src/qtimetable.cpp \
     src/domout/domaddress.cpp \
     src/domout/domstation.cpp \
     src/domout/domflags.cpp \
-    src/domout/domdate.cpp
+    src/domout/domdate.cpp \
+    src/listitems/connectionitem.cpp \
+    src/util/duration.cpp \
+    src/listitems/connectionstepitem.cpp \
+    src/listitems/stopitem.cpp \
+    src/domin/location.cpp \
+    src/domin/station.cpp \
+    src/domin/address.cpp \
+    src/domin/journey.cpp
 
 OTHER_FILES += qml/qtimetable.qml \
     qml/cover/CoverPage.qml \
@@ -55,7 +63,10 @@ OTHER_FILES += qml/qtimetable.qml \
     harbour-qtimetable.desktop \
     rpm/harbour-qtimetable.spec \
     qml/components/SearchListItem.qml \
-    qml/components/DeletableTextField.qml
+    qml/components/DeletableTextField.qml \
+    qml/pages/ConnectionOverview.qml \
+    qml/components/ConnectionDetailItem.qml \
+    qml/components/ConnectionOverviewItem.qml
 HEADERS += \
     src/listitems/locationitem.h \
     src/listmodels/resultlistmodel.h \
@@ -79,5 +90,14 @@ HEADERS += \
     src/domout/domstation.h \
     src/domout/domflags.h \
     src/domout/domdate.h \
-    src/listmodels/stationlistmodel.h
+    src/listmodels/stationlistmodel.h \
+    src/listitems/connectionitem.h \
+    src/util/duration.h \
+    src/listitems/connectionstepitem.h \
+    src/listitems/stopitem.h \
+    src/domin/location.h \
+    src/domin/station.h \
+    src/domin/address.h \
+    src/domin/journey.h \
+    src/listmodels/connectionlistmodel.h
 
