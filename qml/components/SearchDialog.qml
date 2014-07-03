@@ -12,6 +12,10 @@ Dialog {
     // TODO it would be nicer to just select the first entry?
     canAccept: false
 
+    onOpened: {
+        stationSearch.forceActiveFocus()
+    }
+
     Item {
         id: stationSearchWrap
         width: parent.width

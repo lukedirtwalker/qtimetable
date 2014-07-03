@@ -101,6 +101,7 @@ Page {
             Button {
                 id: searchButton
                 text: qsTr("Search")
+                anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
                     timeTableHandler.lookupConnection()
                     pageStack.push(Qt.resolvedUrl("ConnectionOverview.qml"), {"model" : connectionModel})
