@@ -3,19 +3,24 @@
 
 #include "location.h"
 
-#include <QDomNode>
+class QDomNode;
 
 class Address : public Location
 {
 public:
     Address(QDomNode domAddress);
 
-    QString getLongitude();
-    QString getLatitude();
+    inline QString getLongitude();
+    inline QString getLatitude();
 
 private:
-    QString mLongitude;
-    QString mLatitude;
+    QString longitude_;
+    QString latitude_;
 };
+
+inline QString Address::getLongitude() { return longitude_;}
+
+inline QString Address::getLatitude() { return latitude_;}
+
 
 #endif // ADDRESS_H

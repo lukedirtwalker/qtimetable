@@ -44,7 +44,6 @@ SOURCES += src/qtimetable.cpp \
     src/util/duration.cpp \
     src/listitems/connectionstepitem.cpp \
     src/listitems/stopitem.cpp \
-    src/domin/location.cpp \
     src/domin/station.cpp \
     src/domin/address.cpp \
     src/domin/journey.cpp
@@ -99,5 +98,6 @@ HEADERS += \
     src/domin/station.h \
     src/domin/address.h \
     src/domin/journey.h \
-    src/listmodels/connectionlistmodel.h
+    src/listmodels/connectionlistmodel.h \
+    src/util/qdomnodeiterator.h
 

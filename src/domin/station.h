@@ -3,25 +3,35 @@
 
 #include "location.h"
 
-#include <QDomNode>
+class QDomNode;
 
 class Station : public Location
 {
 public:
     Station(QDomNode domStation);
 
-    QString getLongitude();
-    QString getLatitude();
-    QString getExtStatNR();
-    QString getExternalID();
-    QString getScore();
+    inline QString getLongitude();
+    inline QString getLatitude();
+    inline QString getExtStatNR();
+    inline QString getExternalID();
+    inline QString getScore();
 
 private:
-    QString mExternalID;
-    QString mScore;
-    QString mLatitude;
-    QString mLongitude;
-    QString mExtStatNR;
+    QString externalID_;
+    QString score_;
+    QString latitude_;
+    QString longitude_;
+    QString extStatNR_;
 };
+
+inline QString Station::getExtStatNR() { return extStatNR_;}
+
+inline QString Station::getLongitude() { return latitude_;}
+
+inline QString Station::getLatitude() { return longitude_;}
+
+inline QString Station::getExternalID() { return externalID_;}
+
+inline QString Station::getScore() { return score_;}
 
 #endif // STATION_H

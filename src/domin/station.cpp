@@ -1,48 +1,18 @@
 #include "station.h"
 
-Station::Station(QDomNode domStation)
-{
-    this->mType = STATION;
+#include <QDomNode>
 
+Station::Station(QDomNode domStation) : Location(STATION)
+{
     QDomElement el = domStation.toElement();
 
-    this->mExternalID = el.attributeNode("externalId").value().toLatin1();
-    while(this->mExternalID.endsWith( ' ' )) this->mExternalID.chop(1);
+    externalID_ = el.attributeNode("externalId").value().trimmed().toLatin1();
 
-    this->mExtStatNR = el.attributeNode("externalStationNr").value().toLatin1();
-    while(this->mExtStatNR.endsWith( ' ' )) this->mExtStatNR.chop(1);
+    extStatNR_ = el.attributeNode("externalStationNr").value().trimmed().toLatin1();
 
-    this->mName = el.attributeNode("name").value().toLatin1();
-    while(this->mName.endsWith( ' ' )) this->mName.chop(1);
+    name_ = el.attributeNode("name").value().trimmed().toLatin1();
 
-    this->mLatitude = el.attributeNode("y").value().toLatin1();
-    while(this->mLatitude.endsWith( ' ' )) this->mLatitude.chop(1);
+    latitude_ = el.attributeNode("y").value().trimmed().toLatin1();
 
-    this->mLongitude = el.attributeNode("x").value().toLatin1();
-    while(this->mLongitude.endsWith( ' ' )) this->mLongitude.chop(1);
-}
-
-QString Station::getExtStatNR()
-{
-    return this->mExtStatNR;
-}
-
-QString Station::getLongitude()
-{
-    return this->mLatitude;
-}
-
-QString Station::getLatitude()
-{
-    return this->mLongitude;
-}
-
-QString Station::getExternalID()
-{
-    return this->mExternalID;
-}
-
-QString Station::getScore()
-{
-    return this->mScore;
+    longitude_ = el.attributeNode("x").value().trimmed().toLatin1();
 }

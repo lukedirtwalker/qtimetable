@@ -8,29 +8,43 @@
 class Journey
 {
 public:
-    Journey();
+    Journey() : hasMOT_{false} {}
     Journey(QString meansOfTransportation);
     Journey(QDomNode domJourney, QDateTime date);
     ~Journey();
 
-    QString getMeansOfTransport() const;
-    QString getDirection() const;
+    inline QString getMeansOfTransport() const;
+    inline QString getDirection() const;
 
-    QList<StopItem*> getStopovers();
-    bool hasMeansOfTransportation();
-    QString getJHandletNr();
-    QString getJHandlepuic();
-    QString getJHandlecycle();
+    inline QList<StopItem*> getStopovers();
+    inline bool hasMeansOfTransportation();
+    inline QString getJHandletNr();
+    inline QString getJHandlepuic();
+    inline QString getJHandlecycle();
 
 
 private:
-    QList<StopItem*> mStopovers;
-    QString mDirection;
-    QString mMeansOfTransport;
-    QString mJHandletNr;
-    QString mJHandlepuic;
-    QString mJHandlecycle;
-    bool mHasMOT;
+    QList<StopItem*> stopovers_;
+    QString direction_;
+    QString meansOfTransport_;
+    QString jHandletNr_;
+    QString jHandlepuic_;
+    QString jHandlecycle_;
+    bool hasMOT_;
 };
+
+inline QList<StopItem *> Journey::getStopovers() { return stopovers_;}
+
+inline bool Journey::hasMeansOfTransportation() { return hasMOT_;}
+
+inline QString Journey::getMeansOfTransport() const { return meansOfTransport_;}
+
+inline QString Journey::getDirection() const { return direction_;}
+
+inline QString Journey::getJHandletNr() { return jHandletNr_;}
+
+inline QString Journey::getJHandlecycle() { return jHandlecycle_;}
+
+inline QString Journey::getJHandlepuic() { return jHandlepuic_;}
 
 #endif // CONNECTIONEDGE_H

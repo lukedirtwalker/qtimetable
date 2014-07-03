@@ -8,14 +8,19 @@
 class Location
 {
 public:
-    Location();
+    Location() : type_{UNDEFINED} {}
+    Location(eLocationType t) : type_(t) {}
 
-    QString getName();
-    eLocationType getType();
+    inline QString getName();
+    inline eLocationType getType();
 
 protected:
-    QString mName;
-    eLocationType mType;
+    QString name_;
+    eLocationType type_;
 };
+
+inline QString Location::getName() { return name_;}
+
+inline eLocationType Location::getType() { return type_;}
 
 #endif // LOCATION_H
