@@ -5,37 +5,34 @@
 #include <QList>
 #include <QVariant>
 
-#include "../listitems/listitem.h"
-#include "resultlisttype.h"
-
-class ResultListModel : public QAbstractListModel
+template <class ItemType>  class ResultListModel : public QAbstractListModel
 {
-    Q_OBJECT
-
-    //TODO we can template this class?
 
 public:
-    explicit ResultListModel(ListItem* prototype, QObject* parent=0);
+    explicit ResultListModel(QObject *parent=nullptr);
     ~ResultListModel();
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QHash<int, QByteArray> roleNames() const;
-    void appendRow(ListItem* item);
-    void appendRows(const QList<ListItem*> &items);
-    void insertRow(int row, ListItem* item);
+    void appendRow(ItemType* item);
+    void appendRows(const QList<ItemType*> &items);
+    void insertRow(int row, ItemType *item);
     bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
     bool isEmpty();
-    ListItem* takeRow(int row);
-    ListItem* find(const QString &id) const;
-    ListItem* at(int index);
-    QModelIndex indexFromItem( const ListItem* item) const;
-    Q_INVOKABLE void clear();
+    ItemType* takeRow(int row);
+    ItemType* find(const QString &id) const;
+    ItemType* at(int index);
+    QModelIndex indexFromItem(const ItemType *item) const;
+    void clear();
 
 private:
-    ListItem* prototype_;
-    ResultListType dataList_;
+    ItemType* prototype_;
+    QList<ItemType*> dataList_;
 
 };
+
+// template class has to have definition
+#include "resultlistmodel.cpp"
 
 #endif // RESULTLISTMODEL_H

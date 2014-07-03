@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QQmlContext>
 
-#include "../listmodels/resultlistmodel.h"
+#include "../listmodels/stationlistmodel.h"
 #include "../db/db.h"
 #include "../core/sbbconnectionhandler.h"
 
@@ -21,16 +21,16 @@ public:
     Q_INVOKABLE void lookupConnection();
 
 public slots:
-    void depLookupFinished(ResultListType items);
-    void arrLookupFinished(ResultListType items);
-    void viaLookupFinished(ResultListType items);
+    void depLookupFinished(StationListType items);
+    void arrLookupFinished(StationListType items);
+    void viaLookupFinished(StationListType items);
 
 private:
     QQmlContext *qmlContext_;
 
     DatabaseHandler *dbHandler_;
 
-    ResultListModel *depStationModel_, *arrStationModel_, *viaStationModel_;
+    StationListModel *depStationModel_, *arrStationModel_, *viaStationModel_;
     LocationItem *depStation_, *arrStation_, *viaStation_;
     SBBConnectionHandler *connHandler;
 };

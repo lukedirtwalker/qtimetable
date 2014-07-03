@@ -3,9 +3,7 @@
 
 #include <QtSql/QtSql>
 
-#include "../listmodels/resultlistmodel.h"
-//#include "ui/searchitem.h"
-#include "../listitems/locationitem.h"
+class LocationItem;
 
 template<class T>
 static bool dereferencedLessThan(T * o1, T * o2) {
@@ -16,6 +14,7 @@ class ThreadedDbHandler : public QObject
 {
     Q_OBJECT
 public:
+    // Don't use this with empty strings!
     ThreadedDbHandler(QSqlDatabase *db, const QString &comp);
     ~ThreadedDbHandler();
 
@@ -24,13 +23,12 @@ public slots:
 
 signals:
     void finished();
-    void foundResults(const ResultListType items);
+    void foundResults(const QList<LocationItem*> items);
 
 private:
     QSqlQuery *q_;
     QString comp_;
     QList<LocationItem*> items_;
-    ResultListType endItems_;
 
     //db queries
     int queryCityName(const QString &query,bool searchMiddle,int numResults);

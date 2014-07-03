@@ -65,7 +65,6 @@ HEADERS += \
     src/uihandlers/timetablehandler.h \
     src/db/threadeddbhandler.h \
     src/db/db.h \
-    src/listmodels/resultlisttype.h \
     src/core/sbbhandler.h \
     src/net/sbbservercommunication.h \
     src/net/sbbrequest.h \
@@ -79,5 +78,6 @@ HEADERS += \
     src/domout/domaddress.h \
     src/domout/domstation.h \
     src/domout/domflags.h \
-    src/domout/domdate.h
+    src/domout/domdate.h \
+    src/listmodels/stationlistmodel.h
 

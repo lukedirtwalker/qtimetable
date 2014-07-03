@@ -1,5 +1,8 @@
 #include "threadeddbhandler.h"
 
+#include "../listitems/locationitem.h"
+//#include "ui/searchitem.h"
+
 ThreadedDbHandler::~ThreadedDbHandler()
 {
     delete q_;
@@ -13,26 +16,23 @@ ThreadedDbHandler::ThreadedDbHandler(QSqlDatabase *db, const QString &comp)
 
 void ThreadedDbHandler::run()
 {
-    if(comp_ != ""){
-//       TODO endItems_.append(new SearchItem(comp_));
-        QString comparer = replacer(comp_);
-        int len = comparer.length();
-        int i=20;
-        if(i>0)
-            i-=queryCityName(comparer,false,i);
-        if(i>0 && len > 1)
-            i-=queryCityName(comparer,true,i);
-        if(i>0)
-            i-=queryStationName(comparer,false,i);
-        if(i>0 && len > 1)
-            i-=queryStationName(comparer,true,i);
-    }
+    QString comparer = replacer(comp_);
+    int len = comparer.length();
+    int i=20;
+    if(i>0)
+        i-=queryCityName(comparer,false,i);
+    if(i>0 && len > 1)
+        i-=queryCityName(comparer,true,i);
+    if(i>0)
+        i-=queryStationName(comparer,false,i);
+    if(i>0 && len > 1)
+        i-=queryStationName(comparer,true,i);
 
-    //sort list
     qStableSort(items_.begin(),items_.end(),dereferencedLessThan<LocationItem>);
-    foreach(LocationItem *item, items_)
-        endItems_.append(item);
-    emit foundResults(endItems_);
+
+    // TODO items_.prepend(new SearchItem(comp_));
+
+    emit foundResults(items_);
 
     emit finished();
 }

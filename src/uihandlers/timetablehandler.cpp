@@ -9,9 +9,9 @@ TimeTableHandler::TimeTableHandler(QQmlContext *ctxt,
     : QObject(parent), qmlContext_(ctxt), dbHandler_(dbHandler),
       depStation_{}, arrStation_{}, viaStation_{}
 {
-    depStationModel_ = new ResultListModel(new LocationItem());
-    arrStationModel_ = new ResultListModel(new LocationItem());
-    viaStationModel_ = new ResultListModel(new LocationItem());
+    depStationModel_ = new StationListModel();
+    arrStationModel_ = new StationListModel();
+    viaStationModel_ = new StationListModel();
 
     qmlContext_->setContextProperty("depStationModel", depStationModel_);
     qmlContext_->setContextProperty("arrStationModel", arrStationModel_);
@@ -93,17 +93,17 @@ void TimeTableHandler::lookupConnection()
     }
 }
 
-void TimeTableHandler::depLookupFinished(ResultListType items)
+void TimeTableHandler::depLookupFinished(StationListType items)
 {
     depStationModel_->appendRows(items);
 }
 
-void TimeTableHandler::arrLookupFinished(ResultListType items)
+void TimeTableHandler::arrLookupFinished(StationListType items)
 {
     arrStationModel_->appendRows(items);
 }
 
-void TimeTableHandler::viaLookupFinished(ResultListType items)
+void TimeTableHandler::viaLookupFinished(StationListType items)
 {
     viaStationModel_->appendRows(items);
 }

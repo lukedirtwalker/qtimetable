@@ -40,8 +40,6 @@
 
 #include "db/databasehandler.h"
 
-#include "listmodels/resultlistmodel.h"
-
 #include <QDebug>
 
 
@@ -65,7 +63,7 @@ int main(int argc, char *argv[])
     QQuickView *view = SailfishApp::createView();
 
 
-    qRegisterMetaType<ResultListType>("ResultListType");
+    qRegisterMetaType<StationListType>("StationListType");
 
     DatabaseHandler *dbHandler = new DatabaseHandler();
     if(!dbHandler->openConnection())
