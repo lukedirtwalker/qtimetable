@@ -10,23 +10,18 @@ class SBBConnectionHandler : public SBBHandler
 {
     Q_OBJECT
 public:
-    SBBConnectionHandler();
+    SBBConnectionHandler() : SBBHandler() {}
 
     void startConnectionSearch(LocationItem *depStation, LocationItem *arrStation, QDateTime d, bool isArrival);
 
-    void startConnectionSearch(QString startName, QString startExternalId, QString startLatitude, QString startLongitude,
-                               QString destName, QString destExternalId, QString destLatitude, QString destLongitude,
-                               QString viaName, QString viaExternalId, QString viaLatitude, QString viaLongitude,
+    void startConnectionSearch(LocationItem *depStation, LocationItem *arrStation, LocationItem* viaStation,
                                QDateTime d, bool isArrival);
 
-    void startConnectionSearch(QString startName, QString startExternalId, QString startLatitude, QString startLongitude,
-                               QString destName, QString destExternalId, QString destLatitude, QString destLongitude,
-                               QDateTime d, bool isArrival);
     void searchEarlier();
     void searchLater();
     void stopConnectionSearch();
 
-    QList<ConnectionItem*> getAvailableConnections();
+    inline QList<ConnectionItem*> getAvailableConnections();
 
 public slots:
     virtual void parseXMLResponse(QDomDocument xml);
@@ -34,8 +29,11 @@ public slots:
     virtual void parseNoTypeResponse(QByteArray data);
 
 private:
-    QString mSearchContext;
-    QList<ConnectionItem*> mSBBConnections;
+    QString searchContext_;
+    QList<ConnectionItem*> SBBConnections_;
 };
+
+inline QList<ConnectionItem*> SBBConnectionHandler::getAvailableConnections()
+{ return SBBConnections_;}
 
 #endif // SBBCONNECTIONHANDLER_H

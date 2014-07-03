@@ -12,17 +12,13 @@
 
 #include "../listitems/locationitem.h"
 
-//#include "util/debugger.h"
+#include "../util/qdomnodeiterator.h"
 
-SBBConnectionHandler::SBBConnectionHandler() : SBBHandler()
+void SBBConnectionHandler::startConnectionSearch(LocationItem *depStation,
+                                                 LocationItem *arrStation,
+                                                 QDateTime d, bool isArrival)
 {
-
-}
-
-void SBBConnectionHandler::startConnectionSearch(LocationItem *depStation, LocationItem *arrStation, QDateTime d, bool isArrival)
-{
-    qDebug() << depStation->getExternalId() << arrStation->getExternalId();
-    mSearchContext = "";
+    searchContext_ = "";
 
     if(state_ != H_STOPPED)
         stopConnectionSearch();
@@ -30,14 +26,20 @@ void SBBConnectionHandler::startConnectionSearch(LocationItem *depStation, Locat
     Serializable *start,*dest;
 
     if(depStation->getExternalId().isEmpty())
-        start = new DomAddress(depStation->stationName(), depStation->getLatitude(), depStation->getLongitude());
+        start = new DomAddress(depStation->stationName(),
+                               depStation->getLatitude(),
+                               depStation->getLongitude());
     else
-        start = new DomStation(depStation->stationName(), depStation->getExternalId());
+        start = new DomStation(depStation->stationName(),
+                               depStation->getExternalId());
 
     if(arrStation->getExternalId().isEmpty())
-        dest = new DomAddress(arrStation->stationName(), arrStation->getLatitude(), arrStation->getLongitude());
+        dest = new DomAddress(arrStation->stationName(),
+                              arrStation->getLatitude(),
+                              arrStation->getLongitude());
     else
-        dest = new DomStation(arrStation->stationName(), arrStation->getExternalId());
+        dest = new DomStation(arrStation->stationName(),
+                              arrStation->getExternalId());
 
     DomDate *date = new DomDate(d,isArrival);
 
@@ -45,194 +47,142 @@ void SBBConnectionHandler::startConnectionSearch(LocationItem *depStation, Locat
 
     SBBConnectionQuery *q = new SBBConnectionQuery(start,dest,date,flags);
     sendRequest(new SBBRequest(q,"application/xml", this));
-    setState(H_STARTED);
+    state_ = H_STARTED;
 }
 
-
-void SBBConnectionHandler::startConnectionSearch(QString startName, QString startExternalId, QString startLatitude, QString startLongitude, QString destName, QString destExternalId, QString destLatitude, QString destLongitude, QDateTime d, bool isArrival)
+void SBBConnectionHandler::startConnectionSearch(LocationItem *depStation,
+                                                 LocationItem *arrStation,
+                                                 LocationItem* viaStation,
+                                                 QDateTime d, bool isArrival)
 {
-    this->mSearchContext = "";
+    searchContext_ = "";
 
-    if(this->getState() != H_STOPPED)
-    {
-        this->stopConnectionSearch();
-    }
+    if(state_ != H_STOPPED)
+        stopConnectionSearch();
 
-    Serializable *start,*dest;
+    Serializable *start, *dest, *via;
 
-    if(startExternalId.isEmpty())
-        start = new DomAddress(startName, startLatitude, startLongitude);
+    if(depStation->getExternalId().isEmpty())
+        start = new DomAddress(depStation->stationName(),
+                               depStation->getLatitude(),
+                               depStation->getLongitude());
     else
-        start = new DomStation(startName,startExternalId);
+        start = new DomStation(depStation->stationName(),
+                               depStation->getExternalId());
 
-    if(destExternalId.isEmpty())
-        dest = new DomAddress(destName, destLatitude, destLongitude);
+    if(arrStation->getExternalId().isEmpty())
+        dest = new DomAddress(arrStation->stationName(),
+                              arrStation->getLatitude(),
+                              arrStation->getLongitude());
     else
-        dest = new DomStation(destName,destExternalId);
+        dest = new DomStation(arrStation->stationName(),
+                              arrStation->getExternalId());
+
+    if(viaStation->getExternalId().isEmpty())
+        via = new DomAddress(viaStation->stationName(),
+                             viaStation->getLatitude(),
+                             viaStation->getLongitude());
+    else
+        via = new DomStation(viaStation->stationName(),
+                             viaStation->getExternalId());
 
     DomDate *date = new DomDate(d,isArrival);
 
-    DomFlags *flags;
-    if(isArrival)
-    {
-        flags = new DomFlags(B);
-    }
-    else
-    {
-        flags = new DomFlags(F);
-    }
+    DomFlags *flags = isArrival ? new DomFlags(B) : new DomFlags(F);
 
-    SBBConnectionQuery *q = new SBBConnectionQuery(start,dest,date,flags);
-    this->sendRequest(new SBBRequest(q,"application/xml", this));
-    this->setState(H_STARTED);
-}
-
-void SBBConnectionHandler::startConnectionSearch(QString startName, QString startExternalId, QString startLatitude, QString startLongitude, QString destName, QString destExternalId, QString destLatitude, QString destLongitude, QString viaName, QString viaExternalId, QString viaLatitude, QString viaLongitude, QDateTime d, bool isArrival)
-{
-    this->mSearchContext = "";
-
-    if(this->getState() != H_STOPPED)
-    {
-        this->stopConnectionSearch();
-    }
-
-    Serializable *start,*dest,*via;
-
-    if(startExternalId.isEmpty())
-        start = new DomAddress(startName, startLatitude, startLongitude);
-    else
-        start = new DomStation(startName,startExternalId);
-
-    if(destExternalId.isEmpty())
-        dest = new DomAddress(destName, destLatitude, destLongitude);
-    else
-        dest = new DomStation(destName,destExternalId);
-
-    if(viaExternalId.isEmpty())
-        via = new DomAddress(viaName, viaLatitude, viaLongitude);
-    else
-        via = new DomStation(viaName,viaExternalId);
-
-    DomDate *date = new DomDate(d,isArrival);
-
-    DomFlags *flags;
-    if(isArrival)
-    {
-        flags = new DomFlags(B);
-    }
-    else
-    {
-        flags = new DomFlags(F);
-    }
-
-    SBBConnectionQuery *q = new SBBConnectionQuery(start,dest,via,date,flags);
-    this->sendRequest(new SBBRequest(q,"application/xml", this));
-    this->setState(H_STARTED);
+    SBBConnectionQuery *q =
+            new SBBConnectionQuery(start, dest, via, date, flags);
+    sendRequest(new SBBRequest(q,"application/xml", this));
+    state_ = H_STARTED;
 }
 
 void SBBConnectionHandler::searchEarlier()
 {
-    if(this->getState() == H_READY)
+    if(state_ == H_READY)
     {
-        SBBRelativeConnectionQuery *q = new SBBRelativeConnectionQuery(this->mSearchContext,B);
+        SBBRelativeConnectionQuery *q =
+                new SBBRelativeConnectionQuery(searchContext_,B);
         this->sendRequest(new SBBRequest(q,"application/xml", this));
-        this->setState(H_EARLIER);
+        state_ = H_EARLIER;
     }
 }
 
 void SBBConnectionHandler::searchLater()
 {
-    if(this->getState() == H_READY)
+    if(state_ == H_READY)
     {
-        SBBRelativeConnectionQuery *q = new SBBRelativeConnectionQuery(this->mSearchContext,F);
-        this->sendRequest(new SBBRequest(q,"application/xml", this));
-        this->setState(H_LATER);
+        SBBRelativeConnectionQuery *q =
+                new SBBRelativeConnectionQuery(searchContext_,F);
+        sendRequest(new SBBRequest(q,"application/xml", this));
+        state_ = H_LATER;
     }
 }
 
 void SBBConnectionHandler::stopConnectionSearch()
 {
-    if(this->getState() != H_STOPPED)
+    if(state_ != H_STOPPED)
     {
-        this->stopRequest();
-        qDeleteAll(this->mSBBConnections);
-        this->mSBBConnections.clear();
-        this->setState(H_STOPPED);
+        stopRequest();
+        qDeleteAll(SBBConnections_);
+        SBBConnections_.clear();
+        state_ = H_STOPPED;
     }
 }
 
 void SBBConnectionHandler::parseXMLResponse(QDomDocument xml)
 {
-    if (!xml.documentElement().elementsByTagName("Err").at(0).isNull())
+    if(!xml.documentElement().elementsByTagName("Err").at(0).isNull())
     {
-        QString errCode = xml.documentElement().elementsByTagName("Err").at(0).toElement().attributeNode("code").value();
+        QString errCode = xml.documentElement().elementsByTagName("Err")
+                .at(0).toElement().attributeNode("code").value();
         if(errCode == "K890")
-        {
             emit parsingFinished(NO_CONNECTIONS_RESPONSE);
-        }
         else
         {
             SBBErrorMessage_ = QString(errCode + " ");
-            SBBErrorMessage_ += xml.documentElement().elementsByTagName("Err").at(0).toElement().attributeNode("text").value();
+            SBBErrorMessage_ += xml.documentElement().elementsByTagName("Err")
+                    .at(0).toElement().attributeNode("text").value();
             emit parsingFinished(XML_ERROR_RESPONSE);
         }
         return;
     }
 
-    this->mSearchContext = xml.documentElement().elementsByTagName("ConResCtxt").at(0).toElement().text().toLatin1();
+    searchContext_ = xml.documentElement().elementsByTagName("ConResCtxt")
+            .at(0).toElement().text().toLatin1();
 
-    QDomNodeList domConnections = xml.documentElement().elementsByTagName("Connection");
-    int nConnections = domConnections.count();
-    if(!nConnections)
+    QDomNodeList domConnections = xml.documentElement()
+            .elementsByTagName("Connection");
+    if(!domConnections.count())
     {
         emit parsingFinished(XML_PARSING_ERROR);
         return;
     }
 
     QList<ConnectionItem*> newSBBConnections;
-    for(int i=0;i<nConnections;i++)
-    {
-        QDomNode domConnection = domConnections.at(i);
-        ConnectionItem *c = new ConnectionItem(domConnection);
-        newSBBConnections.append(c);
-    }
+    for(auto con : domConnections)
+        newSBBConnections.append(new ConnectionItem(con));
 
-    switch(this->getState())
+    switch(state_)
     {
         case H_STARTED:
         {
-            this->mSBBConnections = newSBBConnections;
+            SBBConnections_ = newSBBConnections;
             break;
         }
         case H_EARLIER:
         {
-            QListIterator<ConnectionItem*> it(newSBBConnections);
-            QList<ConnectionItem*> tmp = this->mSBBConnections;
-            this->mSBBConnections.clear();
-            while(it.hasNext())
-            {
-                this->mSBBConnections.append(it.next());
-            }
-            it = QListIterator<ConnectionItem*>(tmp);
-            while(it.hasNext())
-            {
-                this->mSBBConnections.append(it.next());
-            }
+            newSBBConnections.append(SBBConnections_);
+            SBBConnections_ = newSBBConnections;
             break;
         }
         case H_LATER:
         {
-            QListIterator<ConnectionItem*> it(newSBBConnections);
-            while(it.hasNext())
-            {
-                this->mSBBConnections.append(it.next());
-            }
+            SBBConnections_.append(newSBBConnections);
             break;
         }
     }
     newSBBConnections.clear();
-    qDebug() << "parsing done!";
-    emit this->parsingFinished(AOK);
+    emit parsingFinished(AOK);
 }
 
 void SBBConnectionHandler::parseHTMLResponse(QString html)
@@ -249,12 +199,7 @@ void SBBConnectionHandler::parseHTMLResponse(QString html)
     emit this->parsingFinished(HTML_ERROR_RESPONSE);
 }
 
-void SBBConnectionHandler::parseNoTypeResponse(QByteArray data)
+void SBBConnectionHandler::parseNoTypeResponse(QByteArray)
 {
-    emit this->parsingFinished(NOTYPE_ERROR);
-}
-
-QList<ConnectionItem*> SBBConnectionHandler::getAvailableConnections()
-{
-    return this->mSBBConnections;
+    emit parsingFinished(NOTYPE_ERROR);
 }

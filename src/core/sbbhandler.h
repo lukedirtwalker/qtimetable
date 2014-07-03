@@ -12,7 +12,7 @@ class SBBHandler : public QObject
 public:
     SBBHandler();
 
-    QString getErrorMessage();
+    inline QString getErrorMessage();
 
 public slots:
     virtual void parseResponse();
@@ -28,13 +28,13 @@ protected:
 
     virtual void sendRequest(SBBRequest *r);
     virtual void stopRequest();
-    virtual void setState(eSBBHandlerState s);
-    virtual eSBBHandlerState getState();
 
     QString SBBErrorMessage_;
     SBBServerCommunication SBBServerCommunication_;
     SBBRequest *pendingRequest_;
     eSBBHandlerState state_;
 };
+
+inline QString SBBHandler::getErrorMessage() { return SBBErrorMessage_;}
 
 #endif // SBBHANDLER_H
