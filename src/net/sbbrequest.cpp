@@ -1,6 +1,6 @@
 #include "sbbrequest.h"
 
-SBBRequest::SBBRequest() : reply_{nullptr}, query_{nullptr}, contentType_{""},
+SBBRequest::SBBRequest() : query_{nullptr}, reply_{nullptr}, contentType_{""},
     handler_{nullptr}
 {}
 

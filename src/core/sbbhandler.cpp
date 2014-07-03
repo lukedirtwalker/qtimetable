@@ -1,6 +1,6 @@
 #include "sbbhandler.h"
 
-SBBHandler::SBBHandler() : state_{H_STOPPED}, pendingRequest_{nullptr}
+SBBHandler::SBBHandler() : pendingRequest_{nullptr}, state_{H_STOPPED}
 {}
 
 void SBBHandler::setState(eSBBHandlerState s)
