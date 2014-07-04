@@ -35,7 +35,6 @@
 #include <QtQuick>
 #include <sailfishapp.h>
 
-#include "uihandlers/timehandler.h"
 #include "uihandlers/timetablehandler.h"
 
 #include "db/databasehandler.h"
@@ -72,11 +71,8 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    TimeHandler *timeHandler = new TimeHandler();
     TimeTableHandler *timeTableHandler = new TimeTableHandler(view->rootContext(), dbHandler);
 
-
-    view->rootContext()->setContextProperty("timeHandler", timeHandler);
     view->rootContext()->setContextProperty("timeTableHandler", timeTableHandler);
 
     view->setSource(SailfishApp::pathTo("qml/qtimetable.qml"));

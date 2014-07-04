@@ -10,6 +10,8 @@
 #include "../db/db.h"
 #include "../core/sbbconnectionhandler.h"
 
+#include "timehandler.h"
+
 class TimeTableHandler : public QObject
 {
     Q_OBJECT
@@ -34,6 +36,8 @@ public slots:
 
 private:
     QQmlContext *qmlContext_;
+
+    TimeHandler *timeHandler_;
 
     DatabaseHandler *dbHandler_;
 

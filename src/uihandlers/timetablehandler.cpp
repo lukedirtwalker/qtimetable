@@ -9,6 +9,9 @@ TimeTableHandler::TimeTableHandler(QQmlContext *ctxt,
     : QObject(parent), qmlContext_(ctxt), dbHandler_(dbHandler),
       depStation_{}, arrStation_{}, viaStation_{}
 {
+    timeHandler_ = new TimeHandler();
+    qmlContext_->setContextProperty("timeHandler", timeHandler_);
+
     depStationModel_ = new StationListModel();
     arrStationModel_ = new StationListModel();
     viaStationModel_ = new StationListModel();
@@ -31,6 +34,8 @@ TimeTableHandler::TimeTableHandler(QQmlContext *ctxt,
 
 TimeTableHandler::~TimeTableHandler()
 {
+    delete timeHandler_;
+
     depStationModel_->clear();
     arrStationModel_->clear();
     viaStationModel_->clear();
@@ -114,7 +119,9 @@ void TimeTableHandler::lookupConnection()
 {
     // TODO
     if(depStation_ && arrStation_) {
-        connHandler_->startConnectionSearch(depStation_, arrStation_, QDateTime::currentDateTime(), false);
+        connHandler_->startConnectionSearch(depStation_, arrStation_,
+                                            timeHandler_->getCurrentDateTime(),
+                                            false);
     }
 }
 
