@@ -26,6 +26,8 @@ public:
 
     Q_INVOKABLE void lookupConnection();
 
+    Q_INVOKABLE inline void setArrival(bool arrival);
+
 
 public slots:
     void depLookupFinished(StationListType items);
@@ -48,6 +50,10 @@ private:
     ConnectionStepModel *connectionSteps_;
 
     SBBConnectionHandler *connHandler_;
+
+    bool arrival_;
 };
+
+inline void TimeTableHandler::setArrival(bool arrival) { arrival_ = arrival;}
 
 #endif // TIMETABLEHANDLER_H

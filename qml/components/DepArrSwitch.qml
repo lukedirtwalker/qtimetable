@@ -2,24 +2,21 @@ import QtQuick 2.1
 import Sailfish.Silica 1.0
 
 Row {
+    id: depArrSwitch
+
     width: parent.width
 
-    // TODO replace with backend state
-    property bool depart: true;
+    property bool arrival: false;
 
     TextSwitch {
         id: dep
         width: parent.width / 2
         text: qsTr("Departure")
-        checked: true
+        checked: !arrival
         automaticCheck: false
         onClicked: {
             if(!checked) {
-                arr.checked = false;
-                arr.highlighted = false;
-                highlighted = true;
-                // TODO backend
-                checked = true;
+                depArrSwitch.arrival = false;
             }
         }
     }
@@ -29,15 +26,11 @@ Row {
         width: parent.width / 2
         text: qsTr("Arrival")
 
-        checked: false
+        checked: arrival
         automaticCheck: false
         onClicked: {
             if(!checked) {
-                dep.checked = false;
-                dep.highlighted = false;
-                highlighted = true;
-                // TODO backend
-                checked = true;
+                depArrSwitch.arrival = true;
             }
         }
     }

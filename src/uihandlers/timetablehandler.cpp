@@ -7,7 +7,7 @@
 TimeTableHandler::TimeTableHandler(QQmlContext *ctxt,
                                    DatabaseHandler *dbHandler, QObject *parent)
     : QObject(parent), qmlContext_(ctxt), dbHandler_(dbHandler),
-      depStation_{}, arrStation_{}, viaStation_{}
+      depStation_{}, arrStation_{}, viaStation_{}, arrival_{false}
 {
     timeHandler_ = new TimeHandler();
     qmlContext_->setContextProperty("timeHandler", timeHandler_);
@@ -121,7 +121,7 @@ void TimeTableHandler::lookupConnection()
     if(depStation_ && arrStation_) {
         connHandler_->startConnectionSearch(depStation_, arrStation_,
                                             timeHandler_->getCurrentDateTime(),
-                                            false);
+                                            arrival_);
     }
 }
 

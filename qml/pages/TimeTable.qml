@@ -56,6 +56,9 @@ Page {
             DepArrSwitch {
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.paddingLarge
+                onArrivalChanged: {
+                    timeTableHandler.setArrival(arrival)
+                }
             }
             Row {
                 id: timeRow
