@@ -4,7 +4,7 @@
 
 ConnectionItem::ConnectionItem(QDomNode domConnection) : ListItem()
 {
-    mConnectionSteps = new ConnectionStepModel();
+    mConnectionSteps = new ConnectionStepModel(this); // needs parent to keep ownership
 
     this->mDate = QDateTime::fromString(domConnection.toElement().elementsByTagName("Date").at(0).toElement().text().toLatin1(),"yyyyMMdd");
     this->mId = domConnection.toElement().attributeNode("id").value().toLatin1();
