@@ -10,7 +10,7 @@ Station::Station(QDomNode domStation) : Location(STATION)
 
     extStatNR_ = el.attributeNode("externalStationNr").value().trimmed().toLatin1();
 
-    name_ = el.attributeNode("name").value().trimmed().toLatin1();
+    name_ = el.attributeNode("name").value().trimmed();
 
     latitude_ = el.attributeNode("y").value().trimmed().toLatin1();
 
