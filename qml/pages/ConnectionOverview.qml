@@ -83,10 +83,11 @@ Page {
         }
 
         delegate: ConnectionOverviewItem {
+            id: overviewItem
             onSelected: {
-                timeTableHandler.modelConnectionSteps(index)
+//                timeTableHandler.modelConnectionSteps(index)
                 pageStack.push(Qt.resolvedUrl("ConnectionStep.qml"),
-                               {"model" : connectionStepModel,
+                               {"model" : searchSuggestionList.model.getConnectionSteps(index),
                                    "from" : overviewHeader.fromStationText,
                                    "to" : overviewHeader.toStationText,
                                    "time" : Qt.formatDateTime(dep, "hh:mm"),

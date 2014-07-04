@@ -22,7 +22,6 @@ public:
 
     Q_INVOKABLE void startQuery(const QString &compare, const int type);
     Q_INVOKABLE void setStation(const int index, const int type);
-    Q_INVOKABLE void modelConnectionSteps(const int index);
 
     Q_INVOKABLE void lookupConnection();
 
@@ -47,7 +46,6 @@ private:
     LocationItem *depStation_, *arrStation_, *viaStation_;
 
     ConnectionListModel *connections_;
-    ConnectionStepModel *connectionSteps_;
 
     SBBConnectionHandler *connHandler_;
 

@@ -4,6 +4,8 @@
 
 ConnectionItem::ConnectionItem(QDomNode domConnection) : ListItem()
 {
+    mConnectionSteps = new ConnectionStepModel();
+
     this->mDate = QDateTime::fromString(domConnection.toElement().elementsByTagName("Date").at(0).toElement().text().toLatin1(),"yyyyMMdd");
     this->mId = domConnection.toElement().attributeNode("id").value().toLatin1();
     mId = mId.trimmed();
@@ -83,7 +85,7 @@ ConnectionItem::ConnectionItem(QDomNode domConnection) : ListItem()
     {
         QDomNode domCStep = domConnectionSteps.at(i);
         ConnectionStepItem *s = new ConnectionStepItem(domCStep,this->mDate);
-        this->mConnectionSteps.append(s);
+        this->mConnectionSteps->appendRow(s);
     }
 
     this->createOverview();
@@ -91,7 +93,9 @@ ConnectionItem::ConnectionItem(QDomNode domConnection) : ListItem()
 
 ConnectionItem::~ConnectionItem()
 {
-    qDeleteAll(this->mConnectionSteps);
+    mConnectionSteps->clear();
+    delete mConnectionSteps;
+//    qDeleteAll(this->mConnectionSteps);
 }
 
 QVariant ConnectionItem::data(int role) const
@@ -128,37 +132,35 @@ QHash<int, QByteArray> ConnectionItem::roleNames() const
 
 void ConnectionItem::createOverview()
 {
-    QListIterator<ConnectionStepItem*> it(this->mConnectionSteps);
     int maxFirst = 0;
     int maxSecond = 0;
-    while(it.hasNext())
+    int count = mConnectionSteps->rowCount();
+    for(int i = 0; i < count; ++i)
     {
-        ConnectionStepItem *cur = it.next();
+         ConnectionStepItem *cur = mConnectionSteps->at(i);
         maxFirst = qMax(maxFirst,cur->getUtilisationFirst());
         maxSecond = qMax(maxSecond,cur->getUtilisationSecond());
     }
     this->mUtilisationFirst = maxFirst;
     this->mUtilisationSecond = maxSecond;
 
-    it = QListIterator<ConnectionStepItem*>(this->mConnectionSteps);
     bool start = true;
-    while(it.hasNext())
+    ConnectionStepItem *cur = mConnectionSteps->at(0);
+    for(int i = 0; i < count; ++i)
     {
-        if (it.next()->hasMeansOfTransportation())
-        {
-            it.previous();
+        cur = mConnectionSteps->at(i);
+        if (cur->hasMeansOfTransportation())
             break;
-        }
         if(!start)
             this->mNrChanges--;
         else
             start = false;
     }
-    ConnectionStepItem *tmp = it.next();
+    ConnectionStepItem *tmp = cur;
     this->mPlatform = tmp->getDepPlatform();
     this->mHasChangedDeparturePlatform = tmp->hasChangedDeparturePlatform();
     this->mDepartureTime = tmp->getDepTime();
-    this->mArrivalTime = this->mConnectionSteps.last()->getArrTime();
+    this->mArrivalTime = this->mConnectionSteps->at(count - 1)->getArrTime();
 }
 
 QString ConnectionItem::getId() const
@@ -166,7 +168,7 @@ QString ConnectionItem::getId() const
     return QString();
 }
 
-QList<ConnectionStepItem*> ConnectionItem::getConnectionSteps()
+ConnectionStepModel *ConnectionItem::getConnectionSteps()
 {
     return this->mConnectionSteps;
 }

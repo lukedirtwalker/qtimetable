@@ -24,9 +24,6 @@ TimeTableHandler::TimeTableHandler(QQmlContext *ctxt,
 
     qmlContext_->setContextProperty("connectionModel", connections_);
 
-    connectionSteps_ = new ConnectionStepModel();
-    qmlContext_->setContextProperty("connectionStepModel", connectionSteps_);
-
     connHandler_ = new SBBConnectionHandler();
     connect(connHandler_, &SBBConnectionHandler::parsingFinished,
             this, &TimeTableHandler::connectionLookedUp);
@@ -40,13 +37,11 @@ TimeTableHandler::~TimeTableHandler()
     arrStationModel_->clear();
     viaStationModel_->clear();
     connections_->clear();
-    connectionSteps_->clear();
 
     delete depStationModel_;
     delete arrStationModel_;
     delete viaStationModel_;
     delete connections_;
-    delete connectionSteps_;
 }
 
 void TimeTableHandler::startQuery(const QString &compare, const int type)
@@ -109,14 +104,9 @@ void TimeTableHandler::setStation(int index, int type)
     }
 }
 
-void TimeTableHandler::modelConnectionSteps(int index)
-{
-    ConnectionItem* conn = connections_->at(index);
-    connectionSteps_->replaceData(conn->getConnectionSteps());
-}
-
 void TimeTableHandler::lookupConnection()
 {
+    connections_->clear();
     // TODO
     if(depStation_ && arrStation_) {
         connHandler_->startConnectionSearch(depStation_, arrStation_,

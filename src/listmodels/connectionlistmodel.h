@@ -10,6 +10,11 @@ class ConnectionListModel : public ResultListModel<ConnectionItem>
 public:
     ConnectionListModel(QObject *parent=nullptr)
         : ResultListModel<ConnectionItem>(parent) {}
+    Q_INVOKABLE inline QObject *getConnectionSteps(const int index);
 };
+
+inline QObject *ConnectionListModel::getConnectionSteps(const int index) {
+    return at(index)->getConnectionSteps();
+}
 
 #endif // CONNECTIONLISTMODEL_H

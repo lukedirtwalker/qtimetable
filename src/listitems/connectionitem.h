@@ -4,6 +4,8 @@
 #include "listitem.h"
 #include "../util/duration.h"
 #include "../util/globalshared.h"
+#include "../listmodels/connectionstepmodel.h"
+
 #include "connectionstepitem.h"
 
 class QDomNode;
@@ -16,7 +18,7 @@ public:
     ConnectionItem(QDomNode domConnection);
     ~ConnectionItem();
 
-    QList<ConnectionStepItem *> getConnectionSteps();
+    ConnectionStepModel *getConnectionSteps();
     QVector<eConnectionStateInformation> getConnectionStateInformations();
     void setConnectionStateInfo(int info);
     bool hasConnectionStateInformation();
@@ -66,7 +68,7 @@ private:
 
     QVector<QString> mConnectionVehicles;
     QVector<eConnectionStateInformation> mConnectionStateInformations;
-    QList<ConnectionStepItem*> mConnectionSteps;
+    ConnectionStepModel *mConnectionSteps;
 
     int mConnectionStateInfo;
 };
