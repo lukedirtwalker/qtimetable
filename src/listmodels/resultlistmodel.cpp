@@ -43,10 +43,7 @@ template <class ItemType>
 void ResultListModel<ItemType>::appendRows(const QList<ItemType *> &items)
 {
     beginInsertRows(QModelIndex(),rowCount(),rowCount()+items.size()-1);
-    foreach(ItemType *item, items)
-    {
-        dataList_.append(item);
-    }
+    dataList_.append(items);
     endInsertRows();
 }
 
@@ -132,4 +129,11 @@ template <class ItemType>
 ItemType *ResultListModel<ItemType>::at(int index)
 {
     return dataList_.at(index);
+}
+
+template <class ItemType>
+void ResultListModel<ItemType>::replaceData(const QList<ItemType *> &newData)
+{
+    clear();
+    appendRows(newData);
 }

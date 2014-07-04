@@ -99,5 +99,6 @@ HEADERS += \
     src/domin/address.h \
     src/domin/journey.h \
     src/listmodels/connectionlistmodel.h \
-    src/util/qdomnodeiterator.h
+    src/util/qdomnodeiterator.h \
+    src/listmodels/connectionstepmodel.h
 

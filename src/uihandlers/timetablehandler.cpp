@@ -21,9 +21,27 @@ TimeTableHandler::TimeTableHandler(QQmlContext *ctxt,
 
     qmlContext_->setContextProperty("connectionModel", connections_);
 
+    connectionSteps_ = new ConnectionStepModel();
+    qmlContext_->setContextProperty("connectionStepsModel", connectionSteps_);
+
     connHandler_ = new SBBConnectionHandler();
     connect(connHandler_, &SBBConnectionHandler::parsingFinished,
             this, &TimeTableHandler::connectionLookedUp);
+}
+
+TimeTableHandler::~TimeTableHandler()
+{
+    depStationModel_->clear();
+    arrStationModel_->clear();
+    viaStationModel_->clear();
+    connections_->clear();
+    connectionSteps_->clear();
+
+    delete depStationModel_;
+    delete arrStationModel_;
+    delete viaStationModel_;
+    delete connections_;
+    delete connectionSteps_;
 }
 
 void TimeTableHandler::startQuery(const QString &compare, const int type)
@@ -41,17 +59,14 @@ void TimeTableHandler::startQuery(const QString &compare, const int type)
 
     switch(type) {
     case 0: // dep
-        depStationModel_->clear();
         connect(queryHandler, &ThreadedDbHandler::foundResults, this,
                 &TimeTableHandler::depLookupFinished);
         break;
     case 1: // arr
-        arrStationModel_->clear();
         connect(queryHandler, &ThreadedDbHandler::foundResults, this,
                 &TimeTableHandler::arrLookupFinished);
         break;
     case 2: // via
-        viaStationModel_->clear();
         connect(queryHandler, &ThreadedDbHandler::foundResults, this,
                 &TimeTableHandler::viaLookupFinished);
         break;
@@ -72,23 +87,27 @@ void TimeTableHandler::startQuery(const QString &compare, const int type)
 
 void TimeTableHandler::setStation(int index, int type)
 {
-    qDebug() << "setStation" << type << index;
-    // TODO either use dynamic_cast or use templated model
     switch(type) {
     case 0:
-        depStation_ = dynamic_cast<LocationItem*>(depStationModel_->at(index));
+        depStation_ = depStationModel_->at(index);
         qDebug() << depStation_->stationName();
         break;
     case 1:
-        arrStation_ = dynamic_cast<LocationItem*>(arrStationModel_->at(index));
+        arrStation_ = arrStationModel_->at(index);
         break;
     case 2:
-        viaStation_ = dynamic_cast<LocationItem*>(viaStationModel_->at(index));
+        viaStation_ = viaStationModel_->at(index);
         break;
     default:
         qDebug() << "Unsupported type" << type;
         break;
     }
+}
+
+void TimeTableHandler::modelConnectionSteps(int index)
+{
+    ConnectionItem* conn = connections_->at(index);
+    connectionSteps_->replaceData(conn->getConnectionSteps());
 }
 
 void TimeTableHandler::lookupConnection()
@@ -101,17 +120,17 @@ void TimeTableHandler::lookupConnection()
 
 void TimeTableHandler::depLookupFinished(StationListType items)
 {
-    depStationModel_->appendRows(items);
+    depStationModel_->replaceData(items);
 }
 
 void TimeTableHandler::arrLookupFinished(StationListType items)
 {
-    arrStationModel_->appendRows(items);
+    arrStationModel_->replaceData(items);
 }
 
 void TimeTableHandler::viaLookupFinished(StationListType items)
 {
-    viaStationModel_->appendRows(items);
+    viaStationModel_->replaceData(items);
 }
 
 void TimeTableHandler::connectionLookedUp(eStatusID id)
@@ -135,9 +154,7 @@ void TimeTableHandler::connectionLookedUp(eStatusID id)
                 cur->setConnectionStateInfo(1);
             else
                 cur->setConnectionStateInfo(0);
-//            this->connections_->appendRow(cur);
         }
-        connections_->clear();
-        connections_->appendRows(connections);
+        connections_->replaceData(connections);
     }
 }

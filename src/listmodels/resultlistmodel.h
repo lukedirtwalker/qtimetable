@@ -19,6 +19,7 @@ public:
     void insertRow(int row, ItemType *item);
     bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    void replaceData(const QList<ItemType*> &newData);
     bool isEmpty();
     ItemType* takeRow(int row);
     ItemType* find(const QString &id) const;
