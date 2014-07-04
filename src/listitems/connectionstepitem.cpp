@@ -33,9 +33,12 @@ ConnectionStepItem::ConnectionStepItem(QDomNode domConnectionStep, QDateTime dat
 
 ConnectionStepItem::~ConnectionStepItem()
 {
-    delete this->mDeparture;
-    delete this->mArrival;
-    delete this->mJourney;
+    if(mDeparture)
+        delete this->mDeparture;
+    if(mArrival)
+        delete this->mArrival;
+    if(mJourney)
+        delete this->mJourney;
 }
 
 QVariant ConnectionStepItem::data(int role) const

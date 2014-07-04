@@ -8,7 +8,8 @@ class ConnectionStepItem : public ListItem
 {
     Q_OBJECT
 public:
-    ConnectionStepItem(QObject *parent = 0) : ListItem(parent){}
+    ConnectionStepItem(QObject *parent = 0) : ListItem(parent),
+    mDeparture{nullptr}, mArrival{nullptr}, mJourney{nullptr} {}
     ConnectionStepItem(QDomNode domConnectionStep, QDateTime date, QObject *parent =0);
     ~ConnectionStepItem();
 
