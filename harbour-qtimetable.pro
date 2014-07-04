@@ -65,7 +65,9 @@ OTHER_FILES += qml/qtimetable.qml \
     qml/components/DeletableTextField.qml \
     qml/pages/ConnectionOverview.qml \
     qml/components/ConnectionOverviewItem.qml \
-    qml/components/ConnectionOverviewHeader.qml
+    qml/components/ConnectionOverviewHeader.qml \
+    qml/pages/ConnectionStep.qml \
+    qml/components/ConnectionStepItem.qml
 HEADERS += \
     src/listitems/locationitem.h \
     src/listmodels/resultlistmodel.h \

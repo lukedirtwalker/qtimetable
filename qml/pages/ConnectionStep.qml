@@ -3,9 +3,9 @@ import Sailfish.Silica 1.0
 import "../components"
 
 Page {
-    id: connectionsPage
+    id: connectionStepPage
 
-    property alias model: searchSuggestionList.model
+    property alias model: connectionSteps.model
     property alias from: overviewHeader.fromStationText
     property alias to: overviewHeader.toStationText
     property alias date: overviewHeader.date
@@ -13,11 +13,11 @@ Page {
 
     Column {
         id: column
-        width: connectionsPage.width
+        width: connectionStepPage.width
         spacing: Theme.paddingSmall
 
         PageHeader {
-            title: qsTr("Overview")
+            title: qsTr("Detail")
         }
 
         ConnectionOverviewHeader {
@@ -39,24 +39,19 @@ Page {
                 spacing: Theme.paddingMedium
                 Label{
                     id: depTimeLabel
-                    width: parent.width / 4
-                    text: qsTr("Dep")
+                    width: parent.width * 0.25
+                    text: qsTr("Time")
                 }
 
                 Label{
                     id: arrTimeLabel
-                    width: parent.width / 4
-                    text: qsTr("Arr")
+                    width: parent.width * 0.25
+                    text: qsTr("Pl.")
                 }
                 Label{
                     id: durTimeLabel
-                    width: parent.width / 4
-                    text: qsTr("Dur")
-                }
-                Label{
-                    id: chgLabel
-                    width: parent.width / 4
-                    text: qsTr("Chg")
+                    width: parent.width * 0.5
+                    text: qsTr("Stop / Remark")
                 }
             }
 
@@ -74,7 +69,7 @@ Page {
         }
     }
     SilicaListView {
-        id: searchSuggestionList
+        id: connectionSteps
         anchors {
             left: parent.left
             right: parent.right
@@ -82,16 +77,6 @@ Page {
             bottom: parent.bottom
         }
 
-        delegate: ConnectionOverviewItem {
-            onSelected: {
-                timeTableHandler.modelConnectionSteps(index)
-                pageStack.push(Qt.resolvedUrl("ConnectionStep.qml"),
-                               {"model" : connectionStepModel,
-                                   "from" : overviewHeader.fromStationText,
-                                   "to" : overviewHeader.toStationText,
-                                   "time" : Qt.formatDateTime(dep, "hh:mm"),
-                                   "date" : Qt.formatDateTime(dep, "dd.MM")})
-            }
-        }
+        delegate: ConnectionStepItem {}
     }
 }

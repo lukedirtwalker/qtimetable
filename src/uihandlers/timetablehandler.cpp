@@ -22,7 +22,7 @@ TimeTableHandler::TimeTableHandler(QQmlContext *ctxt,
     qmlContext_->setContextProperty("connectionModel", connections_);
 
     connectionSteps_ = new ConnectionStepModel();
-    qmlContext_->setContextProperty("connectionStepsModel", connectionSteps_);
+    qmlContext_->setContextProperty("connectionStepModel", connectionSteps_);
 
     connHandler_ = new SBBConnectionHandler();
     connect(connHandler_, &SBBConnectionHandler::parsingFinished,
