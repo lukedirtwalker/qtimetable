@@ -123,7 +123,7 @@ void SBBConnectionHandler::stopConnectionSearch()
     if(state_ != H_STOPPED)
     {
         stopRequest();
-        qDeleteAll(SBBConnections_);
+        // Do not delete the connections here ownership is transfered to model
         SBBConnections_.clear();
         state_ = H_STOPPED;
     }
