@@ -11,6 +11,10 @@ Page {
     property alias date: overviewHeader.date
     property alias time: overviewHeader.time
 
+    Component.onDestruction : {
+        searchSuggestionList.model.clear()
+    }
+
     Column {
         id: column
         width: connectionsPage.width
@@ -85,7 +89,6 @@ Page {
         delegate: ConnectionOverviewItem {
             id: overviewItem
             onSelected: {
-//                timeTableHandler.modelConnectionSteps(index)
                 pageStack.push(Qt.resolvedUrl("ConnectionStep.qml"),
                                {"model" : searchSuggestionList.model.getConnectionSteps(index),
                                    "from" : overviewHeader.fromStationText,
