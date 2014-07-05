@@ -1,20 +1,11 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Item {
+BackgroundItem {
     id: connOverviewItem
 
     width: parent.width
     height: Theme.itemSizeSmall
-
-    signal selected
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            connOverviewItem.selected()
-        }
-    }
 
     Label{
         id: depTimeLabel

@@ -88,7 +88,7 @@ Page {
 
         delegate: ConnectionOverviewItem {
             id: overviewItem
-            onSelected: {
+            onClicked: {
                 pageStack.push(Qt.resolvedUrl("ConnectionStep.qml"),
                                {"model" : searchSuggestionList.model.getConnectionSteps(index),
                                    "from" : overviewHeader.fromStationText,

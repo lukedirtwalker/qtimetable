@@ -44,7 +44,7 @@ Dialog {
 
         delegate: SearchListItem {
             text: stationName
-            onSelected: {
+            onClicked: {
                 timeTableHandler.setStation(index, type)
                 selectedText = stationName
                 searchDialog.canAccept = true
