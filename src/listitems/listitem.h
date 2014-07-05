@@ -9,7 +9,7 @@ class ListItem: public QObject {
 public:
   ListItem(QObject* parent = 0) : QObject(parent) {}
   virtual ~ListItem() {}
-  virtual QString getId() const = 0;
+  virtual QString getId() const {return QString();}
   virtual QVariant data(int role) const = 0;
   virtual QHash<int, QByteArray> roleNames() const = 0;
 };

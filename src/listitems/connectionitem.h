@@ -14,28 +14,16 @@ class ConnectionItem : public ListItem
 {
     Q_OBJECT
 public:
-    ConnectionItem(QObject *parent = 0) : ListItem(parent) {}
+    ConnectionItem(QObject *parent = nullptr) : ListItem(parent) {}
     ConnectionItem(QDomNode domConnection);
     ~ConnectionItem();
 
-    ConnectionStepModel *getConnectionSteps();
-    QVector<eConnectionStateInformation> getConnectionStateInformations();
-    void setConnectionStateInfo(int info);
-    bool hasConnectionStateInformation();
-
     virtual QVariant data(int role) const;
     virtual QHash<int, QByteArray> roleNames() const;
-    virtual QString getId() const;
 
-    QDateTime getDepartureTime() const;
-    QDateTime getArrivalTime() const;
-    QString getDuration() const;
-    QString getPlatform() const;
-    int getConnectionStateInfo() const;
-    int getNumberOfChanges() const;
-    int getUtilisationFirst() const;
-    int getUtilisationSecond() const;
-    bool hasChangedDeparturePlatform() const;
+    inline ConnectionStepModel *getConnectionSteps() const;
+    inline void setConnectionStateInfo(int info);
+    inline bool hasConnectionStateInformation() const;
 
     enum Roles{
         DepRole=Qt::UserRole+1,
@@ -52,25 +40,34 @@ public:
 private:
     void createOverview();
 
-    bool mHasChangedDeparturePlatform;
-    bool mHasIrregularServiceDays;
-    bool mHasCSInformation;
-    QString mPlatform;
-    QString mServiceDays;
-    QString mId;
-    QDateTime mDate;
-    QDateTime mDepartureTime;
-    QDateTime mArrivalTime;
-    Duration mDuration;
-    int mNrChanges;
-    int mUtilisationFirst;
-    int mUtilisationSecond;
+    bool hasChangedDeparturePlatform_;
+    bool hasIrregularServiceDays_;
+    bool hasCSInformation_;
+    QString platform_;
+    QString serviceDays_;
+    QString id_;
+    QDateTime date_;
+    QDateTime departureTime_;
+    QDateTime arrivalTime_;
+    Duration duration_;
+    int nrChanges_;
+    int utilisationFirst_;
+    int utilisationSecond_;
 
-    QVector<QString> mConnectionVehicles;
-    QVector<eConnectionStateInformation> mConnectionStateInformations;
-    ConnectionStepModel *mConnectionSteps;
+    QVector<QString> connectionVehicles_;
+    QVector<eConnectionStateInformation> connectionStateInformations_;
+    ConnectionStepModel *connectionSteps_;
 
-    int mConnectionStateInfo;
+    int connectionStateInfo_;
 };
+
+inline ConnectionStepModel *ConnectionItem::getConnectionSteps() const
+{ return connectionSteps_;}
+
+inline bool ConnectionItem::hasConnectionStateInformation() const
+{ return hasCSInformation_;}
+
+inline void ConnectionItem::setConnectionStateInfo(int info)
+{ connectionStateInfo_ = info;}
 
 #endif // CONNECTIONITEMNEW_H

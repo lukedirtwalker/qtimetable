@@ -20,21 +20,20 @@ public:
     virtual QVariant data(int role) const;
     virtual QHash<int, QByteArray> roleNames() const;
 
-
-    QString getPlatform() const;
-    int getUtilisationFirst() const;
-    int getUtilisationSecond() const;
     double getLatitude() const;
     double getLongitude() const;
-    QString getDelay() const;
-    QString getName() const;
-
     QString getExternalId() const;
-    inline QDateTime getTime() const;
-    bool hasDelay();
-    bool hasChangedPlatform();
 
-    void setDateTime(QDateTime t);
+    inline QString getPlatform() const;
+    inline int getUtilisationFirst() const;
+    inline int getUtilisationSecond() const;
+    inline QString getDelay() const;
+    inline QString getName() const;
+    inline QDateTime getTime() const;
+    inline bool hasDelay() const;
+    inline bool hasChangedPlatform() const;
+
+    inline void setDateTime(QDateTime t);
 
     enum Roles{StationRole=Qt::UserRole+1,
                PlatformRole,
@@ -69,5 +68,21 @@ private:
 };
 
 inline QDateTime StopItem::getTime() const { return time_;}
+
+inline QString StopItem::getPlatform() const { return platform_;}
+
+inline int StopItem::getUtilisationFirst() const { return utilisationFirst_;}
+
+inline int StopItem::getUtilisationSecond() const { return utilisationSecond_;}
+
+inline QString StopItem::getDelay() const { return delay_.toString();}
+
+inline QString StopItem::getName() const { return location_->getName();}
+
+inline bool StopItem::hasDelay() const { return hasDelay_;}
+
+inline bool StopItem::hasChangedPlatform() const { return hasChangedPlatform_;}
+
+inline void StopItem::setDateTime(QDateTime t) { time_ = t;}
 
 #endif // STOP_H

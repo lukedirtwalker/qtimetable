@@ -186,21 +186,6 @@ QHash<int, QByteArray> StopItem::roleNames() const
     return names;
 }
 
-QString StopItem::getPlatform() const
-{
-    return platform_;
-}
-
-int StopItem::getUtilisationFirst() const
-{
-    return utilisationFirst_;
-}
-
-int StopItem::getUtilisationSecond() const
-{
-    return utilisationSecond_;
-}
-
 double StopItem::getLatitude() const
 {
     auto type = location_->getType();
@@ -221,34 +206,9 @@ double StopItem::getLongitude() const
     return 0;
 }
 
-QString StopItem::getDelay() const
-{
-    return delay_.toString();
-}
-
-QString StopItem::getName() const
-{
-    return location_->getName();
-}
-
 QString StopItem::getExternalId() const
 {
     if(STATION == location_->getType())
         return static_cast<Station*>(location_)->getExternalID();
     return QString();
-}
-
-bool StopItem::hasDelay()
-{
-    return hasDelay_;
-}
-
-bool StopItem::hasChangedPlatform()
-{
-    return hasChangedPlatform_;
-}
-
-void StopItem::setDateTime(QDateTime t)
-{
-    time_ = t;
 }
