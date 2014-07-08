@@ -9,9 +9,6 @@ public:
     SBBQueryContainer();
 
     virtual QDomElement toXML(QDomDocument &query);
-
-private:
-    virtual void initXMLFields();
 };
 
 #endif // SBBQUERYCONTAINER_H
