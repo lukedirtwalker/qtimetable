@@ -26,6 +26,8 @@ BackgroundItem {
                 width: parent.width / 4
                 text: HasDepDelay ? Qt.formatTime(DepTime,"hh:mm") + "+" + DepDelay : Qt.formatTime(DepTime,"hh:mm")
 //                color: theme.inverted ? (HasDepDelay ? "red" : "white") : (HasDepDelay ? "red" : "black")
+                color: connStepItem.highlighted ?
+                           Theme.highlightColor : Theme.primaryColor
             }
 
             Label{
@@ -33,6 +35,8 @@ BackgroundItem {
                 width: parent.width / 4
                 text: DepPlatform
 //                color: theme.inverted ? (HasChangedDepPlatform ? "red" : "white") : (HasChangedDepPlatform ? "red" : "black")
+                color: connStepItem.highlighted ?
+                           Theme.highlightColor : Theme.primaryColor
             }
 
             Label{
@@ -41,6 +45,8 @@ BackgroundItem {
                 text: DepStation
                 elide: Text.ElideRight
                 maximumLineCount: 2
+                color: connStepItem.highlighted ?
+                           Theme.highlightColor : Theme.primaryColor
             }
         }
 
@@ -130,6 +136,8 @@ BackgroundItem {
                 width: parent.width / 4
                 text: HasArrDelay ? Qt.formatTime(ArrTime,"hh:mm") + "+" + ArrDelay : Qt.formatTime(ArrTime,"hh:mm")
 //                color: theme.inverted ? (HasArrDelay ? "red" : "white") : (HasArrDelay ? "red" : "black")
+                color: connStepItem.highlighted ?
+                           Theme.highlightColor : Theme.primaryColor
             }
 
             Label{
@@ -137,6 +145,8 @@ BackgroundItem {
                 width: parent.width / 4
                 text: ArrPlatform
 //                color: theme.inverted ? (HasChangedArrPlatform ? "red" : "white") : (HasChangedArrPlatform ? "red" : "black")
+                color: connStepItem.highlighted ?
+                           Theme.highlightColor : Theme.primaryColor
             }
             Label{
                 id: arrStopLabel
@@ -144,6 +154,8 @@ BackgroundItem {
                 text: ArrStation
                 elide: Text.ElideRight
                 maximumLineCount: 2
+                color: connStepItem.highlighted ?
+                           Theme.highlightColor : Theme.primaryColor
             }
         }
 

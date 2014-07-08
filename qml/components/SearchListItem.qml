@@ -13,5 +13,7 @@ BackgroundItem {
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: Theme.paddingLarge
+        color: searchListItem.highlighted ?
+                   Theme.highlightColor : Theme.primaryColor
     }
 }

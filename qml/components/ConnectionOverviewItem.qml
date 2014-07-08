@@ -14,6 +14,8 @@ BackgroundItem {
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width / 4
         text: Qt.formatTime(dep,"hh:mm") // TODO change depending on locale
+        color: connOverviewItem.highlighted ?
+                   Theme.highlightColor : Theme.primaryColor
     }
 
     Label{
@@ -23,6 +25,8 @@ BackgroundItem {
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width / 4
         text: Qt.formatTime(arr,"hh:mm"); // TODO change depending on locale
+        color: connOverviewItem.highlighted ?
+                   Theme.highlightColor : Theme.primaryColor
     }
     Label{
         id: durTimeLabel
@@ -31,6 +35,8 @@ BackgroundItem {
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width / 4
         text: dur
+        color: connOverviewItem.highlighted ?
+                   Theme.highlightColor : Theme.primaryColor
     }
     Label{
         id: chgLabel
@@ -39,6 +45,8 @@ BackgroundItem {
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width / 4
         text: chg
+        color: connOverviewItem.highlighted ?
+                   Theme.highlightColor : Theme.primaryColor
     }
 
     //        Item{
