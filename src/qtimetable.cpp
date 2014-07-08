@@ -71,9 +71,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    TimeTableHandler *timeTableHandler = new TimeTableHandler(view->rootContext(), dbHandler);
+    TimeTableHandler timeTableHandler(view->rootContext(), dbHandler);
 
-    view->rootContext()->setContextProperty("timeTableHandler", timeTableHandler);
+    view->rootContext()->setContextProperty("timeTableHandler", &timeTableHandler);
 
     view->setSource(SailfishApp::pathTo("qml/qtimetable.qml"));
     view->showFullScreen();

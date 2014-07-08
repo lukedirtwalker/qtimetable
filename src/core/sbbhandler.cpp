@@ -6,8 +6,8 @@
 
 #include "../net/sbbrequest.h"
 
-SBBHandler::SBBHandler() : pendingRequest_{nullptr}, state_{H_STOPPED}
-{}
+SBBHandler::SBBHandler(QObject *parent) : QObject(parent),
+    pendingRequest_{nullptr}, state_{H_STOPPED} {}
 
 void SBBHandler::parseResponse()
 {

@@ -12,7 +12,7 @@ class SBBHandler : public QObject
 {
     Q_OBJECT
 public:
-    SBBHandler();
+    SBBHandler(QObject *parent = nullptr);
 
     inline QString getErrorMessage();
 

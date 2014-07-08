@@ -9,39 +9,32 @@ TimeTableHandler::TimeTableHandler(QQmlContext *ctxt,
     : QObject(parent), qmlContext_(ctxt), dbHandler_(dbHandler),
       depStation_{}, arrStation_{}, viaStation_{}, arrival_{false}
 {
-    timeHandler_ = new TimeHandler();
+    timeHandler_ = new TimeHandler(this);
     qmlContext_->setContextProperty("timeHandler", timeHandler_);
 
-    depStationModel_ = new StationListModel();
-    arrStationModel_ = new StationListModel();
-    viaStationModel_ = new StationListModel();
+    depStationModel_ = new StationListModel(this);
+    arrStationModel_ = new StationListModel(this);
+    viaStationModel_ = new StationListModel(this);
 
     qmlContext_->setContextProperty("depStationModel", depStationModel_);
     qmlContext_->setContextProperty("arrStationModel", arrStationModel_);
     qmlContext_->setContextProperty("viaStationModel", viaStationModel_);
 
-    connections_ = new ConnectionListModel();
+    connections_ = new ConnectionListModel(this);
 
     qmlContext_->setContextProperty("connectionModel", connections_);
 
-    connHandler_ = new SBBConnectionHandler();
+    connHandler_ = new SBBConnectionHandler(this);
     connect(connHandler_, &SBBConnectionHandler::parsingFinished,
             this, &TimeTableHandler::connectionLookedUp);
 }
 
 TimeTableHandler::~TimeTableHandler()
 {
-    delete timeHandler_;
-
     depStationModel_->clear();
     arrStationModel_->clear();
     viaStationModel_->clear();
     connections_->clear();
-
-    delete depStationModel_;
-    delete arrStationModel_;
-    delete viaStationModel_;
-    delete connections_;
 }
 
 void TimeTableHandler::startQuery(const QString &compare, const int type)

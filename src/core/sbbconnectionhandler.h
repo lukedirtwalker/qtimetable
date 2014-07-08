@@ -10,7 +10,7 @@ class SBBConnectionHandler : public SBBHandler
 {
     Q_OBJECT
 public:
-    SBBConnectionHandler() : SBBHandler() {}
+    SBBConnectionHandler(QObject *parent = nullptr) : SBBHandler(parent) {}
 
     void startConnectionSearch(LocationItem *depStation, LocationItem *arrStation, QDateTime d, bool isArrival);
 

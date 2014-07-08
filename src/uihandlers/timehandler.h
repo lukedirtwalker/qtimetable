@@ -8,7 +8,7 @@ class TimeHandler : public QObject
 {
     Q_OBJECT
 public:
-    TimeHandler(QObject *parent = 0);
+    TimeHandler(QObject *parent = nullptr);
     Q_INVOKABLE void updateTime();
     Q_INVOKABLE QDate getCurrentDate() const;
     Q_INVOKABLE QTime getCurrentTime() const;
