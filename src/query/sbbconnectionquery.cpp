@@ -1,86 +1,54 @@
 #include "sbbconnectionquery.h"
 
-SBBConnectionQuery::SBBConnectionQuery()
-{
-    this->initXMLFields();
-    this->mHasVia = false;
-    this->mStart = NULL;
-    this->mDestination = NULL;
-    this->mVia = NULL;
-    this->mDate = NULL;
-    this->mFlags = NULL;
-}
+SBBConnectionQuery::SBBConnectionQuery(Serializable *start, Serializable *dest,
+                                       Serializable *date, Serializable *flags,
+                                       Serializable *via)
+    : SBBQuery("ConReq"), start_(start), destination_(dest), via_(via),
+      date_(date), flags_(flags) {}
 
 SBBConnectionQuery::~SBBConnectionQuery()
 {
-    delete this->mStart;
-    delete this->mDestination;
-    if(this->mVia)
-        delete this->mVia;
-    delete this->mDate;
-    delete this->mFlags;
-}
-
-SBBConnectionQuery::SBBConnectionQuery(Serializable *start, Serializable *dest, Serializable *via, Serializable *date, Serializable *flags)
-{
-    this->initXMLFields();
-    this->mStart = start;
-    this->mDestination = dest;
-    this->mVia = via;
-    this->mHasVia = true;
-    this->mDate = date;
-    this->mFlags = flags;
-}
-
-SBBConnectionQuery::SBBConnectionQuery(Serializable *start, Serializable *dest, Serializable *date, Serializable *flags)
-{
-    this->initXMLFields();
-    this->mStart = start;
-    this->mDestination = dest;
-    this->mVia = NULL;
-    this->mHasVia = false;
-    this->mDate = date;
-    this->mFlags = flags;
+    delete start_;
+    delete destination_;
+    if(via_)
+        delete via_;
+    delete date_;
+    delete flags_;
 }
 
 QDomElement SBBConnectionQuery::getProdElement()
 {
-    QDomElement prod = this->createElement("Prod");
+    QDomElement prod = createElement("Prod");
     prod.setAttribute("prod","1111111111000000");
     return prod;
 }
 
 QDomDocument SBBConnectionQuery::toXML()
 {
-    this->clear();
+    clear();
     QDomElement reqC = queryContainer_.toXML(*this);
-    QDomElement conReq = this->createElement(domStaticElementName_);
+    QDomElement conReq = createElement(domStaticElementName_);
 
-    QDomElement start = this->createElement("Start");
-    start.appendChild(this->mStart->toXML(*this));
-    start.appendChild(this->getProdElement());
+    QDomElement start = createElement("Start");
+    start.appendChild(start_->toXML(*this));
+    start.appendChild(getProdElement());
     conReq.appendChild(start);
 
-    QDomElement destination = this->createElement("Dest");
-    destination.appendChild(this->mDestination->toXML(*this));
+    QDomElement destination = createElement("Dest");
+    destination.appendChild(destination_->toXML(*this));
     conReq.appendChild(destination);
 
-    if(this->mHasVia)
+    if(via_)
     {
-        QDomElement via = this->createElement("Via");
-        via.appendChild(this->mVia->toXML(*this));
-        via.appendChild(this->getProdElement());
+        QDomElement via = createElement("Via");
+        via.appendChild(via_->toXML(*this));
+        via.appendChild(getProdElement());
         conReq.appendChild(via);
     }
 
-    conReq.appendChild(this->mDate->toXML(*this));
-    conReq.appendChild(this->mFlags->toXML(*this));
+    conReq.appendChild(date_->toXML(*this));
+    conReq.appendChild(flags_->toXML(*this));
     reqC.appendChild(conReq);
-    this->appendChild(reqC);
+    appendChild(reqC);
     return *this;
-}
-
-void SBBConnectionQuery::initXMLFields()
-{
-    domStaticElementName_ = "ConReq";
 }

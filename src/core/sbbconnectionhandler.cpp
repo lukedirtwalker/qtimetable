@@ -91,7 +91,7 @@ void SBBConnectionHandler::startConnectionSearch(LocationItem *depStation,
     DomFlags *flags = isArrival ? new DomFlags(B) : new DomFlags(F);
 
     SBBConnectionQuery *q =
-            new SBBConnectionQuery(start, dest, via, date, flags);
+            new SBBConnectionQuery(start, dest, date, flags, via);
     sendRequest(new SBBRequest(q,"application/xml", this));
     state_ = H_STARTED;
 }
@@ -123,7 +123,10 @@ void SBBConnectionHandler::stopConnectionSearch()
     if(state_ != H_STOPPED)
     {
         stopRequest();
-        // Do not delete the connections here ownership is transfered to model
+        // Only delete the connections here if ownership is not yet
+        // transfered to model.
+        if(H_STARTED == state_)
+            qDeleteAll(SBBConnections_);
         SBBConnections_.clear();
         state_ = H_STOPPED;
     }

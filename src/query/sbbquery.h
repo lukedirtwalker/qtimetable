@@ -8,7 +8,8 @@
 class SBBQuery : public QDomDocument, public Serializable
 {
 public:
-    SBBQuery() : QDomDocument() {}
+    SBBQuery(QString domElemName = "") : QDomDocument(),
+        Serializable(domElemName) {}
     virtual ~SBBQuery() {}
 
     virtual QDomDocument toXML();
