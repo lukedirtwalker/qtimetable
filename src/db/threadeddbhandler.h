@@ -6,7 +6,7 @@
 class LocationItem;
 
 template<class T>
-static bool dereferencedLessThan(T * o1, T * o2) {
+static bool dereferencedLessThan(QSharedPointer<T> o1, QSharedPointer<T> o2) {
     return *o1 < *o2;
 }
 
@@ -23,12 +23,12 @@ public slots:
 
 signals:
     void finished();
-    void foundResults(const QList<LocationItem*> items);
+    void foundResults(const QList<QSharedPointer<LocationItem> > items);
 
 private:
     QSqlQuery *q_;
     QString comp_;
-    QList<LocationItem*> items_;
+    QList<QSharedPointer<LocationItem> > items_;
 
     //db queries
     int queryCityName(const QString &query,bool searchMiddle,int numResults);

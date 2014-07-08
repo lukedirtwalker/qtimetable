@@ -43,7 +43,7 @@ private:
     DatabaseHandler *dbHandler_;
 
     StationListModel *depStationModel_, *arrStationModel_, *viaStationModel_;
-    LocationItem *depStation_, *arrStation_, *viaStation_;
+    QSharedPointer<LocationItem> depStation_, arrStation_, viaStation_;
 
     ConnectionListModel *connections_;
 

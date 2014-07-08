@@ -4,6 +4,7 @@
 #include <QAbstractListModel>
 #include <QList>
 #include <QVariant>
+#include <QSharedPointer>
 
 template <class ItemType>  class ResultListModel : public QAbstractListModel
 {
@@ -14,22 +15,22 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QHash<int, QByteArray> roleNames() const;
-    void appendRow(ItemType* item);
-    void appendRows(const QList<ItemType*> &items);
-    void insertRow(int row, ItemType *item);
+    void appendRow(QSharedPointer<ItemType>  item);
+    void appendRows(const QList<QSharedPointer<ItemType> > &items);
+    void insertRow(int row, QSharedPointer<ItemType> item);
     bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
-    void replaceData(const QList<ItemType*> &newData);
+    void replaceData(const QList<QSharedPointer<ItemType> > &newData);
     bool isEmpty();
-    ItemType* takeRow(int row);
-    ItemType* find(const QString &id) const;
-    ItemType* at(int index);
-    QModelIndex indexFromItem(const ItemType *item) const;
+    QSharedPointer<ItemType> takeRow(int row);
+    QSharedPointer<ItemType> find(const QString &id) const;
+    QSharedPointer<ItemType> at(int index);
+    QModelIndex indexFromItem(const QSharedPointer<ItemType> item) const;
     void clear();
 
 private:
     ItemType* prototype_;
-    QList<ItemType*> dataList_;
+    QList<QSharedPointer<ItemType> > dataList_;
 
 };
 

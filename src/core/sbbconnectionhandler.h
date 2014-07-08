@@ -12,16 +12,20 @@ class SBBConnectionHandler : public SBBHandler
 public:
     SBBConnectionHandler(QObject *parent = nullptr) : SBBHandler(parent) {}
 
-    void startConnectionSearch(LocationItem *depStation, LocationItem *arrStation, QDateTime d, bool isArrival);
+    void startConnectionSearch(QSharedPointer<LocationItem> depStation,
+                               QSharedPointer<LocationItem> arrStation,
+                               QDateTime d, bool isArrival);
 
-    void startConnectionSearch(LocationItem *depStation, LocationItem *arrStation, LocationItem* viaStation,
+    void startConnectionSearch(QSharedPointer<LocationItem> depStation,
+                               QSharedPointer<LocationItem> arrStation,
+                               QSharedPointer<LocationItem> viaStation,
                                QDateTime d, bool isArrival);
 
     void searchEarlier();
     void searchLater();
     void stopConnectionSearch();
 
-    inline QList<ConnectionItem*> getAvailableConnections();
+    inline QList<QSharedPointer<ConnectionItem> > getAvailableConnections();
 
 public slots:
     virtual void parseXMLResponse(QDomDocument xml);
@@ -30,10 +34,10 @@ public slots:
 
 private:
     QString searchContext_;
-    QList<ConnectionItem*> SBBConnections_;
+    QList<QSharedPointer<ConnectionItem> > SBBConnections_;
 };
 
-inline QList<ConnectionItem*> SBBConnectionHandler::getAvailableConnections()
+inline QList<QSharedPointer<ConnectionItem> > SBBConnectionHandler::getAvailableConnections()
 { return SBBConnections_;}
 
 #endif // SBBCONNECTIONHANDLER_H

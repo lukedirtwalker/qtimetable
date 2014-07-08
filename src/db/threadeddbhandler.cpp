@@ -77,7 +77,11 @@ int ThreadedDbHandler::queryCityName(const QString &query, bool searchMiddle, in
     {
         if(q_->next())
         {
-            items_.append(new LocationItem(q_->value(0).toInt(),q_->value(1).toInt(),q_->value(2).toString(),"","",q_->value(3).toBool()));
+            items_.append(QSharedPointer<LocationItem>
+                          (new LocationItem(q_->value(0).toInt(),
+                                            q_->value(1).toInt(),
+                                            q_->value(2).toString(),"","",
+                                            q_->value(3).toBool())));
         }
         else
             break;
@@ -114,7 +118,11 @@ int ThreadedDbHandler::queryStationName(const QString &query, bool searchMiddle,
     {
         if(q_->next())
         {
-            items_.append(new LocationItem(q_->value(0).toInt(),q_->value(1).toInt(),q_->value(2).toString(),"","",q_->value(3).toBool()));
+            items_.append(QSharedPointer<LocationItem>
+                          (new LocationItem(q_->value(0).toInt(),
+                                            q_->value(1).toInt(),
+                                            q_->value(2).toString(),"","",
+                                            q_->value(3).toBool())));
         }
         else
             break;

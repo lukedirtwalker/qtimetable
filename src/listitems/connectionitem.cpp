@@ -66,7 +66,7 @@ ConnectionItem::ConnectionItem(QDomNode domConnection) : ListItem()
 
     QDomNodeList domConnectionSteps = domConnection.toElement().elementsByTagName("ConSection");
     for(auto conStep : domConnectionSteps)
-        connectionSteps_->appendRow(new ConnectionStepItem(conStep,date_));
+        connectionSteps_->appendRow(QSharedPointer<ConnectionStepItem>(new ConnectionStepItem(conStep,date_)));
 
     createOverview();
 }
@@ -116,7 +116,7 @@ void ConnectionItem::createOverview()
     int count = connectionSteps_->rowCount();
     for(int i = 0; i < count; ++i)
     {
-        ConnectionStepItem *cur = connectionSteps_->at(i);
+        auto cur = connectionSteps_->at(i);
         maxFirst = qMax(maxFirst,cur->getUtilisationFirst());
         maxSecond = qMax(maxSecond,cur->getUtilisationSecond());
     }
@@ -124,7 +124,7 @@ void ConnectionItem::createOverview()
     utilisationSecond_ = maxSecond;
 
     bool start = true;
-    ConnectionStepItem *cur = connectionSteps_->at(0);
+    auto cur = connectionSteps_->at(0);
     for(int i = 0; i < count; ++i)
     {
         cur = connectionSteps_->at(i);
@@ -135,7 +135,7 @@ void ConnectionItem::createOverview()
         else
             start = false;
     }
-    ConnectionStepItem *tmp = cur;
+    auto tmp = cur;
     platform_ = tmp->getDepPlatform();
     hasChangedDeparturePlatform_ = tmp->hasChangedDeparturePlatform();
     departureTime_ = tmp->getDepTime();

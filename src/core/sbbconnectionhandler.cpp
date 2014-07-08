@@ -14,9 +14,10 @@
 
 #include "../util/qdomnodeiterator.h"
 
-void SBBConnectionHandler::startConnectionSearch(LocationItem *depStation,
-                                                 LocationItem *arrStation,
-                                                 QDateTime d, bool isArrival)
+void SBBConnectionHandler::startConnectionSearch(
+        QSharedPointer<LocationItem> depStation,
+        QSharedPointer<LocationItem> arrStation,
+        QDateTime d, bool isArrival)
 {
     searchContext_ = "";
 
@@ -50,10 +51,11 @@ void SBBConnectionHandler::startConnectionSearch(LocationItem *depStation,
     state_ = H_STARTED;
 }
 
-void SBBConnectionHandler::startConnectionSearch(LocationItem *depStation,
-                                                 LocationItem *arrStation,
-                                                 LocationItem* viaStation,
-                                                 QDateTime d, bool isArrival)
+void SBBConnectionHandler::startConnectionSearch(
+        QSharedPointer<LocationItem> depStation,
+        QSharedPointer<LocationItem> arrStation,
+        QSharedPointer<LocationItem> viaStation,
+        QDateTime d, bool isArrival)
 {
     searchContext_ = "";
 
@@ -123,10 +125,6 @@ void SBBConnectionHandler::stopConnectionSearch()
     if(state_ != H_STOPPED)
     {
         stopRequest();
-        // Only delete the connections here if ownership is not yet
-        // transfered to model.
-        if(H_STARTED == state_)
-            qDeleteAll(SBBConnections_);
         SBBConnections_.clear();
         state_ = H_STOPPED;
     }
@@ -161,9 +159,10 @@ void SBBConnectionHandler::parseXMLResponse(QDomDocument xml)
         return;
     }
 
-    QList<ConnectionItem*> newSBBConnections;
+    QList<QSharedPointer<ConnectionItem> > newSBBConnections;
     for(auto con : domConnections)
-        newSBBConnections.append(new ConnectionItem(con));
+        newSBBConnections.append(
+                    QSharedPointer<ConnectionItem>(new ConnectionItem(con)));
 
     if(H_STARTED == state_)
         SBBConnections_ = newSBBConnections;

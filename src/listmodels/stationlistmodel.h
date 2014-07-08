@@ -4,7 +4,7 @@
 #include "resultlistmodel.h"
 #include "../listitems/locationitem.h"
 
-typedef QList<LocationItem*> StationListType;
+typedef QList<QSharedPointer<LocationItem> > StationListType;
 
 class StationListModel : public ResultListModel<LocationItem>
 {
