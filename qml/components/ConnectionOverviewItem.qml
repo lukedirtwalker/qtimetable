@@ -12,7 +12,7 @@ BackgroundItem {
         anchors.left: parent.left
         anchors.leftMargin: Theme.paddingLarge
         anchors.verticalCenter: parent.verticalCenter
-        width: parent.width / 4
+        width: parent.width * 0.18
         text: Qt.formatTime(dep,"hh:mm") // TODO change depending on locale
         color: connOverviewItem.highlighted ?
                    Theme.highlightColor : Theme.primaryColor
@@ -23,7 +23,7 @@ BackgroundItem {
         anchors.left: depTimeLabel.right
         anchors.leftMargin: Theme.paddingMedium
         anchors.verticalCenter: parent.verticalCenter
-        width: parent.width / 4
+        width: parent.width * 0.18
         text: Qt.formatTime(arr,"hh:mm"); // TODO change depending on locale
         color: connOverviewItem.highlighted ?
                    Theme.highlightColor : Theme.primaryColor
@@ -33,7 +33,7 @@ BackgroundItem {
         anchors.left: arrTimeLabel.right
         anchors.leftMargin: Theme.paddingMedium
         anchors.verticalCenter: parent.verticalCenter
-        width: parent.width / 4
+        width: parent.width * 0.18
         text: dur
         color: connOverviewItem.highlighted ?
                    Theme.highlightColor : Theme.primaryColor
@@ -43,8 +43,20 @@ BackgroundItem {
         anchors.left: durTimeLabel.right
         anchors.leftMargin: Theme.paddingMedium
         anchors.verticalCenter: parent.verticalCenter
-        width: parent.width / 4
+        width: parent.width * 0.18
         text: chg
+        color: connOverviewItem.highlighted ?
+                   Theme.highlightColor : Theme.primaryColor
+    }
+
+    Label{
+        id: platTimeLabel
+        anchors.left: chgLabel.right
+        anchors.leftMargin: Theme.paddingMedium
+        anchors.verticalCenter: parent.verticalCenter
+        width: parent.width * 0.18
+        text: plat
+//        color: theme.inverted ? (HasChangedDepPlatform ? "red" : "white") : (HasChangedDepPlatform ? "red" : "black")
         color: connOverviewItem.highlighted ?
                    Theme.highlightColor : Theme.primaryColor
     }

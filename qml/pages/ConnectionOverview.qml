@@ -43,24 +43,29 @@ Page {
                 spacing: Theme.paddingMedium
                 Label{
                     id: depTimeLabel
-                    width: parent.width / 4
+                    width: parent.width * 0.18
                     text: qsTr("Dep")
                 }
 
                 Label{
                     id: arrTimeLabel
-                    width: parent.width / 4
+                    width: parent.width * 0.18
                     text: qsTr("Arr")
                 }
                 Label{
                     id: durTimeLabel
-                    width: parent.width / 4
+                    width: parent.width * 0.18
                     text: qsTr("Dur")
                 }
                 Label{
                     id: chgLabel
-                    width: parent.width / 4
+                    width: parent.width * 0.18
                     text: qsTr("Chg")
+                }
+                Label {
+                    id: platLabel
+                    width: parent.width * 0.18
+                    text: qsTr("Plat.")
                 }
             }
 
