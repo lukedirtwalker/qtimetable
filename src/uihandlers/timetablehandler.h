@@ -20,7 +20,7 @@ public:
     ~TimeTableHandler();
 
     Q_INVOKABLE void startQuery(const QString &compare, const int type);
-    Q_INVOKABLE void setStation(const int index, const int type);
+    Q_INVOKABLE const QString setStation(const int index, const int type);
     Q_INVOKABLE void clearStation(const int type);
 
     Q_INVOKABLE void lookupConnection();

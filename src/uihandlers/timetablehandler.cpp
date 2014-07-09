@@ -77,22 +77,33 @@ void TimeTableHandler::startQuery(const QString &compare, const int type)
     queryThread->start();
 }
 
-void TimeTableHandler::setStation(int index, int type)
+const QString TimeTableHandler::setStation(int index, int type)
 {
     switch(type) {
     case 0:
-        depStation_ = depStationModel_->at(index);
-        qDebug() << depStation_->stationName();
-        break;
+        if(!depStationModel_->isEmpty()) {
+            depStation_ = depStationModel_->at(index);
+            return depStation_->stationName();
+        } else {
+            return QString();
+        }
     case 1:
-        arrStation_ = arrStationModel_->at(index);
-        break;
+        if(!arrStationModel_->isEmpty()) {
+            arrStation_ = arrStationModel_->at(index);
+            return arrStation_->stationName();
+        } else {
+            return QString();
+        }
     case 2:
-        viaStation_ = viaStationModel_->at(index);
-        break;
+        if(!viaStationModel_->isEmpty()) {
+            viaStation_ = viaStationModel_->at(index);
+            return viaStation_->stationName();
+        } else {
+            return QString();
+        }
     default:
         qDebug() << "Unsupported type" << type;
-        break;
+        return QString();
     }
 }
 
@@ -151,10 +162,12 @@ void TimeTableHandler::connectionLookedUp(eStatusID id)
     if(XML_ERROR_RESPONSE == id || HTML_ERROR_RESPONSE == id)
     {
         QString msg = connHandler_->getErrorMessage();
+        qDebug() << "Connection lookup error" << msg;
 //        TODO emit lookupConnectionError(msg);
     }
     else if(NO_CONNECTIONS_RESPONSE == id)
     {
+        qDebug() << "Connection lookup no connections found";
 //      TODO   emit this->noConnectionsFound();
     }
     else

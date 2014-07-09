@@ -9,15 +9,18 @@ Dialog {
     property int type
     property alias model: searchSuggestionList.model
 
+    property int selectIndex : 0;
+
     Component.onDestruction: {
         searchDialog.model.clear()
     }
 
-    // TODO it would be nicer to just select the first entry?
-    canAccept: false
-
     onOpened: {
         stationSearch.forceActiveFocus()
+    }
+
+    onAccepted: {
+        selectedText = timeTableHandler.setStation(selectIndex, type)
     }
 
     Item {
@@ -48,9 +51,7 @@ Dialog {
 
         delegate: SearchListItem {
             onClicked: {
-                timeTableHandler.setStation(index, type)
-                selectedText = stationName
-                searchDialog.canAccept = true
+                selectIndex = index;
                 searchDialog.accept()
             }
         }
