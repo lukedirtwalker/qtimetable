@@ -112,13 +112,7 @@ Page {
                 text: qsTr("Search")
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
-                    timeTableHandler.lookupConnection()
-                    pageStack.push(Qt.resolvedUrl("ConnectionOverview.qml"),
-                                   {"model" : connectionModel,
-                                       "from": fromStation.text,
-                                       "to": toStation.text,
-                                       "date": Qt.formatDate(timeHandler.getCurrentDate(), "dd.MM"),
-                                       "time": timeButton.value})
+                    tryLookup()
                 }
             }
 
@@ -144,5 +138,20 @@ Page {
         }
     }
 
+    function tryLookup() {
+        if(fromStation.text === "") {
+            return
+        }
+        if(toStation.text === "") {
+            return
+        }
 
+        timeTableHandler.lookupConnection()
+        pageStack.push(Qt.resolvedUrl("ConnectionOverview.qml"),
+                       {"model" : connectionModel,
+                           "from": fromStation.text,
+                           "to": toStation.text,
+                           "date": Qt.formatDate(timeHandler.getCurrentDate(), "dd.MM"),
+                           "time": timeButton.value})
+    }
 }
