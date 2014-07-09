@@ -80,14 +80,13 @@ int main(int argc, char *argv[])
     qDebug() << dataDir + "/" + dbFile;
     copyDb(dataDir, dbFile);
 
-    DatabaseHandler *dbHandler = new DatabaseHandler(dataDir + "/" + dbFile);
-    if(!dbHandler->openConnection())
+    if(!DatabaseHandler::getInstance().openConnection(dataDir + "/" + dbFile))
     {
         qDebug() << "DB NOT OPEN";
         return 1;
     }
 
-    TimeTableHandler timeTableHandler(view->rootContext(), dbHandler);
+    TimeTableHandler timeTableHandler(view->rootContext());
 
     view->rootContext()->setContextProperty("timeTableHandler", &timeTableHandler);
 

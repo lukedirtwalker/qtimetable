@@ -11,14 +11,18 @@
 class DatabaseHandler
 {
 public:
-    DatabaseHandler(QString dbFile);
+    static DatabaseHandler &getInstance() {
+        static DatabaseHandler inst;
+        return inst;
+    }
+
     ~DatabaseHandler();
-    bool openConnection();
+    bool openConnection(const QString &dbFile);
  //   void searchByLocation(double latitude,double longitude, ResultListModel *mdl);
 //    LocationItem *selectById(const int dbId);
 
     //favorite stations
-//    void changeFavorite(int id, bool favorite);
+    void changeFavorite(int id, bool favorite);
 
 //    void saveFavoriteConnection(LocationItem *depStation, LocationItem *arrStation, LocationItem *viaStation);
 //    void getFavoritesConnections(ResultListModel *mdl);
@@ -28,9 +32,10 @@ public:
     QSqlDatabase *getDb();
 
 private:
-    QString DB_NAME;
-    QString USER_NAME;
-    QString PASSWORD;
+    DatabaseHandler() : q_{} {}
+    DatabaseHandler(DatabaseHandler const&);
+    void operator=(DatabaseHandler const&);
+
     QSqlDatabase db_;
     QSqlQuery *q_;
 };

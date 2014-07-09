@@ -16,8 +16,7 @@ class TimeTableHandler : public QObject
 {
     Q_OBJECT
 public:
-    TimeTableHandler(QQmlContext *ctxt,
-                     DatabaseHandler *dbHandler, QObject *parent = 0);
+    TimeTableHandler(QQmlContext *ctxt, QObject *parent = 0);
     ~TimeTableHandler();
 
     Q_INVOKABLE void startQuery(const QString &compare, const int type);
@@ -39,8 +38,6 @@ private:
     QQmlContext *qmlContext_;
 
     TimeHandler *timeHandler_;
-
-    DatabaseHandler *dbHandler_;
 
     StationListModel *depStationModel_, *arrStationModel_, *viaStationModel_;
     QSharedPointer<LocationItem> depStation_, arrStation_, viaStation_;

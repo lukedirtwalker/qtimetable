@@ -4,9 +4,8 @@
 #include "../listmodels/resultlistmodel.h"
 
 
-TimeTableHandler::TimeTableHandler(QQmlContext *ctxt,
-                                   DatabaseHandler *dbHandler, QObject *parent)
-    : QObject(parent), qmlContext_(ctxt), dbHandler_(dbHandler),
+TimeTableHandler::TimeTableHandler(QQmlContext *ctxt, QObject *parent)
+    : QObject(parent), qmlContext_(ctxt),
       depStation_{}, arrStation_{}, viaStation_{}, arrival_{false}
 {
     timeHandler_ = new TimeHandler(this);
@@ -42,7 +41,7 @@ void TimeTableHandler::startQuery(const QString &compare, const int type)
     if(compare.isEmpty())
         return;
     QThread *queryThread = new QThread();
-    ThreadedDbHandler *queryHandler = new ThreadedDbHandler(dbHandler_->getDb(), compare);
+    ThreadedDbHandler *queryHandler = new ThreadedDbHandler(compare);
     connect(queryThread, &QThread::started, queryHandler,
             &ThreadedDbHandler::run);
 

@@ -1,9 +1,6 @@
 #include "databasehandler.h"
 #include <QDebug>
 
-DatabaseHandler::DatabaseHandler(QString dbFile) :
-    DB_NAME(dbFile), USER_NAME{"sbbApp"}, PASSWORD{"1234"}, q_{} {}
-
 DatabaseHandler::~DatabaseHandler()
 {
     if(q_)
@@ -14,12 +11,12 @@ DatabaseHandler::~DatabaseHandler()
 /*
     open a connection to a database
 */
-bool DatabaseHandler::openConnection()
+bool DatabaseHandler::openConnection(const QString &dbFile)
 {
     db_ = QSqlDatabase::addDatabase("QSQLITE");
-    db_.setDatabaseName(DB_NAME);
-    db_.setUserName(USER_NAME);
-    db_.setPassword(PASSWORD);
+    db_.setDatabaseName(dbFile);
+    db_.setUserName("sbbApp");
+    db_.setPassword("1234");
     if(db_.open())
     {
         qDebug() << "db opened";
@@ -81,26 +78,21 @@ bool DatabaseHandler::openConnection()
 //    return 0;
 //}
 
-//void DatabaseHandler::changeFavorite(int id, bool favorite)
-//{
-//    QString sqlQuery;
-//    if(favorite)
-//    {
-//        sqlQuery = "UPDATE stations SET favorite = 1 WHERE id = ";
-//    }
-//    else
-//    {
-//        sqlQuery = "UPDATE stations SET favorite = 0 WHERE id = ";
-//    }
-//    sqlQuery.append(QString::number(id));
-////    qDebug() << sqlQuery;
-//    q->prepare(sqlQuery);
-//    if(!q->exec())
-//    {
-//        qDebug() << "failure in DB query";
-//        qDebug() << q->lastError();
-//    }
-//}
+void DatabaseHandler::changeFavorite(int id, bool favorite)
+{
+    QString sqlQuery;
+    if(favorite)
+        sqlQuery = "UPDATE stations SET favorite = 1 WHERE id = ";
+    else
+        sqlQuery = "UPDATE stations SET favorite = 0 WHERE id = ";
+    sqlQuery.append(QString::number(id));
+    q_->prepare(sqlQuery);
+    if(!q_->exec())
+    {
+        qDebug() << "failure in DB query";
+        qDebug() << q_->lastError();
+    }
+}
 
 //void DatabaseHandler::saveFavoriteConnection(LocationItem *depStation, LocationItem *arrStation, LocationItem *viaStation)
 //{
