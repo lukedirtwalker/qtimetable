@@ -5,7 +5,8 @@
 
 #include "../util/qdomnodeiterator.h"
 
-ConnectionItem::ConnectionItem(QDomNode domConnection) : ListItem()
+ConnectionItem::ConnectionItem(QDomNode domConnection, QObject *parent)
+    : ListItem(parent)
 {
     connectionSteps_ = new ConnectionStepModel(this); // needs parent to keep ownership
 
@@ -69,12 +70,6 @@ ConnectionItem::ConnectionItem(QDomNode domConnection) : ListItem()
         connectionSteps_->appendRow(QSharedPointer<ConnectionStepItem>(new ConnectionStepItem(conStep,date_)));
 
     createOverview();
-}
-
-ConnectionItem::~ConnectionItem()
-{
-    connectionSteps_->clear();
-    delete connectionSteps_;
 }
 
 QVariant ConnectionItem::data(int role) const

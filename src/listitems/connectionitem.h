@@ -15,8 +15,7 @@ class ConnectionItem : public ListItem
     Q_OBJECT
 public:
     ConnectionItem(QObject *parent = nullptr) : ListItem(parent) {}
-    ConnectionItem(QDomNode domConnection);
-    ~ConnectionItem();
+    ConnectionItem(QDomNode domConnection, QObject *parent = nullptr);
 
     virtual QVariant data(int role) const;
     virtual QHash<int, QByteArray> roleNames() const;

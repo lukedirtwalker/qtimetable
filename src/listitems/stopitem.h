@@ -12,8 +12,8 @@ class StopItem : public ListItem
 {
     Q_OBJECT
 public:
-    StopItem(QObject *parent = 0) : ListItem(parent){}
-    StopItem(QDomNode domBasicStop,QDateTime date);
+    StopItem(QObject *parent = nullptr) : ListItem(parent) {}
+    StopItem(QDomNode domBasicStop,QDateTime date, QObject * parent = nullptr);
     ~StopItem();
 
     virtual QString getId() const;

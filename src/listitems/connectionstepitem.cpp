@@ -13,8 +13,8 @@ ConnectionStepItem::ConnectionStepItem(QDomNode domConnectionStep, QDateTime dat
     QDomNodeList domFoot = el.elementsByTagName("GisRoute");
     QDomNode domArrival = el.elementsByTagName("Arrival").at(0).toElement().elementsByTagName("BasicStop").at(0);
 
-    departure_ = new StopItem(domDeparture,date);
-    arrival_ = new StopItem(domArrival,date);
+    departure_ = new StopItem(domDeparture,date, this);
+    arrival_ = new StopItem(domArrival,date, this);
 
     if(domJourney.count())
         journey_ = new Journey(domJourney.at(0), date);
@@ -29,10 +29,6 @@ ConnectionStepItem::ConnectionStepItem(QDomNode domConnectionStep, QDateTime dat
 
 ConnectionStepItem::~ConnectionStepItem()
 {
-    if(departure_)
-        delete departure_;
-    if(arrival_)
-        delete arrival_;
     if(journey_)
         delete journey_;
 }

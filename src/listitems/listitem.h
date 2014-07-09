@@ -7,7 +7,7 @@ class ListItem: public QObject {
   Q_OBJECT
 
 public:
-  ListItem(QObject* parent = 0) : QObject(parent) {}
+  ListItem(QObject* parent = nullptr) : QObject(parent) {}
   virtual ~ListItem() {}
   virtual QString getId() const {return QString();}
   virtual QVariant data(int role) const = 0;

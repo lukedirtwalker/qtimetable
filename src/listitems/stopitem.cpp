@@ -5,8 +5,8 @@
 #include "../domin/station.h"
 #include "../domin/address.h"
 
-StopItem::StopItem(QDomNode domBasicStop, QDateTime date)
-    : hasDelay_{false}, hasArrTime_{false}, hasDepTime_{false},
+StopItem::StopItem(QDomNode domBasicStop, QDateTime date, QObject *parent)
+    : ListItem(parent), hasDelay_{false}, hasArrTime_{false}, hasDepTime_{false},
       hasDepDelay_{false}, hasArrDelay_{false}, hasChangedPlatform_{false},
       hasChangedArrPlatform_{false}, hasChangedDepPlatform_{false},
       location_{nullptr}, utilisationFirst_{0}, utilisationSecond_{0}
