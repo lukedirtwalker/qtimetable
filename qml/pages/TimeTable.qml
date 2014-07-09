@@ -123,33 +123,21 @@ Page {
 
         PullDownMenu {
             MenuItem{
-                id: depArrMenu
-                text: qsTr("Departure/Arrival")
-                // TODO: Find better solution than {}
-                onClicked: pageStack.replace(Qt.resolvedUrl("DepArr.qml"), {}, PageStackAction.Immediate)
-            }
-            MenuItem{
-                id: favMenu
-                text: qsTr("Favorites")
-                // TODO: Find better solution than {}
-                onClicked: pageStack.replace(Qt.resolvedUrl("Favorites.qml"), {}, PageStackAction.Immediate)
-            }
-        }
-        PushUpMenu {
-            MenuItem{
-                text:qsTr("Help")
-                onClicked: pageStack.push(Qt.resolvedUrl("Help.qml"))
-            }
-
-            MenuItem{
-                text: qsTr("About")
-                onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
-            }
-
-            MenuItem{
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
             }
+//            MenuItem{
+//                id: depArrMenu
+//                text: qsTr("Departure/Arrival")
+//                // TODO: Find better solution than {}
+//                onClicked: pageStack.replace(Qt.resolvedUrl("DepArr.qml"), {}, PageStackAction.Immediate)
+//            }
+//            MenuItem{
+//                id: favMenu
+//                text: qsTr("Favorites")
+//                // TODO: Find better solution than {}
+//                onClicked: pageStack.replace(Qt.resolvedUrl("Favorites.qml"), {}, PageStackAction.Immediate)
+//            }
         }
     }
 
