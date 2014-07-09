@@ -43,7 +43,6 @@ Dialog {
         anchors.bottom: parent.bottom
 
         delegate: SearchListItem {
-            text: stationName
             onClicked: {
                 timeTableHandler.setStation(index, type)
                 selectedText = stationName

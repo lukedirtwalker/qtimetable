@@ -1,5 +1,7 @@
 #include "locationitem.h"
 
+#include "../db/databasehandler.h"
+
 #include <QDebug>
 
 LocationItem::LocationItem(int dbId, int extId, const QString &name, QString longitude, QString latitude, bool favorite, QObject *parent)
@@ -105,9 +107,12 @@ bool LocationItem::setData(const QVariant &value, int role)
     {
     case StationNameRole:
         return false;
-    case FavoriteRole:
-        favorite_ = value.toBool();
+    case FavoriteRole: {
+        bool newVal = value.toBool();
+        DatabaseHandler::getInstance().changeFavorite(dbId_, newVal);
+        favorite_ = newVal;
         return true;
+    }
 //    case TypeRole:
 //        return getListItemType();
 //    case LocationTypeRole:
