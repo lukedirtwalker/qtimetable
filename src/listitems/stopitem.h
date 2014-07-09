@@ -19,6 +19,7 @@ public:
     virtual QString getId() const;
     virtual QVariant data(int role) const;
     virtual QHash<int, QByteArray> roleNames() const;
+    bool setData(const QVariant &value, int role);
 
     double getLatitude() const;
     double getLongitude() const;

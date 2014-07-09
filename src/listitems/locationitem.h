@@ -19,6 +19,8 @@ public:
     QHash <int,QByteArray> roleNames() const;
     QString getId() const;
 
+    bool setData(const QVariant &value, int role);
+
     QString stationName() const;
 //    ListItemType getListItemType() const;
     bool favorite()const;

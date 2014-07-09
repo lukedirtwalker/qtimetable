@@ -104,6 +104,13 @@ QHash<int, QByteArray> ConnectionItem::roleNames() const
     return names;
 }
 
+bool ConnectionItem::setData(const QVariant &value, int role)
+{
+    Q_UNUSED(value)
+    Q_UNUSED(role)
+    return false;
+}
+
 void ConnectionItem::createOverview()
 {
     int maxFirst = 0;
