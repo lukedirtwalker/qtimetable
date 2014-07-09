@@ -143,9 +143,25 @@ Page {
 
     function tryLookup() {
         if(fromStation.text === "") {
+            var fromdialog = pageStack.push(Qt.resolvedUrl("../components/SearchDialog.qml"),
+                                        {"searchText": fromStation.text,
+                                            "type": fromStation.type,
+                                            "typeString": fromStation.typeString,
+                                            "model" : fromStation.listModel})
+            fromdialog.accepted.connect(function() {
+                fromStation.text = fromdialog.selectedText
+            })
             return
         }
         if(toStation.text === "") {
+            var todialog = pageStack.push(Qt.resolvedUrl("../components/SearchDialog.qml"),
+                                        {"searchText": toStation.text,
+                                            "type": toStation.type,
+                                            "typeString": toStation.typeString,
+                                            "model" : toStation.listModel})
+            todialog.accepted.connect(function() {
+                toStation.text = todialog.selectedText
+            })
             return
         }
 
