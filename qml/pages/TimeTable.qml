@@ -36,6 +36,7 @@ Page {
                 labelText: qsTr("From")
                 stationText: qsTr("Location")
                 type: 0 // dep
+                typeString: qsTr("Departure")
                 listModel: depStationModel
                 handler: timeTableHandler
             }
@@ -44,6 +45,7 @@ Page {
                 labelText: qsTr("To")
                 stationText: qsTr("Location")
                 type: 1 // arr
+                typeString: qsTr("Arrival")
                 listModel: arrStationModel
                 handler: timeTableHandler
             }
@@ -52,6 +54,7 @@ Page {
                 labelText: qsTr("Via")
                 stationText: qsTr("Location")
                 type: 2 // via
+                typeString: qsTr("Via")
                 listModel: viaStationModel
                 handler: timeTableHandler
             }

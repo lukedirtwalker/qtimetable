@@ -10,6 +10,7 @@ Column{
     property alias labelText: label.text
     property alias stationText: station.placeholderText
     property int type
+    property string typeString
     property variant listModel
     property variant handler
 
@@ -32,6 +33,7 @@ Column{
             var dialog = pageStack.push("SearchDialog.qml",
                                         {"searchText": station.text,
                                             "type": listItem.type,
+                                            "typeString": listItem.typeString,
                                             "model" : listModel})
             dialog.accepted.connect(function() {
                 station.text = dialog.selectedText
@@ -43,6 +45,7 @@ Column{
             var dialog = pageStack.push("SearchDialog.qml",
                                         {"searchText": station.text,
                                             "type": listItem.type,
+                                            "typeString": listItem.typeString,
                                             "model" : listModel})
             dialog.accepted.connect(function() {
                 station.text = dialog.selectedText

@@ -7,6 +7,7 @@ Dialog {
     property string searchText
     property string selectedText
     property int type
+    property string typeString
     property alias model: searchSuggestionList.model
 
     property int selectIndex : 0;
@@ -23,6 +24,12 @@ Dialog {
         selectedText = timeTableHandler.setStation(selectIndex, type)
     }
 
+    DialogHeader {
+        acceptText: typeString
+    }
+
+    // TODO maybe use accept destination?
+
     Item {
         id: stationSearchWrap
         width: parent.width
@@ -34,7 +41,7 @@ Dialog {
             id: stationSearch
             anchors.fill: parent
             text: searchText
-            placeholderText: qsTr("Enter station")
+            placeholderText: qsTr("Enter %1 station".arg(typeString.toLowerCase()))
             onTextChanged: {
                 timeTableHandler.startQuery(text, type)
             }
