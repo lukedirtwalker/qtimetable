@@ -11,7 +11,7 @@
 class DatabaseHandler
 {
 public:
-    DatabaseHandler();
+    DatabaseHandler(QString dbFile);
     ~DatabaseHandler();
     bool openConnection();
  //   void searchByLocation(double latitude,double longitude, ResultListModel *mdl);
@@ -28,7 +28,6 @@ public:
     QSqlDatabase *getDb();
 
 private:
-    QString SERVER_NAME;
     QString DB_NAME;
     QString USER_NAME;
     QString PASSWORD;

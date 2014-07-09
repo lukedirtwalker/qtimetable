@@ -1,9 +1,8 @@
 #include "databasehandler.h"
 #include <QDebug>
 
-DatabaseHandler::DatabaseHandler() :
-    SERVER_NAME{"localhost"}, DB_NAME{"/usr/share/harbour-qtimetable/data/stations.db"},
-    USER_NAME{"sbbApp"}, PASSWORD{"1234"}, q_{nullptr} {}
+DatabaseHandler::DatabaseHandler(QString dbFile) :
+    DB_NAME(dbFile), USER_NAME{"sbbApp"}, PASSWORD{"1234"}, q_{} {}
 
 DatabaseHandler::~DatabaseHandler()
 {
@@ -21,7 +20,6 @@ bool DatabaseHandler::openConnection()
     db_.setDatabaseName(DB_NAME);
     db_.setUserName(USER_NAME);
     db_.setPassword(PASSWORD);
-    db_.setConnectOptions("QSQLITE_OPEN_READONLY=1");
     if(db_.open())
     {
         qDebug() << "db opened";
