@@ -96,14 +96,38 @@ void TimeTableHandler::setStation(int index, int type)
     }
 }
 
+void TimeTableHandler::clearStation(int type)
+{
+    switch(type) {
+    case 0:
+        depStation_.clear();
+        break;
+    case 1:
+        arrStation_.clear();
+        break;
+    case 2:
+        viaStation_.clear();
+        break;
+    default:
+        qDebug() << "Unsupported type" << type;
+        break;
+    }
+}
+
 void TimeTableHandler::lookupConnection()
 {
     connections_->clear();
     // TODO
     if(depStation_ && arrStation_) {
-        connHandler_->startConnectionSearch(depStation_, arrStation_,
-                                            timeHandler_->getCurrentDateTime(),
-                                            arrival_);
+        if(viaStation_) {
+            connHandler_->startConnectionSearch(depStation_, arrStation_, viaStation_,
+                                                timeHandler_->getCurrentDateTime(),
+                                                arrival_);
+        } else {
+            connHandler_->startConnectionSearch(depStation_, arrStation_,
+                                                timeHandler_->getCurrentDateTime(),
+                                                arrival_);
+        }
     }
 }
 

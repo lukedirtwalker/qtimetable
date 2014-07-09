@@ -9,6 +9,10 @@ Dialog {
     property int type
     property alias model: searchSuggestionList.model
 
+    Component.onDestruction: {
+        searchDialog.model.clear()
+    }
+
     // TODO it would be nicer to just select the first entry?
     canAccept: false
 

@@ -11,6 +11,7 @@ Column{
     property alias stationText: station.placeholderText
     property int type
     property variant listModel
+    property variant handler
 
 
 
@@ -28,6 +29,17 @@ Column{
         anchors.right: parent.right
         font.pixelSize: Theme.fontSizeMedium
         onClicked: {
+            var dialog = pageStack.push("SearchDialog.qml",
+                                        {"searchText": station.text,
+                                            "type": listItem.type,
+                                            "model" : listModel})
+            dialog.accepted.connect(function() {
+                station.text = dialog.selectedText
+            })
+        }
+
+        onDeleted: {
+            handler.clearStation(type)
             var dialog = pageStack.push("SearchDialog.qml",
                                         {"searchText": station.text,
                                             "type": listItem.type,

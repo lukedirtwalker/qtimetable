@@ -37,6 +37,7 @@ Page {
                 stationText: qsTr("Location")
                 type: 0 // dep
                 listModel: depStationModel
+                handler: timeTableHandler
             }
             TimeTableInput {
                 id: toStation
@@ -44,6 +45,7 @@ Page {
                 stationText: qsTr("Location")
                 type: 1 // arr
                 listModel: arrStationModel
+                handler: timeTableHandler
             }
             TimeTableInput {
                 id: viaStation
@@ -51,6 +53,7 @@ Page {
                 stationText: qsTr("Location")
                 type: 2 // via
                 listModel: viaStationModel
+                handler: timeTableHandler
             }
 
             DepArrSwitch {

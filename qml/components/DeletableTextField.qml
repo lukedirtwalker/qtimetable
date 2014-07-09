@@ -28,11 +28,6 @@ Item {
         onClicked: {
             deletableTextField.clicked()
         }
-
-//        onPressAndHold: {
-//            console.log('press and hold')
-//        }
-
     }
 
     IconButton {

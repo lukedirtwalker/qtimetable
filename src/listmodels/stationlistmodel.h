@@ -12,6 +12,9 @@ class StationListModel : public ResultListModel<LocationItem>
 public:
     StationListModel(QObject *parent=nullptr)
         : ResultListModel<LocationItem>(parent) {}
+    Q_INVOKABLE inline void clear();
 };
+
+inline void StationListModel::clear() { ResultListModel<LocationItem>::clear();}
 
 #endif // STATIONLISTMODEL_H
