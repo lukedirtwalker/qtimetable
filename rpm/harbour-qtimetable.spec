@@ -66,5 +66,10 @@ desktop-file-install --delete-original       \
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/86x86/apps/%{name}.png
 #%{_datadir}/data/stations.db
+
 # >> files
+%changelog
+* Fri Jul 11 2014 - Lukas <lukedirtwalker at gmail.com> 0.1-1
+- Initial release
+
 # << files
