@@ -77,33 +77,39 @@ void TimeTableHandler::startQuery(const QString &compare, const int type)
     queryThread->start();
 }
 
-const QString TimeTableHandler::setStation(int index, int type)
+void TimeTableHandler::setStation(int index, int type)
 {
     switch(type) {
     case 0:
         if(!depStationModel_->isEmpty()) {
             depStation_ = depStationModel_->at(index);
-            return depStation_->stationName();
+            depStationName_ = depStation_->stationName();
         } else {
-            return QString();
+            depStationName_ = "";
         }
+        qDebug() << "dep station changed: " << depStationName_;
+        emit depStationChanged();
+        break;
     case 1:
         if(!arrStationModel_->isEmpty()) {
             arrStation_ = arrStationModel_->at(index);
-            return arrStation_->stationName();
+            arrStationName_ = arrStation_->stationName();
         } else {
-            return QString();
+            arrStationName_ = "";
         }
+        emit arrStationChanged();
+        break;
     case 2:
         if(!viaStationModel_->isEmpty()) {
             viaStation_ = viaStationModel_->at(index);
-            return viaStation_->stationName();
+            viaStationName_ = viaStation_->stationName();
         } else {
-            return QString();
+            viaStationName_ = "";
         }
+        emit viaStationChanged();
+        break;
     default:
         qDebug() << "Unsupported type" << type;
-        return QString();
     }
 }
 
@@ -112,16 +118,37 @@ void TimeTableHandler::clearStation(int type)
     switch(type) {
     case 0:
         depStation_.clear();
+        depStationName_ = "";
+        emit depStationChanged();
         break;
     case 1:
         arrStation_.clear();
+        arrStationName_ = "";
+        emit arrStationChanged();
         break;
     case 2:
         viaStation_.clear();
+        viaStationName_ = "";
+        emit viaStationChanged();
         break;
     default:
         qDebug() << "Unsupported type" << type;
         break;
+    }
+}
+
+void TimeTableHandler::switchStations()
+{
+    if(depStation_ && arrStation_) {
+        depStationModel_->clear();
+        arrStationModel_->clear();
+        QSharedPointer<LocationItem> temp = depStation_;
+        depStation_ = arrStation_;
+        arrStation_ = temp;
+        depStationName_ = depStation_->stationName();
+        arrStationName_ = arrStation_->stationName();
+        emit depStationChanged();
+        emit arrStationChanged();
     }
 }
 

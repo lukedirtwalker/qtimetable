@@ -5,7 +5,6 @@ Dialog {
     id: searchDialog
 
     property string searchText
-    property string selectedText
     property int type
     property string typeString
     property alias model: searchSuggestionList.model
@@ -21,7 +20,7 @@ Dialog {
     }
 
     onAccepted: {
-        selectedText = timeTableHandler.setStation(selectIndex, type)
+        timeTableHandler.setStation(selectIndex, type)
     }
 
     DialogHeader {

@@ -35,6 +35,7 @@ Page {
                 id: fromStation
                 labelText: qsTr("From")
                 stationText: qsTr("Location")
+                text: timeTableHandler.depStation
                 type: 0 // dep
                 typeString: qsTr("Departure")
                 listModel: depStationModel
@@ -44,6 +45,7 @@ Page {
                 id: toStation
                 labelText: qsTr("To")
                 stationText: qsTr("Location")
+                text: timeTableHandler.arrStation
                 type: 1 // arr
                 typeString: qsTr("Arrival")
                 listModel: arrStationModel
@@ -53,6 +55,7 @@ Page {
                 id: viaStation
                 labelText: qsTr("Via")
                 stationText: qsTr("Location")
+                text: timeTableHandler.viaStation
                 type: 2 // via
                 typeString: qsTr("Via")
                 listModel: viaStationModel
@@ -110,12 +113,28 @@ Page {
                 }
             }
 
-            Button {
-                id: searchButton
-                text: qsTr("Search")
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: {
-                    tryLookup()
+            Row {
+                anchors {
+                    left: parent.left
+                    leftMargin: Theme.paddingLarge
+                    right: parent.right
+                    rightMargin: Theme.paddingLarge
+                }
+
+                Button {
+                    id: switchButton
+                    text: qsTr("Opposite direction")
+                    onClicked: {
+                        timeTableHandler.switchStations()
+                    }
+                }
+
+                Button {
+                    id: searchButton
+                    text: qsTr("Search")
+                    onClicked: {
+                        tryLookup()
+                    }
                 }
             }
 
@@ -143,25 +162,19 @@ Page {
 
     function tryLookup() {
         if(fromStation.text === "") {
-            var fromdialog = pageStack.push(Qt.resolvedUrl("../components/SearchDialog.qml"),
-                                        {"searchText": fromStation.text,
-                                            "type": fromStation.type,
-                                            "typeString": fromStation.typeString,
-                                            "model" : fromStation.listModel})
-            fromdialog.accepted.connect(function() {
-                fromStation.text = fromdialog.selectedText
-            })
+            pageStack.push(Qt.resolvedUrl("../components/SearchDialog.qml"),
+                           {"searchText": fromStation.text,
+                               "type": fromStation.type,
+                               "typeString": fromStation.typeString,
+                               "model" : fromStation.listModel})
             return
         }
         if(toStation.text === "") {
-            var todialog = pageStack.push(Qt.resolvedUrl("../components/SearchDialog.qml"),
-                                        {"searchText": toStation.text,
-                                            "type": toStation.type,
-                                            "typeString": toStation.typeString,
-                                            "model" : toStation.listModel})
-            todialog.accepted.connect(function() {
-                toStation.text = todialog.selectedText
-            })
+            pageStack.push(Qt.resolvedUrl("../components/SearchDialog.qml"),
+                           {"searchText": toStation.text,
+                               "type": toStation.type,
+                               "typeString": toStation.typeString,
+                               "model" : toStation.listModel})
             return
         }
 

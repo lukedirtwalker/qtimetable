@@ -14,8 +14,6 @@ Column{
     property variant listModel
     property variant handler
 
-
-
     Label{
         id: label
         anchors.left: parent.left
@@ -29,27 +27,19 @@ Column{
         anchors.leftMargin: Theme.paddingLarge
         anchors.right: parent.right
         font.pixelSize: Theme.fontSizeMedium
-        onClicked: {
-            var dialog = pageStack.push("SearchDialog.qml",
-                                        {"searchText": station.text,
-                                            "type": listItem.type,
-                                            "typeString": listItem.typeString,
-                                            "model" : listModel})
-            dialog.accepted.connect(function() {
-                station.text = dialog.selectedText
-            })
-        }
+        onClicked: { openSearch() }
 
         onDeleted: {
             handler.clearStation(type)
-            var dialog = pageStack.push("SearchDialog.qml",
-                                        {"searchText": station.text,
-                                            "type": listItem.type,
-                                            "typeString": listItem.typeString,
-                                            "model" : listModel})
-            dialog.accepted.connect(function() {
-                station.text = dialog.selectedText
-            })
+            openSearch()
         }
+    }
+
+    function openSearch() {
+        pageStack.push("SearchDialog.qml",
+                       {"searchText": station.text,
+                           "type": listItem.type,
+                           "typeString": listItem.typeString,
+                           "model" : listModel})
     }
 }

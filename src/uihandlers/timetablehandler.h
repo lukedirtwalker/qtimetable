@@ -20,12 +20,21 @@ public:
     ~TimeTableHandler();
 
     Q_INVOKABLE void startQuery(const QString &compare, const int type);
-    Q_INVOKABLE const QString setStation(const int index, const int type);
+    Q_INVOKABLE void setStation(const int index, const int type);
     Q_INVOKABLE void clearStation(const int type);
+    Q_INVOKABLE void switchStations();
 
     Q_INVOKABLE void lookupConnection();
 
     Q_INVOKABLE inline void setArrival(bool arrival);
+
+    Q_PROPERTY(QString depStation READ depStationName NOTIFY depStationChanged())
+    Q_PROPERTY(QString arrStation READ arrStationName NOTIFY arrStationChanged())
+    Q_PROPERTY(QString viaStation READ viaStationName NOTIFY viaStationChanged())
+
+    Q_INVOKABLE QString depStationName() { return depStationName_;}
+    Q_INVOKABLE QString arrStationName() { return arrStationName_;}
+    Q_INVOKABLE QString viaStationName() { return viaStationName_;}
 
 
 public slots:
@@ -35,6 +44,12 @@ public slots:
 
     void connectionLookedUp(eStatusID id);
 
+signals:
+    void depStationChanged();
+    void arrStationChanged();
+    void viaStationChanged();
+
+
 private:
     QQmlContext *qmlContext_;
 
@@ -42,6 +57,7 @@ private:
 
     StationListModel *depStationModel_, *arrStationModel_, *viaStationModel_;
     QSharedPointer<LocationItem> depStation_, arrStation_, viaStation_;
+    QString depStationName_, arrStationName_, viaStationName_;
 
     ConnectionListModel *connections_;
 
