@@ -30,6 +30,7 @@ Page {
 
                 Column {
                     width: parent.width - oppDirection.width
+                    spacing: Theme.paddingLarge
 
                     TimeTableInput {
                         id: fromStation
@@ -148,6 +149,12 @@ Page {
                         timeHandler.updateTime()
                     }
                 }
+            }
+
+            Item {
+                id: spacer
+                width: 1
+                height: Theme.paddingLarge
             }
 
             Button {
