@@ -63,12 +63,37 @@ BackgroundItem {
                 right: parent.right
             }
 
+            spacing: Theme.paddingMedium
+
             Label{
                 id: meansOfTransportLabel
                 anchors.verticalCenter: parent.verticalCenter
+                width: parent.width * 0.36 + Theme.paddingMedium
                 text: MeansOfTransport
                 color: connStepItem.highlighted ?
                            Theme.highlightColor : Theme.primaryColor
+            }
+
+            Column {
+                width: parent.width * 0.55
+
+                anchors.verticalCenter: parent.verticalCenter
+
+                Label {
+                    width: parent.width
+                    text: MOTDetail
+                    elide: Text.ElideRight
+                    color: connStepItem.highlighted ?
+                               Theme.highlightColor : Theme.primaryColor
+                }
+
+                Label {
+                    width: parent.width
+                    text: Direction.length > 0 ? qsTr("Dir. ") + Direction : ""
+                    elide: Text.ElideRight
+                    color: connStepItem.highlighted ?
+                               Theme.highlightColor : Theme.primaryColor
+                }
             }
 
 

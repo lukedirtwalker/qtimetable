@@ -48,6 +48,8 @@ public:
         ArrTimeRole,
         ArrPlatformRole,
         MeansOfTransportRole,
+        MeansOfTransportDetailRole,
+        DirectionRole,
         UtilisationFirstRole,
         UtilisationSecondRole,
         HasDepDelayRole,

@@ -2,10 +2,81 @@
 
 #include "../util/qdomnodeiterator.h"
 
-Journey::Journey(QString meansOfTransportation)
-    : meansOfTransport_(meansOfTransportation), hasMOT_{false} {}
+#include <QDebug>
+#include <QStringList>
 
-Journey::Journey(QDomNode domJourney, QDateTime date) : hasMOT_{false}
+Journey::Journey(QString meansOfTransportation)
+    : meansOfTransport_(meansOfTransportation)
+{
+    hasMOT_ = !meansOfTransport_.isEmpty();
+}
+
+Journey::Journey(QDomNode domJourney, QDateTime date, bool isWalk) : hasMOT_{false}
+{
+    if(isWalk)
+        createWalk(domJourney, date);
+    else
+        createJourney(domJourney, date);
+}
+
+Journey::~Journey()
+{
+    if(stopovers_.size() > 0)
+    {
+        qDeleteAll(stopovers_);
+        stopovers_.clear();
+    }
+}
+
+void Journey::createWalk(QDomNode domWalk, QDateTime date)
+{
+    Q_UNUSED(date)
+//    <Walk length="181">
+//        <Duration>
+//            <Time>00d00:07:00</Time>
+//        </Duration>
+//        <JourneyAttributeList>
+//            <JourneyAttribute>
+//                <Attribute code="Y " priority="5">
+//                    <AttributeVariant type="NORMAL">
+//                        <Text>Walk</Text>
+//                    </AttributeVariant>
+//                </Attribute>
+//            </JourneyAttribute>
+//        </JourneyAttributeList>
+//    </Walk>
+    // TODO There are som translation strings in here (meters, min)
+    meansOfTransportDetail_ = domWalk.attributes().namedItem("length").nodeValue().append(" meters");
+
+    domWalk = domWalk.firstChild();
+    while(!domWalk.isNull())
+    {
+        QString t = domWalk.toElement().tagName();
+        if("Duration" == t)
+        {
+            QString timeString = domWalk.toElement().elementsByTagName("Time")
+                    .at(0).toElement().text().trimmed();
+            // XXX: We assume that we only have to walk at most 59 mins...
+            // also days are ignored
+            timeString = timeString.split("d").at(1);
+            QDateTime timeParsed = QDateTime::fromString(timeString, "hh:mm:ss");
+            meansOfTransportDetail_.prepend(timeParsed.toString("m").append(" min "));
+        }
+        else if("JourneyAttributeList" == t)
+        {
+            meansOfTransport_ = domWalk.toElement()
+                    .elementsByTagName("JourneyAttribute").at(0).toElement()
+                    .elementsByTagName("Attribute").at(0).toElement()
+                    .elementsByTagName("Text").at(0).toElement()
+                    .text().trimmed();
+            hasMOT_ = !meansOfTransport_.isEmpty();
+        }
+        domWalk = domWalk.nextSibling();
+    }
+
+}
+
+void Journey::createJourney(QDomNode domJourney, QDateTime date)
 {
     domJourney = domJourney.firstChild();
     while(!domJourney.isNull())
@@ -40,7 +111,36 @@ Journey::Journey(QDomNode domJourney, QDateTime date) : hasMOT_{false}
                 else if(type == "DIRECTION")
                 {
                     direction_ = domJourneyAttribute.elementsByTagName("Text")
-                            .at(0).toElement().text().trimmed().toLatin1();
+                            .at(0).toElement().text().trimmed();
+                }
+                else if("NAMEFORMATTED" == type)
+                {
+                    bool ok = false;
+                    int code = domJourneyAttribute.attributeNode("code").value().toInt(&ok);
+                    if(!ok) continue;
+                    if(1 == code)
+                    {
+                        QDomNodeList variants = domJourneyAttribute.elementsByTagName("AttributeVariant");
+                        for(auto node : variants)
+                        {
+                            if(node.attributes().namedItem("type").nodeValue() == "NORMAL")
+                            {
+                                meansOfTransport_ = node.toElement().elementsByTagName("Text").at(0).toElement().text().trimmed();
+                            }
+                        }
+                        hasMOT_ = !meansOfTransport_.isEmpty();
+                    }
+                    else if(2 == code)
+                    {
+                        QDomNodeList variants = domJourneyAttribute.elementsByTagName("AttributeVariant");
+                        for(auto node : variants)
+                        {
+                            if(node.attributes().namedItem("type").nodeValue() == "NORMAL")
+                            {
+                                meansOfTransportDetail_ = node.toElement().elementsByTagName("Text").at(0).toElement().text().trimmed();
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -52,14 +152,5 @@ Journey::Journey(QDomNode domJourney, QDateTime date) : hasMOT_{false}
                 stopovers_.append(new StopItem(stop, date));
         }
         domJourney = domJourney.nextSibling();
-    }
-}
-
-Journey::~Journey()
-{
-    if(stopovers_.size() > 0)
-    {
-        qDeleteAll(stopovers_);
-        stopovers_.clear();
     }
 }
