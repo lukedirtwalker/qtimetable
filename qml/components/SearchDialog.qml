@@ -24,38 +24,33 @@ Dialog {
     }
 
     DialogHeader {
+        id: header
         acceptText: typeString
     }
 
-    // TODO maybe use accept destination?
-
-    Item {
-        id: stationSearchWrap
+    SearchField { // should be outside such that we keep focus
+        id: stationSearch
         width: parent.width
-        height: Theme.itemSizeMedium
-        anchors.top: parent.top
-        anchors.topMargin: Theme.itemSizeSmall
-
-        SearchField { // should be outside such that we keep focus
-            id: stationSearch
-            anchors.fill: parent
-            text: searchText
-            placeholderText: qsTr("Enter %1 station".arg(typeString.toLowerCase()))
-            onTextChanged: {
-                timeTableHandler.startQuery(text, type)
-            }
+        anchors.top: header.bottom
+        text: searchText
+        placeholderText: qsTr("Enter %1 station".arg(typeString.toLowerCase()))
+        onTextChanged: {
+            timeTableHandler.startQuery(text, type)
         }
     }
 
     SilicaListView {
         id: searchSuggestionList
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: stationSearchWrap.bottom
-        anchors.topMargin: Theme.paddingLarge
+        width: parent.width
+        anchors.top: stationSearch.bottom
         anchors.bottom: parent.bottom
+        clip: true
+        pressDelay: 0
+
+        VerticalScrollDecorator {}
 
         delegate: SearchListItem {
+            text: stationSearch.text.length > 0 ? Theme.highlightText(model.stationName, stationSearch.text, Theme.highlightColor) : model.stationName
             onClicked: {
                 selectIndex = index;
                 searchDialog.accept()
