@@ -6,16 +6,6 @@ import "../components"
 Page {
     id: timeTablePage
 
-    onStatusChanged: {
-        if(timeTablePage.status === PageStatus.Active) {
-            dateButton.value = Qt.formatDate(timeHandler.getCurrentDate(),
-                                             "ddd dd.MM.yyyy")
-            timeButton.value = Qt.formatTime(timeHandler.getCurrentTime(),
-                                             "hh:mm")
-        }
-    }
-
-    // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
 
@@ -71,44 +61,56 @@ Page {
             }
             Row {
                 id: timeRow
-                width: parent.width
-                height: 100
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    rightMargin: Theme.paddingLarge
+                }
+
                 ValueButton {
                     id: dateButton
-                    label: ""
-                    width: parent.width / 2
-                    value: Qt.formatDate(timeHandler.getCurrentDate(),
+                    width: parent.width * 0.5
+                    anchors.verticalCenter: parent.verticalCenter
+                    value: Qt.formatDate(timeHandler.date,
                                          "ddd dd.MM.yyyy")
 
                     onClicked: {
                         var dialog = pageStack.push(
                                     "Sailfish.Silica.DatePickerDialog", {
-                                        date: timeHandler.getCurrentDate()})
+                                        date: timeHandler.date})
                         dialog.accepted.connect(function() {
                             timeHandler.setDate(dialog.year, dialog.month,
                                                 dialog.day)
-                            dateButton.value = Qt.formatDate(dialog.date,
-                                                             "ddd dd.MM.yyyy")
                         })
                     }
                 }
 
                 ValueButton {
                     id: timeButton
-                    label: ""
-                    width: parent.width / 2
-                    value: Qt.formatTime(timeHandler.getCurrentTime(), "hh:mm")
+                    width: parent.width * 0.5 - refresherButton.width
+                    anchors.verticalCenter: parent.verticalCenter
+                    value: Qt.formatTime(timeHandler.time, "hh:mm")
 
                     onClicked:{
                         var dialog = pageStack.push(
                                     "Sailfish.Silica.TimePickerDialog", {
-                                        hour: timeHandler.getCurrentTime().getHours(),
-                                        minute: timeHandler.getCurrentTime().getMinutes()})
+                                        hour: timeHandler.time.getHours(),
+                                        minute: timeHandler.time.getMinutes()})
 
                         dialog.accepted.connect(function() {
                             timeHandler.setTime(dialog.hour, dialog.minute)
-                            timeButton.value = Qt.formatTime(dialog.time, "hh:mm")
                         })
+                    }
+                }
+
+                IconButton {
+                    id: refresherButton
+                    width: Theme.iconSizeMedium
+                    height: width;
+                    anchors.verticalCenter: parent.verticalCenter
+                    icon.source: "image://theme/icon-m-refresh"
+                    onClicked: {
+                        timeHandler.updateTime()
                     }
                 }
             }
@@ -183,7 +185,7 @@ Page {
                        {"model" : connectionModel,
                            "from": fromStation.text,
                            "to": toStation.text,
-                           "date": Qt.formatDate(timeHandler.getCurrentDate(), "dd.MM"),
+                           "date": Qt.formatDate(timeHandler.date, "dd.MM"),
                            "time": timeButton.value})
     }
 }

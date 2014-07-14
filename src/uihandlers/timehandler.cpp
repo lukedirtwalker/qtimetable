@@ -3,17 +3,21 @@
 TimeHandler::TimeHandler(QObject *parent) :
     QObject(parent)
 {
-    this->uiTime = QDateTime::currentDateTime();
+    uiTime = QDateTime::currentDateTime();
+    emit dateChanged();
+    emit timeChanged();
 }
 
 void TimeHandler::updateTime()
 {
-    this->uiTime = QDateTime::currentDateTime();
+    uiTime = QDateTime::currentDateTime();
+    emit dateChanged();
+    emit timeChanged();
 }
 
 QDate TimeHandler::getCurrentDate() const
 {
-    return this->uiTime.date();
+    return uiTime.date();
 }
 
 QTime TimeHandler::getCurrentTime() const
@@ -29,9 +33,11 @@ QDateTime TimeHandler::getCurrentDateTime() const
 void TimeHandler::setTime(const int hours, const int minutes)
 {
     uiTime.setTime(QTime(hours,minutes));
+    emit timeChanged();
 }
 
 void TimeHandler::setDate(const int year, const int month, const int day)
 {
     uiTime.setDate(QDate(year,month,day));
+    emit dateChanged();
 }
