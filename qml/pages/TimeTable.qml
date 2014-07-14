@@ -21,25 +21,60 @@ Page {
                 title: qsTr("Timetable")
             }
 
-            TimeTableInput {
-                id: fromStation
-                labelText: qsTr("From")
-                stationText: qsTr("Location")
-                text: timeTableHandler.depStation
-                type: 0 // dep
-                typeString: qsTr("Departure")
-                listModel: depStationModel
-                handler: timeTableHandler
-            }
-            TimeTableInput {
-                id: toStation
-                labelText: qsTr("To")
-                stationText: qsTr("Location")
-                text: timeTableHandler.arrStation
-                type: 1 // arr
-                typeString: qsTr("Arrival")
-                listModel: arrStationModel
-                handler: timeTableHandler
+            Row {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    rightMargin: Theme.paddingLarge
+                }
+
+                Column {
+                    width: parent.width - oppDirection.width
+
+                    TimeTableInput {
+                        id: fromStation
+                        labelText: qsTr("From")
+                        stationText: qsTr("Location")
+                        text: timeTableHandler.depStation
+                        type: 0 // dep
+                        typeString: qsTr("Departure")
+                        listModel: depStationModel
+                        handler: timeTableHandler
+                    }
+
+                    TimeTableInput {
+                        id: toStation
+                        labelText: qsTr("To")
+                        stationText: qsTr("Location")
+                        text: timeTableHandler.arrStation
+                        type: 1 // arr
+                        typeString: qsTr("Arrival")
+                        listModel: arrStationModel
+                        handler: timeTableHandler
+                    }
+                }
+
+                IconButton {
+                    id: oppDirection
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: Theme.iconSizeMedium
+                    height: width;
+                    icon.source: "image://theme/icon-m-mobile-network"
+                    onClicked: {
+                        if(timeTableHandler.switchStations()) {
+                            oppDirection.state == "rotated" ? oppDirection.state = "" : oppDirection.state = "rotated"
+                        }
+                    }
+
+                    states: State {
+                        name: "rotated"
+                        PropertyChanges { target: oppDirection; rotation: 180 }
+                    }
+
+                    transitions: Transition {
+                        RotationAnimation { duration: 500; direction: RotationAnimation.Clockwise }
+                    }
+                }
             }
             TimeTableInput {
                 id: viaStation
@@ -115,31 +150,14 @@ Page {
                 }
             }
 
-            Row {
-                anchors {
-                    left: parent.left
-                    leftMargin: Theme.paddingLarge
-                    right: parent.right
-                    rightMargin: Theme.paddingLarge
-                }
-
-                Button {
-                    id: switchButton
-                    text: qsTr("Opposite direction")
-                    onClicked: {
-                        timeTableHandler.switchStations()
-                    }
-                }
-
-                Button {
-                    id: searchButton
-                    text: qsTr("Search")
-                    onClicked: {
-                        tryLookup()
-                    }
+            Button {
+                id: searchButton
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("Search")
+                onClicked: {
+                    tryLookup()
                 }
             }
-
         }
 
         PullDownMenu {
@@ -147,18 +165,18 @@ Page {
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
             }
-//            MenuItem{
-//                id: depArrMenu
-//                text: qsTr("Departure/Arrival")
-//                // TODO: Find better solution than {}
-//                onClicked: pageStack.replace(Qt.resolvedUrl("DepArr.qml"), {}, PageStackAction.Immediate)
-//            }
-//            MenuItem{
-//                id: favMenu
-//                text: qsTr("Favorites")
-//                // TODO: Find better solution than {}
-//                onClicked: pageStack.replace(Qt.resolvedUrl("Favorites.qml"), {}, PageStackAction.Immediate)
-//            }
+            //            MenuItem{
+            //                id: depArrMenu
+            //                text: qsTr("Departure/Arrival")
+            //                // TODO: Find better solution than {}
+            //                onClicked: pageStack.replace(Qt.resolvedUrl("DepArr.qml"), {}, PageStackAction.Immediate)
+            //            }
+            //            MenuItem{
+            //                id: favMenu
+            //                text: qsTr("Favorites")
+            //                // TODO: Find better solution than {}
+            //                onClicked: pageStack.replace(Qt.resolvedUrl("Favorites.qml"), {}, PageStackAction.Immediate)
+            //            }
         }
     }
 

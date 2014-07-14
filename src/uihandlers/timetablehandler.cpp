@@ -137,19 +137,22 @@ void TimeTableHandler::clearStation(int type)
     }
 }
 
-void TimeTableHandler::switchStations()
+bool TimeTableHandler::switchStations()
 {
-    if(depStation_ && arrStation_) {
+    if(depStation_ || arrStation_) {
         depStationModel_->clear();
         arrStationModel_->clear();
         QSharedPointer<LocationItem> temp = depStation_;
         depStation_ = arrStation_;
         arrStation_ = temp;
-        depStationName_ = depStation_->stationName();
-        arrStationName_ = arrStation_->stationName();
+        QString tempName = depStationName_;
+        depStationName_ = arrStationName_;
+        arrStationName_ = tempName;
         emit depStationChanged();
         emit arrStationChanged();
+        return true;
     }
+    return false;
 }
 
 void TimeTableHandler::lookupConnection()
