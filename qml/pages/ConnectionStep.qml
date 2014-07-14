@@ -39,18 +39,18 @@ Page {
                 spacing: Theme.paddingMedium
                 Label{
                     id: depTimeLabel
-                    width: parent.width * 0.25
+                    width: parent.width * 0.18
                     text: qsTr("Time")
                 }
 
                 Label{
                     id: arrTimeLabel
-                    width: parent.width * 0.25
+                    width: parent.width * 0.18
                     text: qsTr("Pl.")
                 }
                 Label{
                     id: durTimeLabel
-                    width: parent.width * 0.5
+//                    width: parent.width * 0.5
                     text: qsTr("Stop / Remark")
                 }
             }
@@ -68,6 +68,7 @@ Page {
             }
         }
     }
+
     SilicaListView {
         id: connectionSteps
         anchors {
@@ -76,6 +77,11 @@ Page {
             top: column.bottom
             bottom: parent.bottom
         }
+
+        VerticalScrollDecorator {}
+
+        clip: true
+        pressDelay: 0
 
         delegate: ConnectionStepItem {}
     }
