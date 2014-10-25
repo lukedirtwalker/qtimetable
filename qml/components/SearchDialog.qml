@@ -5,16 +5,29 @@ Dialog {
     id: searchDialog
 
     property string searchText
-    property string selectedText
     property int type
+    property string typeString
     property alias model: searchSuggestionList.model
 
-    // TODO it would be nicer to just select the first entry?
-    canAccept: false
+    property int selectIndex : 0;
+
+    Component.onDestruction: {
+        searchDialog.model.clear()
+    }
 
     onOpened: {
         stationSearch.forceActiveFocus()
     }
+
+    onAccepted: {
+        timeTableHandler.setStation(selectIndex, type)
+    }
+
+    DialogHeader {
+        acceptText: typeString
+    }
+
+    // TODO maybe use accept destination?
 
     Item {
         id: stationSearchWrap
@@ -27,7 +40,7 @@ Dialog {
             id: stationSearch
             anchors.fill: parent
             text: searchText
-            placeholderText: qsTr("Enter station")
+            placeholderText: qsTr("Enter %1 station".arg(typeString.toLowerCase()))
             onTextChanged: {
                 timeTableHandler.startQuery(text, type)
             }
@@ -43,11 +56,8 @@ Dialog {
         anchors.bottom: parent.bottom
 
         delegate: SearchListItem {
-            text: stationName
             onClicked: {
-                timeTableHandler.setStation(index, type)
-                selectedText = stationName
-                searchDialog.canAccept = true
+                selectIndex = index;
                 searchDialog.accept()
             }
         }

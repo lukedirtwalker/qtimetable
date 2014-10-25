@@ -186,6 +186,13 @@ QHash<int, QByteArray> StopItem::roleNames() const
     return names;
 }
 
+bool StopItem::setData(const QVariant &value, int role)
+{
+    Q_UNUSED(value)
+    Q_UNUSED(role)
+    return false;
+}
+
 double StopItem::getLatitude() const
 {
     auto type = location_->getType();

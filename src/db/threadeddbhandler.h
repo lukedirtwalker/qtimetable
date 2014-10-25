@@ -15,7 +15,7 @@ class ThreadedDbHandler : public QObject
     Q_OBJECT
 public:
     // Don't use this with empty strings!
-    ThreadedDbHandler(QSqlDatabase *db, const QString &comp);
+    ThreadedDbHandler(const QString &comp);
     ~ThreadedDbHandler();
 
 public slots:

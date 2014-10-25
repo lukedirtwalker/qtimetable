@@ -10,9 +10,9 @@ Column{
     property alias labelText: label.text
     property alias stationText: station.placeholderText
     property int type
+    property string typeString
     property variant listModel
-
-
+    property variant handler
 
     Label{
         id: label
@@ -27,14 +27,19 @@ Column{
         anchors.leftMargin: Theme.paddingLarge
         anchors.right: parent.right
         font.pixelSize: Theme.fontSizeMedium
-        onClicked: {
-            var dialog = pageStack.push("SearchDialog.qml",
-                                        {"searchText": station.text,
-                                            "type": listItem.type,
-                                            "model" : listModel})
-            dialog.accepted.connect(function() {
-                station.text = dialog.selectedText
-            })
+        onClicked: { openSearch() }
+
+        onDeleted: {
+            handler.clearStation(type)
+            openSearch()
         }
+    }
+
+    function openSearch() {
+        pageStack.push("SearchDialog.qml",
+                       {"searchText": station.text,
+                           "type": listItem.type,
+                           "typeString": listItem.typeString,
+                           "model" : listModel})
     }
 }

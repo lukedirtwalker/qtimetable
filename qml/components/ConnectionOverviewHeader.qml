@@ -35,7 +35,6 @@ Item {
             id:fromStation
             anchors.left: parent.left
             anchors.top: fromLabel.bottom
-            font.pixelSize: Theme.fontSizeLarge
             width: parent.width * 0.75
             elide: Text.ElideRight
         }
@@ -53,7 +52,6 @@ Item {
             id:dateValue
             anchors.right: parent.right
             anchors.top: dateLabel.bottom
-            font.pixelSize: Theme.fontSizeLarge
         }
     }
 
@@ -79,7 +77,6 @@ Item {
             id:toStation
             anchors.left: parent.left
             anchors.top: toLabel.bottom
-            font.pixelSize: Theme.fontSizeLarge
             width: parent.width * 0.75
             elide: Text.ElideRight
         }
@@ -97,7 +94,6 @@ Item {
             id:timeValue
             anchors.right: parent.right
             anchors.top: timeLabel.bottom
-            font.pixelSize: Theme.fontSizeLarge
         }
     }
 }

@@ -28,11 +28,6 @@ Item {
         onClicked: {
             deletableTextField.clicked()
         }
-
-//        onPressAndHold: {
-//            console.log('press and hold')
-//        }
-
     }
 
     IconButton {
@@ -51,7 +46,6 @@ Item {
         opacity: textField.text.length > 0 ? 1 : 0
 
         onClicked: {
-            textField.text = ""
             deletableTextField.deleted()
         }
     }

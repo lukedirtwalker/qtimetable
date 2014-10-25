@@ -1,5 +1,7 @@
 #include "threadeddbhandler.h"
 
+#include "databasehandler.h"
+
 #include "../listitems/locationitem.h"
 //#include "ui/searchitem.h"
 
@@ -8,10 +10,10 @@ ThreadedDbHandler::~ThreadedDbHandler()
     delete q_;
 }
 
-ThreadedDbHandler::ThreadedDbHandler(QSqlDatabase *db, const QString &comp)
+ThreadedDbHandler::ThreadedDbHandler(const QString &comp)
     : QObject(), comp_(comp)
 {
-    q_ = new QSqlQuery(*db);
+    q_ = new QSqlQuery(*DatabaseHandler::getInstance().getDb());
 }
 
 void ThreadedDbHandler::run()

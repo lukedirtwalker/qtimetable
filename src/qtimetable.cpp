@@ -41,6 +41,20 @@
 
 #include <QDebug>
 
+void copyDb(QString dataDir, QString writableDB) {
+    QFile db("/usr/share/harbour-qtimetable/data/stations.db");
+    QFile newDB(dataDir + "/" + writableDB);
+    if(!db.exists())
+        qDebug() << "nope";
+    if(!newDB.exists()) {
+        QDir dir(dataDir);
+        if(!dir.exists())
+            dir.mkpath(dataDir);
+        if(!db.copy(dataDir + "/" + writableDB))
+            qDebug() << "Copy db failed:" << db.errorString();
+    }
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -57,21 +71,22 @@ int main(int argc, char *argv[])
     app->setOrganizationName("harbour-qtimetable");
     app->setApplicationName("harbour-qtimetable");
 
-//    QString dataDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-//    qDebug() << dataDir;
     QQuickView *view = SailfishApp::createView();
-
 
     qRegisterMetaType<StationListType>("StationListType");
 
-    DatabaseHandler *dbHandler = new DatabaseHandler();
-    if(!dbHandler->openConnection())
+    QString dataDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QString dbFile = ".stations.db";
+    qDebug() << dataDir + "/" + dbFile;
+    copyDb(dataDir, dbFile);
+
+    if(!DatabaseHandler::getInstance().openConnection(dataDir + "/" + dbFile))
     {
         qDebug() << "DB NOT OPEN";
         return 1;
     }
 
-    TimeTableHandler timeTableHandler(view->rootContext(), dbHandler);
+    TimeTableHandler timeTableHandler(view->rootContext());
 
     view->rootContext()->setContextProperty("timeTableHandler", &timeTableHandler);
     view->rootContext()->setContextProperty("APP_VERSION", APP_VERSION);

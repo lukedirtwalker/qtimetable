@@ -1,5 +1,9 @@
 #include "locationitem.h"
 
+#include "../db/databasehandler.h"
+
+#include <QDebug>
+
 LocationItem::LocationItem(int dbId, int extId, const QString &name, QString longitude, QString latitude, bool favorite, QObject *parent)
     : ListItem(parent)
 {
@@ -67,10 +71,9 @@ LocationItem::LocationItem(LocationItem *other)
 
 QHash<int,QByteArray> LocationItem::roleNames() const
 {
-    int role = Qt::UserRole+1;
     QHash<int,QByteArray> names;
-    names[role++] = "stationName";
-    names[role++] = "favorite";
+    names[StationNameRole] = "stationName";
+    names[FavoriteRole] = "favorite";
 //    names[role++] = "Type";
 //    names[LocationTypeRole] = "LocType";
     return names;
@@ -96,6 +99,27 @@ QVariant LocationItem::data(int role) const
 QString LocationItem::getId() const
 {
     return locationName_;
+}
+
+bool LocationItem::setData(const QVariant &value, int role)
+{
+    switch(role)
+    {
+    case StationNameRole:
+        return false;
+    case FavoriteRole: {
+        bool newVal = value.toBool();
+        DatabaseHandler::getInstance().changeFavorite(dbId_, newVal);
+        favorite_ = newVal;
+        return true;
+    }
+//    case TypeRole:
+//        return getListItemType();
+//    case LocationTypeRole:
+//        return getLocationType();
+    default:
+        return false;
+    }
 }
 
 QString LocationItem::stationName() const

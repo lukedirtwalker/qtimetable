@@ -35,22 +35,31 @@ Page {
                 id: fromStation
                 labelText: qsTr("From")
                 stationText: qsTr("Location")
+                text: timeTableHandler.depStation
                 type: 0 // dep
+                typeString: qsTr("Departure")
                 listModel: depStationModel
+                handler: timeTableHandler
             }
             TimeTableInput {
                 id: toStation
                 labelText: qsTr("To")
                 stationText: qsTr("Location")
+                text: timeTableHandler.arrStation
                 type: 1 // arr
+                typeString: qsTr("Arrival")
                 listModel: arrStationModel
+                handler: timeTableHandler
             }
             TimeTableInput {
                 id: viaStation
                 labelText: qsTr("Via")
                 stationText: qsTr("Location")
+                text: timeTableHandler.viaStation
                 type: 2 // via
+                typeString: qsTr("Via")
                 listModel: viaStationModel
+                handler: timeTableHandler
             }
 
             DepArrSwitch {
@@ -104,18 +113,28 @@ Page {
                 }
             }
 
-            Button {
-                id: searchButton
-                text: qsTr("Search")
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: {
-                    timeTableHandler.lookupConnection()
-                    pageStack.push(Qt.resolvedUrl("ConnectionOverview.qml"),
-                                   {"model" : connectionModel,
-                                       "from": fromStation.text,
-                                       "to": toStation.text,
-                                       "date": Qt.formatDate(timeHandler.getCurrentDate(), "dd.MM"),
-                                       "time": timeButton.value})
+            Row {
+                anchors {
+                    left: parent.left
+                    leftMargin: Theme.paddingLarge
+                    right: parent.right
+                    rightMargin: Theme.paddingLarge
+                }
+
+                Button {
+                    id: switchButton
+                    text: qsTr("Opposite direction")
+                    onClicked: {
+                        timeTableHandler.switchStations()
+                    }
+                }
+
+                Button {
+                    id: searchButton
+                    text: qsTr("Search")
+                    onClicked: {
+                        tryLookup()
+                    }
                 }
             }
 
@@ -123,35 +142,48 @@ Page {
 
         PullDownMenu {
             MenuItem{
-                id: depArrMenu
-                text: qsTr("Departure/Arrival")
-                // TODO: Find better solution than {}
-                onClicked: pageStack.replace(Qt.resolvedUrl("DepArr.qml"), {}, PageStackAction.Immediate)
-            }
-            MenuItem{
-                id: favMenu
-                text: qsTr("Favorites")
-                // TODO: Find better solution than {}
-                onClicked: pageStack.replace(Qt.resolvedUrl("Favorites.qml"), {}, PageStackAction.Immediate)
-            }
-        }
-        PushUpMenu {
-            MenuItem{
-                text:qsTr("Help")
-                onClicked: pageStack.push(Qt.resolvedUrl("Help.qml"))
-            }
-
-            MenuItem{
-                text: qsTr("About")
-                onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
-            }
-
-            MenuItem{
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
             }
+//            MenuItem{
+//                id: depArrMenu
+//                text: qsTr("Departure/Arrival")
+//                // TODO: Find better solution than {}
+//                onClicked: pageStack.replace(Qt.resolvedUrl("DepArr.qml"), {}, PageStackAction.Immediate)
+//            }
+//            MenuItem{
+//                id: favMenu
+//                text: qsTr("Favorites")
+//                // TODO: Find better solution than {}
+//                onClicked: pageStack.replace(Qt.resolvedUrl("Favorites.qml"), {}, PageStackAction.Immediate)
+//            }
         }
     }
 
+    function tryLookup() {
+        if(fromStation.text === "") {
+            pageStack.push(Qt.resolvedUrl("../components/SearchDialog.qml"),
+                           {"searchText": fromStation.text,
+                               "type": fromStation.type,
+                               "typeString": fromStation.typeString,
+                               "model" : fromStation.listModel})
+            return
+        }
+        if(toStation.text === "") {
+            pageStack.push(Qt.resolvedUrl("../components/SearchDialog.qml"),
+                           {"searchText": toStation.text,
+                               "type": toStation.type,
+                               "typeString": toStation.typeString,
+                               "model" : toStation.listModel})
+            return
+        }
 
+        timeTableHandler.lookupConnection()
+        pageStack.push(Qt.resolvedUrl("ConnectionOverview.qml"),
+                       {"model" : connectionModel,
+                           "from": fromStation.text,
+                           "to": toStation.text,
+                           "date": Qt.formatDate(timeHandler.getCurrentDate(), "dd.MM"),
+                           "time": timeButton.value})
+    }
 }

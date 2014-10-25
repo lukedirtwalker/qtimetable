@@ -17,6 +17,7 @@ public:
 
     QVariant data(int role) const;
     QHash<int,QByteArray> roleNames() const;
+    bool setData(const QVariant &value, int role);
 
     inline QDateTime getDepTime() const;
     inline QDateTime getArrTime() const;

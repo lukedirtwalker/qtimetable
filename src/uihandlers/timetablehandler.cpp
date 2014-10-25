@@ -4,9 +4,8 @@
 #include "../listmodels/resultlistmodel.h"
 
 
-TimeTableHandler::TimeTableHandler(QQmlContext *ctxt,
-                                   DatabaseHandler *dbHandler, QObject *parent)
-    : QObject(parent), qmlContext_(ctxt), dbHandler_(dbHandler),
+TimeTableHandler::TimeTableHandler(QQmlContext *ctxt, QObject *parent)
+    : QObject(parent), qmlContext_(ctxt),
       depStation_{}, arrStation_{}, viaStation_{}, arrival_{false}
 {
     timeHandler_ = new TimeHandler(this);
@@ -42,7 +41,7 @@ void TimeTableHandler::startQuery(const QString &compare, const int type)
     if(compare.isEmpty())
         return;
     QThread *queryThread = new QThread();
-    ThreadedDbHandler *queryHandler = new ThreadedDbHandler(dbHandler_->getDb(), compare);
+    ThreadedDbHandler *queryHandler = new ThreadedDbHandler(compare);
     connect(queryThread, &QThread::started, queryHandler,
             &ThreadedDbHandler::run);
 
@@ -82,18 +81,74 @@ void TimeTableHandler::setStation(int index, int type)
 {
     switch(type) {
     case 0:
-        depStation_ = depStationModel_->at(index);
-        qDebug() << depStation_->stationName();
+        if(!depStationModel_->isEmpty()) {
+            depStation_ = depStationModel_->at(index);
+            depStationName_ = depStation_->stationName();
+        } else {
+            depStationName_ = "";
+        }
+        qDebug() << "dep station changed: " << depStationName_;
+        emit depStationChanged();
         break;
     case 1:
-        arrStation_ = arrStationModel_->at(index);
+        if(!arrStationModel_->isEmpty()) {
+            arrStation_ = arrStationModel_->at(index);
+            arrStationName_ = arrStation_->stationName();
+        } else {
+            arrStationName_ = "";
+        }
+        emit arrStationChanged();
         break;
     case 2:
-        viaStation_ = viaStationModel_->at(index);
+        if(!viaStationModel_->isEmpty()) {
+            viaStation_ = viaStationModel_->at(index);
+            viaStationName_ = viaStation_->stationName();
+        } else {
+            viaStationName_ = "";
+        }
+        emit viaStationChanged();
+        break;
+    default:
+        qDebug() << "Unsupported type" << type;
+    }
+}
+
+void TimeTableHandler::clearStation(int type)
+{
+    switch(type) {
+    case 0:
+        depStation_.clear();
+        depStationName_ = "";
+        emit depStationChanged();
+        break;
+    case 1:
+        arrStation_.clear();
+        arrStationName_ = "";
+        emit arrStationChanged();
+        break;
+    case 2:
+        viaStation_.clear();
+        viaStationName_ = "";
+        emit viaStationChanged();
         break;
     default:
         qDebug() << "Unsupported type" << type;
         break;
+    }
+}
+
+void TimeTableHandler::switchStations()
+{
+    if(depStation_ && arrStation_) {
+        depStationModel_->clear();
+        arrStationModel_->clear();
+        QSharedPointer<LocationItem> temp = depStation_;
+        depStation_ = arrStation_;
+        arrStation_ = temp;
+        depStationName_ = depStation_->stationName();
+        arrStationName_ = arrStation_->stationName();
+        emit depStationChanged();
+        emit arrStationChanged();
     }
 }
 
@@ -102,9 +157,15 @@ void TimeTableHandler::lookupConnection()
     connections_->clear();
     // TODO
     if(depStation_ && arrStation_) {
-        connHandler_->startConnectionSearch(depStation_, arrStation_,
-                                            timeHandler_->getCurrentDateTime(),
-                                            arrival_);
+        if(viaStation_) {
+            connHandler_->startConnectionSearch(depStation_, arrStation_, viaStation_,
+                                                timeHandler_->getCurrentDateTime(),
+                                                arrival_);
+        } else {
+            connHandler_->startConnectionSearch(depStation_, arrStation_,
+                                                timeHandler_->getCurrentDateTime(),
+                                                arrival_);
+        }
     }
 }
 
@@ -128,10 +189,12 @@ void TimeTableHandler::connectionLookedUp(eStatusID id)
     if(XML_ERROR_RESPONSE == id || HTML_ERROR_RESPONSE == id)
     {
         QString msg = connHandler_->getErrorMessage();
+        qDebug() << "Connection lookup error" << msg;
 //        TODO emit lookupConnectionError(msg);
     }
     else if(NO_CONNECTIONS_RESPONSE == id)
     {
+        qDebug() << "Connection lookup no connections found";
 //      TODO   emit this->noConnectionsFound();
     }
     else

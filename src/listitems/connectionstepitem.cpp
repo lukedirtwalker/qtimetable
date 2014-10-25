@@ -87,6 +87,13 @@ QHash<int,QByteArray> ConnectionStepItem::roleNames() const
     return names;
 }
 
+bool ConnectionStepItem::setData(const QVariant &value, int role)
+{
+    Q_UNUSED(value)
+    Q_UNUSED(role)
+    return false;
+}
+
 QList<StopItem *> ConnectionStepItem::getStopovers()
 {
     return journey_->getStopovers();

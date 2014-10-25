@@ -6,16 +6,17 @@ Page{
     SilicaFlickable {
         anchors.fill: parent
 
-
-        // Tell SilicaFlickable the height of its content.
         contentHeight: column.height
 
-        // Place our content in a Column.  The PageHeader is always placed at the top
-        // of the page, followed by our content.
         Column {
             id: column
 
-            width: aboutPage.width
+            anchors {
+                left: parent.left
+                right: parent.right
+                margins: Theme.paddingLarge
+            }
+
             spacing: Theme.paddingLarge
 
             PageHeader {
@@ -23,32 +24,44 @@ Page{
             }
 
             Label {
+                id: versionInfo
                 width: parent.width
                 text: qsTr("Version: %1".arg(APP_VERSION))
+                wrapMode: Text.WordWrap
             }
 
-            TextArea{
-                id:info1
+            Label {
+                id: testInfo
                 width: parent.width
-                readOnly: true
-                text: qsTr("THIS APPLICATION IS A TEST VERSION. PLEASE DO NOT REDISTRIBUTE. THANKS FOR REPORTING BUGS ETC.")
+                text: qsTr("THIS APPLICATION IS A TEST VERSION. THANKS FOR REPORTING BUGS ETC.")
+                wrapMode: Text.WordWrap
             }
-            TextArea{
+
+            Label {
                 id: infoLabel
                 width: parent.width
-                readOnly: true
-                text: qsTr("This is an unofficial timetable client application which uses the information provided by SBB. \nFor bug reports and other questions / issues send an email to qtimetable@gmail.com or preferably use the link below")
+                text: qsTr("This is an unofficial timetable client application which uses the information provided by SBB. \nFor bug reports and other questions / issues use the issue tracker:")
+                wrapMode: Text.WordWrap
             }
-            TextArea{
-                id: issueField
-                width: parent.width
-                readOnly: true
-                // TODO: Fix link
-                text: qsTr("Report issues here : <a href=\"https://bitbucket.org/qtimetable/qtimetablen9/issues?status=new&status=open\"> issue tracker </a>")
-                // XXX: Workaround to have Links
-//                Component.onCompleted: {
-//                    issueField.textFormat = TextFormat.RichText
-//                }
+
+            Button {
+                id: issueButton
+                width: parent.width * 0.5
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("Issue tracker")
+                onClicked: {
+                    Qt.openUrlExternally("https://bitbucket.org/qtimetable/qtimetable2/issues?status=open")
+                }
+            }
+
+            Button {
+                id: mailButton
+                width: parent.width * 0.5
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("e-Mail developer")
+                onClicked: {
+                    Qt.openUrlExternally("mailto:qtimetable@gmail.com?subject=QtimeTable")
+                }
             }
         }
     }

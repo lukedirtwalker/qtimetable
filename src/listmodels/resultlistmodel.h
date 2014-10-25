@@ -28,6 +28,8 @@ public:
     QModelIndex indexFromItem(const QSharedPointer<ItemType> item) const;
     void clear();
 
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
+
 private:
     ItemType* prototype_;
     QList<QSharedPointer<ItemType> > dataList_;

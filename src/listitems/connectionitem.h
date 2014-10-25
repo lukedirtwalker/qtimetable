@@ -19,6 +19,7 @@ public:
 
     virtual QVariant data(int role) const;
     virtual QHash<int, QByteArray> roleNames() const;
+    bool setData(const QVariant &value, int role);
 
     inline ConnectionStepModel *getConnectionSteps() const;
     inline void setConnectionStateInfo(int info);

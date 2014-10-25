@@ -1,3 +1,5 @@
+#include <QDebug>
+
 template <class ItemType>
 ResultListModel<ItemType>::ResultListModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -131,4 +133,16 @@ void ResultListModel<ItemType>::replaceData(const QList<QSharedPointer<ItemType>
 {
     clear();
     appendRows(newData);
+}
+
+template <class ItemType>
+bool ResultListModel<ItemType>::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if(index.row() >= 0 && index.row() < dataList_.size()) {
+        if(dataList_.at(index.row())->setData(value, role)) {
+            emit dataChanged(index, index, QVector<int>() << role);
+            return true;
+        }
+    }
+    return false;
 }
