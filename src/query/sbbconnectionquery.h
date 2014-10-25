@@ -12,7 +12,7 @@ public:
     SBBConnectionQuery(Serializable *start, Serializable *dest,
                        Serializable *date, Serializable *flags,
                        Serializable *via = nullptr);
-    virtual ~SBBConnectionQuery(); //TODO why virtual
+    virtual ~SBBConnectionQuery();
 
     virtual QDomDocument toXML();
 
