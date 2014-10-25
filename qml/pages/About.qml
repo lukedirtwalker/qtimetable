@@ -21,12 +21,17 @@ Page{
             PageHeader {
                 title: qsTr("About")
             }
+
+            Label {
+                width: parent.width
+                text: qsTr("Version: %1".arg(APP_VERSION))
+            }
+
             TextArea{
                 id:info1
                 width: parent.width
                 readOnly: true
-                // TODO: version number
-                text: qsTr("CURRENT VERSION: NYI\nTHIS APPLICATION IS A TEST VERSION. PLEASE DO NOT REDISTRIBUTE. THANKS FOR REPORTING BUGS ETC.")
+                text: qsTr("THIS APPLICATION IS A TEST VERSION. PLEASE DO NOT REDISTRIBUTE. THANKS FOR REPORTING BUGS ETC.")
             }
             TextArea{
                 id: infoLabel

@@ -17,6 +17,8 @@ database.files = stations.db
 database.path = /usr/share/harbour-qtimetable/data
 INSTALLS += desktop icon database
 
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+
 
 QMAKE_CXXFLAGS += -std=c++0x
 
