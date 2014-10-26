@@ -6,16 +6,6 @@ import "../components"
 Page {
     id: timeTablePage
 
-    onStatusChanged: {
-        if(timeTablePage.status === PageStatus.Active) {
-            dateButton.value = Qt.formatDate(timeHandler.getCurrentDate(),
-                                             "ddd dd.MM.yyyy")
-            timeButton.value = Qt.formatTime(timeHandler.getCurrentTime(),
-                                             "hh:mm")
-        }
-    }
-
-    // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
 
@@ -31,25 +21,61 @@ Page {
                 title: qsTr("Timetable")
             }
 
-            TimeTableInput {
-                id: fromStation
-                labelText: qsTr("From")
-                stationText: qsTr("Location")
-                text: timeTableHandler.depStation
-                type: 0 // dep
-                typeString: qsTr("Departure")
-                listModel: depStationModel
-                handler: timeTableHandler
-            }
-            TimeTableInput {
-                id: toStation
-                labelText: qsTr("To")
-                stationText: qsTr("Location")
-                text: timeTableHandler.arrStation
-                type: 1 // arr
-                typeString: qsTr("Arrival")
-                listModel: arrStationModel
-                handler: timeTableHandler
+            Row {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    rightMargin: Theme.paddingLarge
+                }
+
+                Column {
+                    width: parent.width - oppDirection.width
+                    spacing: Theme.paddingLarge
+
+                    TimeTableInput {
+                        id: fromStation
+                        labelText: qsTr("From")
+                        stationText: qsTr("Location")
+                        text: timeTableHandler.depStation
+                        type: 0 // dep
+                        typeString: qsTr("Departure")
+                        listModel: depStationModel
+                        handler: timeTableHandler
+                    }
+
+                    TimeTableInput {
+                        id: toStation
+                        labelText: qsTr("To")
+                        stationText: qsTr("Location")
+                        text: timeTableHandler.arrStation
+                        type: 1 // arr
+                        typeString: qsTr("Arrival")
+                        listModel: arrStationModel
+                        handler: timeTableHandler
+                    }
+                }
+
+                IconButton {
+                    id: oppDirection
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: Theme.iconSizeMedium
+                    height: width;
+                    icon.source: "image://theme/icon-m-mobile-network"
+                    onClicked: {
+                        if(timeTableHandler.switchStations()) {
+                            oppDirection.state == "rotated" ? oppDirection.state = "" : oppDirection.state = "rotated"
+                        }
+                    }
+
+                    states: State {
+                        name: "rotated"
+                        PropertyChanges { target: oppDirection; rotation: 180 }
+                    }
+
+                    transitions: Transition {
+                        RotationAnimation { duration: 500; direction: RotationAnimation.Clockwise }
+                    }
+                }
             }
             TimeTableInput {
                 id: viaStation
@@ -71,73 +97,74 @@ Page {
             }
             Row {
                 id: timeRow
-                width: parent.width
-                height: 100
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    rightMargin: Theme.paddingLarge
+                }
+
                 ValueButton {
                     id: dateButton
-                    label: ""
-                    width: parent.width / 2
-                    value: Qt.formatDate(timeHandler.getCurrentDate(),
+                    width: parent.width * 0.5
+                    anchors.verticalCenter: parent.verticalCenter
+                    value: Qt.formatDate(timeHandler.date,
                                          "ddd dd.MM.yyyy")
 
                     onClicked: {
                         var dialog = pageStack.push(
                                     "Sailfish.Silica.DatePickerDialog", {
-                                        date: timeHandler.getCurrentDate()})
+                                        date: timeHandler.date})
                         dialog.accepted.connect(function() {
                             timeHandler.setDate(dialog.year, dialog.month,
                                                 dialog.day)
-                            dateButton.value = Qt.formatDate(dialog.date,
-                                                             "ddd dd.MM.yyyy")
                         })
                     }
                 }
 
                 ValueButton {
                     id: timeButton
-                    label: ""
-                    width: parent.width / 2
-                    value: Qt.formatTime(timeHandler.getCurrentTime(), "hh:mm")
+                    width: parent.width * 0.5 - refresherButton.width
+                    anchors.verticalCenter: parent.verticalCenter
+                    value: Qt.formatTime(timeHandler.time, "hh:mm")
 
                     onClicked:{
                         var dialog = pageStack.push(
                                     "Sailfish.Silica.TimePickerDialog", {
-                                        hour: timeHandler.getCurrentTime().getHours(),
-                                        minute: timeHandler.getCurrentTime().getMinutes()})
+                                        hour: timeHandler.time.getHours(),
+                                        minute: timeHandler.time.getMinutes()})
 
                         dialog.accepted.connect(function() {
                             timeHandler.setTime(dialog.hour, dialog.minute)
-                            timeButton.value = Qt.formatTime(dialog.time, "hh:mm")
                         })
                     }
                 }
-            }
 
-            Row {
-                anchors {
-                    left: parent.left
-                    leftMargin: Theme.paddingLarge
-                    right: parent.right
-                    rightMargin: Theme.paddingLarge
-                }
-
-                Button {
-                    id: switchButton
-                    text: qsTr("Opposite direction")
+                IconButton {
+                    id: refresherButton
+                    width: Theme.iconSizeMedium
+                    height: width;
+                    anchors.verticalCenter: parent.verticalCenter
+                    icon.source: "image://theme/icon-m-refresh"
                     onClicked: {
-                        timeTableHandler.switchStations()
-                    }
-                }
-
-                Button {
-                    id: searchButton
-                    text: qsTr("Search")
-                    onClicked: {
-                        tryLookup()
+                        timeHandler.updateTime()
                     }
                 }
             }
 
+            Item {
+                id: spacer
+                width: 1
+                height: Theme.paddingLarge
+            }
+
+            Button {
+                id: searchButton
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("Search")
+                onClicked: {
+                    tryLookup()
+                }
+            }
         }
 
         PullDownMenu {
@@ -145,18 +172,18 @@ Page {
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
             }
-//            MenuItem{
-//                id: depArrMenu
-//                text: qsTr("Departure/Arrival")
-//                // TODO: Find better solution than {}
-//                onClicked: pageStack.replace(Qt.resolvedUrl("DepArr.qml"), {}, PageStackAction.Immediate)
-//            }
-//            MenuItem{
-//                id: favMenu
-//                text: qsTr("Favorites")
-//                // TODO: Find better solution than {}
-//                onClicked: pageStack.replace(Qt.resolvedUrl("Favorites.qml"), {}, PageStackAction.Immediate)
-//            }
+            //            MenuItem{
+            //                id: depArrMenu
+            //                text: qsTr("Departure/Arrival")
+            //                // TODO: Find better solution than {}
+            //                onClicked: pageStack.replace(Qt.resolvedUrl("DepArr.qml"), {}, PageStackAction.Immediate)
+            //            }
+            //            MenuItem{
+            //                id: favMenu
+            //                text: qsTr("Favorites")
+            //                // TODO: Find better solution than {}
+            //                onClicked: pageStack.replace(Qt.resolvedUrl("Favorites.qml"), {}, PageStackAction.Immediate)
+            //            }
         }
     }
 
@@ -183,7 +210,7 @@ Page {
                        {"model" : connectionModel,
                            "from": fromStation.text,
                            "to": toStation.text,
-                           "date": Qt.formatDate(timeHandler.getCurrentDate(), "dd.MM"),
+                           "date": Qt.formatDate(timeHandler.date, "dd.MM"),
                            "time": timeButton.value})
     }
 }

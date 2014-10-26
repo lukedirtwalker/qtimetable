@@ -21,7 +21,7 @@ Page {
         spacing: Theme.paddingSmall
 
         PageHeader {
-            title: qsTr("Overview")
+            title: qsTr("Connections")
         }
 
         ConnectionOverviewHeader {

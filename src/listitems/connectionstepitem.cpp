@@ -7,6 +7,11 @@ ConnectionStepItem::ConnectionStepItem(QDomNode domConnectionStep, QDateTime dat
 {
     QDomElement el = domConnectionStep.toElement();
 
+//    QString elString;
+//    QTextStream stream(&elString);
+//    el.save(stream, 4);
+//    qDebug() << elString;
+
     QDomNode domDeparture = el.elementsByTagName("Departure").at(0).toElement().elementsByTagName("BasicStop").at(0);
     QDomNodeList domJourney = el.elementsByTagName("Journey");
     QDomNodeList domWalk = el.elementsByTagName("Walk");
@@ -18,7 +23,9 @@ ConnectionStepItem::ConnectionStepItem(QDomNode domConnectionStep, QDateTime dat
 
     if(domJourney.count())
         journey_ = new Journey(domJourney.at(0), date);
-    else if(domWalk.count() || domFoot.count())
+    else if(domWalk.count())
+        journey_ = new Journey(domWalk.at(0), date, true);
+    else if(domFoot.count())
         journey_ = new Journey("Walk");
     else
         journey_ = new Journey("");
@@ -44,6 +51,8 @@ QVariant ConnectionStepItem::data(int role) const
     case ArrTimeRole: return arrival_->getTime();
     case ArrPlatformRole: return arrival_->getPlatform();
     case MeansOfTransportRole: return journey_->getMeansOfTransport();
+    case MeansOfTransportDetailRole: return journey_->getMeansOfTransportDetail();
+    case DirectionRole: return journey_->getDirection();
     case UtilisationFirstRole: return departure_->getUtilisationFirst();
     case UtilisationSecondRole: return departure_->getUtilisationSecond();
     case HasDepDelayRole: return departure_->hasDelay();
@@ -71,6 +80,8 @@ QHash<int,QByteArray> ConnectionStepItem::roleNames() const
     names[ArrTimeRole] = "ArrTime";
     names[ArrPlatformRole] = "ArrPlatform";
     names[MeansOfTransportRole] = "MeansOfTransport";
+    names[MeansOfTransportDetailRole] = "MOTDetail";
+    names[DirectionRole] = "Direction";
     names[UtilisationFirstRole] = "UtilisationFirst";
     names[UtilisationSecondRole] = "UtilisationSecond";
     names[HasDepDelayRole] = "HasDepDelay";

@@ -6,12 +6,13 @@ BackgroundItem {
     width: parent.width
     height: Theme.itemSizeSmall
 
+    property alias text: stationNameLabel.text
+
     Label {
         id: stationNameLabel
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: Theme.paddingLarge
-        text: stationName
         color: searchListItem.highlighted ?
                    Theme.highlightColor : Theme.primaryColor
     }
@@ -24,5 +25,6 @@ BackgroundItem {
         onClicked: {
             favorite = !favorite;
         }
+        highlighted: down || searchListItem.highlighted
     }
 }
