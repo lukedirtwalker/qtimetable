@@ -31,13 +31,6 @@ Page{
             }
 
             Label {
-                id: testInfo
-                width: parent.width
-                text: qsTr("THIS APPLICATION IS A TEST VERSION. THANKS FOR REPORTING BUGS ETC.")
-                wrapMode: Text.WordWrap
-            }
-
-            Label {
                 id: infoLabel
                 width: parent.width
                 text: qsTr("This is an unofficial timetable client application which uses the information provided by SBB. \nFor bug reports and other questions / issues use the issue tracker:")
@@ -60,7 +53,17 @@ Page{
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("e-Mail developer")
                 onClicked: {
-                    Qt.openUrlExternally("mailto:qtimetable@gmail.com?subject=QtimeTable")
+                    Qt.openUrlExternally("mailto:lukedirtwalkerdev@gmail.com?subject=[QTimeTable]")
+                }
+            }
+
+            Button {
+                id: donateButton
+                width: parent.width * 0.5
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("Donate")
+                onClicked: {
+                    Qt.openUrlExternally("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DA4FXEE3WXVWW")
                 }
             }
         }
