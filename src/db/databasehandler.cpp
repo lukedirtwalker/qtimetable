@@ -1,6 +1,8 @@
 #include "databasehandler.h"
 #include <QDebug>
 
+#include "../listitems/locationitem.h"
+
 DatabaseHandler::~DatabaseHandler()
 {
     if(q_)
@@ -58,25 +60,28 @@ bool DatabaseHandler::openConnection(const QString &dbFile)
 //    delete other;
 //}
 
-//LocationItem *DatabaseHandler::selectById(const int dbId)
-//{
-//    QString sqlQuery = QString("SELECT id,external_id,name,favorite FROM stations WHERE id=%1").arg(dbId);
-//    q->prepare(sqlQuery);
-//    if(!q->exec())
-//    {
-//        qDebug() << "failure in DB query";
-//        qDebug() << q->lastError();
-//    }
-//    if(!q->next())
-//    {
-//        qDebug() << "failure to get value";
-//    }
-//    else
-//    {
-//        return new LocationItem(q->value(0).toInt(),q->value(1).toInt(), q->value(2).toString(),"","",STATION,q->value(3).toBool());
-//    }
-//    return 0;
-//}
+LocationItem *DatabaseHandler::selectById(const int dbId)
+{
+    QString sqlQuery = QString("SELECT id,external_id,name,favorite FROM stations WHERE id=%1").arg(dbId);
+    q_->prepare(sqlQuery);
+    if(!q_->exec())
+    {
+        qDebug() << "failure in DB query";
+        qDebug() << q_->lastError();
+        return nullptr;
+    }
+    if(!q_->next())
+    {
+        qDebug() << "failure to get value";
+    }
+    else
+    {
+        return new LocationItem(q_->value(0).toInt(), q_->value(1).toInt(),
+                                q_->value(2).toString(), "", "",
+                                q_->value(3).toBool());
+    }
+    return nullptr;
+}
 
 void DatabaseHandler::changeFavorite(int id, bool favorite)
 {

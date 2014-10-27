@@ -3,6 +3,7 @@
 #include "../listitems/locationitem.h"
 #include "../listmodels/resultlistmodel.h"
 
+#include "../util/settingshandler.h"
 
 TimeTableHandler::TimeTableHandler(QQmlContext *ctxt, QObject *parent)
     : QObject(parent), qmlContext_(ctxt),
@@ -26,6 +27,29 @@ TimeTableHandler::TimeTableHandler(QQmlContext *ctxt, QObject *parent)
     connHandler_ = new SBBConnectionHandler(this);
     connect(connHandler_, &SBBConnectionHandler::parsingFinished,
             this, &TimeTableHandler::connectionLookedUp);
+
+    // settings
+    settings_ = new SettingsHandler();
+    if (auto dep = settings_->depStation())
+    {
+        depStation_ = dep;
+        depStationName_ = depStation_->stationName();
+        emit depStationChanged();
+    }
+    if (auto arr = settings_->arrStation())
+    {
+        arrStation_ = arr;
+        arrStationName_ = arrStation_->stationName();
+        emit arrStationChanged();
+    }
+    if (auto via = settings_->viaStation())
+    {
+        viaStation_ = via;
+        viaStationName_ = viaStation_->stationName();
+        emit viaStationChanged();
+    }
+
+    saveStations_ = settings_->saveStations();
 }
 
 TimeTableHandler::~TimeTableHandler()
@@ -34,6 +58,8 @@ TimeTableHandler::~TimeTableHandler()
     arrStationModel_->clear();
     viaStationModel_->clear();
     connections_->clear();
+
+    delete settings_;
 }
 
 void TimeTableHandler::startQuery(const QString &compare, const int type)
@@ -84,8 +110,12 @@ void TimeTableHandler::setStation(int index, int type)
         if(!depStationModel_->isEmpty()) {
             depStation_ = depStationModel_->at(index);
             depStationName_ = depStation_->stationName();
+            if (saveStations_)
+                settings_->setDepStation(depStation_);
         } else {
             depStationName_ = "";
+            if (saveStations_)
+                settings_->setDepStation(QSharedPointer<LocationItem>());
         }
         qDebug() << "dep station changed: " << depStationName_;
         emit depStationChanged();
@@ -94,8 +124,12 @@ void TimeTableHandler::setStation(int index, int type)
         if(!arrStationModel_->isEmpty()) {
             arrStation_ = arrStationModel_->at(index);
             arrStationName_ = arrStation_->stationName();
+            if (saveStations_)
+                settings_->setArrStation(arrStation_);
         } else {
             arrStationName_ = "";
+            if (saveStations_)
+                 settings_->setArrStation(QSharedPointer<LocationItem>());
         }
         emit arrStationChanged();
         break;
@@ -103,8 +137,12 @@ void TimeTableHandler::setStation(int index, int type)
         if(!viaStationModel_->isEmpty()) {
             viaStation_ = viaStationModel_->at(index);
             viaStationName_ = viaStation_->stationName();
+            if (saveStations_)
+                settings_->setViaStation(viaStation_);
         } else {
             viaStationName_ = "";
+            if (saveStations_)
+                 settings_->setViaStation(QSharedPointer<LocationItem>());
         }
         emit viaStationChanged();
         break;
@@ -119,16 +157,22 @@ void TimeTableHandler::clearStation(int type)
     case 0:
         depStation_.clear();
         depStationName_ = "";
+        if (saveStations_)
+             settings_->setDepStation(QSharedPointer<LocationItem>());
         emit depStationChanged();
         break;
     case 1:
         arrStation_.clear();
         arrStationName_ = "";
+        if (saveStations_)
+             settings_->setArrStation(QSharedPointer<LocationItem>());
         emit arrStationChanged();
         break;
     case 2:
         viaStation_.clear();
         viaStationName_ = "";
+        if (saveStations_)
+             settings_->setViaStation(QSharedPointer<LocationItem>());
         emit viaStationChanged();
         break;
     default:
@@ -148,6 +192,13 @@ bool TimeTableHandler::switchStations()
         QString tempName = depStationName_;
         depStationName_ = arrStationName_;
         arrStationName_ = tempName;
+
+        if (saveStations_)
+        {
+            settings_->setDepStation(depStation_);
+            settings_->setArrStation(arrStation_);
+        }
+
         emit depStationChanged();
         emit arrStationChanged();
         return true;
@@ -213,4 +264,11 @@ void TimeTableHandler::connectionLookedUp(eStatusID id)
         }
         connections_->replaceData(connections);
     }
+}
+
+void TimeTableHandler::setSaveStations(bool save)
+{
+    saveStations_ = save;
+    settings_->setSaveStations(save);
+    emit saveStationsChanged();
 }

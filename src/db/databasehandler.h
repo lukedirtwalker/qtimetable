@@ -7,6 +7,7 @@
 
 //#include "util/sorterhelper.h"
 
+class LocationItem;
 
 class DatabaseHandler
 {
@@ -19,7 +20,7 @@ public:
     ~DatabaseHandler();
     bool openConnection(const QString &dbFile);
  //   void searchByLocation(double latitude,double longitude, ResultListModel *mdl);
-//    LocationItem *selectById(const int dbId);
+    LocationItem *selectById(const int dbId);
 
     //favorite stations
     void changeFavorite(int id, bool favorite);

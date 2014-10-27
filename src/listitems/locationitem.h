@@ -24,7 +24,7 @@ public:
     QString stationName() const;
 //    ListItemType getListItemType() const;
     bool favorite()const;
-    int getDbId() const;
+    int dbId() const;
     int getExtId() const;
     QString getExternalId() const;
     void setFavorite(bool fav);

@@ -12,6 +12,8 @@
 
 #include "timehandler.h"
 
+class SettingsHandler;
+
 class TimeTableHandler : public QObject
 {
     Q_OBJECT
@@ -32,9 +34,14 @@ public:
     Q_PROPERTY(QString arrStation READ arrStationName NOTIFY arrStationChanged())
     Q_PROPERTY(QString viaStation READ viaStationName NOTIFY viaStationChanged())
 
+    Q_PROPERTY(bool saveStations READ saveStations WRITE setSaveStations NOTIFY saveStationsChanged)
+
     Q_INVOKABLE QString depStationName() { return depStationName_;}
     Q_INVOKABLE QString arrStationName() { return arrStationName_;}
     Q_INVOKABLE QString viaStationName() { return viaStationName_;}
+
+    bool saveStations() const { return saveStations_; }
+    void setSaveStations(bool save);
 
 
 public slots:
@@ -48,6 +55,8 @@ signals:
     void depStationChanged();
     void arrStationChanged();
     void viaStationChanged();
+
+    void saveStationsChanged();
 
 
 private:
@@ -63,7 +72,11 @@ private:
 
     SBBConnectionHandler *connHandler_;
 
+    SettingsHandler *settings_;
+
     bool arrival_;
+
+    bool saveStations_;
 };
 
 inline void TimeTableHandler::setArrival(bool arrival) { arrival_ = arrival;}

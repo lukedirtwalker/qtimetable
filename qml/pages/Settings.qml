@@ -17,6 +17,14 @@ Page{
             PageHeader {
                 title: qsTr("Settings")
             }
+
+            TextSwitch {
+                checked: timeTableHandler.saveStations
+                text: "Save stations on Exit"
+                onClicked: {
+                    timeTableHandler.saveStations = checked
+                }
+            }
         }
 
         PullDownMenu {

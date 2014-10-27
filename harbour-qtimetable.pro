@@ -48,7 +48,8 @@ SOURCES += src/qtimetable.cpp \
     src/listitems/stopitem.cpp \
     src/domin/station.cpp \
     src/domin/address.cpp \
-    src/domin/journey.cpp
+    src/domin/journey.cpp \
+    src/util/settingshandler.cpp
 
 OTHER_FILES += qml/qtimetable.qml \
     qml/cover/CoverPage.qml \
@@ -104,5 +105,6 @@ HEADERS += \
     src/domin/journey.h \
     src/listmodels/connectionlistmodel.h \
     src/util/qdomnodeiterator.h \
-    src/listmodels/connectionstepmodel.h
+    src/listmodels/connectionstepmodel.h \
+    src/util/settingshandler.h
 

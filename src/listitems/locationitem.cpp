@@ -37,7 +37,7 @@ LocationItem::LocationItem(int dbId, const QString &extId, const QString &name, 
 LocationItem::LocationItem(LocationItem *other)
     : ListItem(other->parent())
 {
-    dbId_ = other->getDbId();
+    dbId_ = other->dbId();
     externalId_ = other->getExtId();
     extIdString_ = other->getExternalId();
     locationName_ = other->stationName();
@@ -137,7 +137,7 @@ bool LocationItem::favorite() const
     return favorite_;
 }
 
-int LocationItem::getDbId() const
+int LocationItem::dbId() const
 {
     return dbId_;
 }
