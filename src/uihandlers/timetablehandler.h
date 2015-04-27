@@ -27,6 +27,8 @@ public:
     Q_INVOKABLE bool switchStations();
 
     Q_INVOKABLE void lookupConnection();
+    Q_INVOKABLE void searchEarlier();
+    Q_INVOKABLE void searchLater();
 
     Q_INVOKABLE inline void setArrival(bool arrival);
 

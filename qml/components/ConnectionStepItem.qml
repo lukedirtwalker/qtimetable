@@ -20,6 +20,7 @@ BackgroundItem {
                 right: parent.right
             }
 
+            property color labelColor: Theme.highlightColor
             spacing: Theme.paddingMedium
 
             Label{
@@ -28,8 +29,7 @@ BackgroundItem {
                 anchors.verticalCenter: parent.verticalCenter
                 text: HasDepDelay ? Qt.formatTime(DepTime,"hh:mm") + "+" + DepDelay : Qt.formatTime(DepTime,"hh:mm")
                 //                color: theme.inverted ? (HasDepDelay ? "red" : "white") : (HasDepDelay ? "red" : "black")
-                color: connStepItem.highlighted ?
-                           Theme.highlightColor : Theme.primaryColor
+                color: depItem.labelColor
             }
 
             Label{
@@ -38,8 +38,7 @@ BackgroundItem {
                 anchors.verticalCenter: parent.verticalCenter
                 text: DepPlatform
                 //                color: theme.inverted ? (HasChangedDepPlatform ? "red" : "white") : (HasChangedDepPlatform ? "red" : "black")
-                color: connStepItem.highlighted ?
-                           Theme.highlightColor : Theme.primaryColor
+                color: depItem.labelColor
             }
 
             Label{
@@ -49,8 +48,7 @@ BackgroundItem {
                 text: DepStation
                 elide: Text.ElideRight
                 maximumLineCount: 2
-                color: connStepItem.highlighted ?
-                           Theme.highlightColor : Theme.primaryColor
+                color: depItem.labelColor
             }
         }
 
@@ -63,6 +61,8 @@ BackgroundItem {
                 right: parent.right
             }
 
+            property color labelColor: highlighted ? Theme.highlightColor : Theme.primaryColor
+
             spacing: Theme.paddingMedium
 
             Label{
@@ -70,8 +70,7 @@ BackgroundItem {
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width * 0.36 + Theme.paddingMedium
                 text: MeansOfTransport
-                color: connStepItem.highlighted ?
-                           Theme.highlightColor : Theme.primaryColor
+                color: infoItem.labelColor
             }
 
             Column {
@@ -83,16 +82,14 @@ BackgroundItem {
                     width: parent.width
                     text: MOTDetail
                     elide: Text.ElideRight
-                    color: connStepItem.highlighted ?
-                               Theme.highlightColor : Theme.primaryColor
+                    color: infoItem.labelColor
                 }
 
                 Label {
                     width: parent.width
                     text: Direction.length > 0 ? qsTr("Dir. ") + Direction : ""
                     elide: Text.ElideRight
-                    color: connStepItem.highlighted ?
-                               Theme.highlightColor : Theme.primaryColor
+                    color: infoItem.labelColor
                 }
             }
 
@@ -157,6 +154,8 @@ BackgroundItem {
                 right: parent.right
             }
 
+            property color labelColor: Theme.highlightColor
+
             spacing: Theme.paddingMedium
 
             Label{
@@ -165,8 +164,7 @@ BackgroundItem {
                 anchors.verticalCenter: parent.verticalCenter
                 text: HasArrDelay ? Qt.formatTime(ArrTime,"hh:mm") + "+" + ArrDelay : Qt.formatTime(ArrTime,"hh:mm")
                 //                color: theme.inverted ? (HasArrDelay ? "red" : "white") : (HasArrDelay ? "red" : "black")
-                color: connStepItem.highlighted ?
-                           Theme.highlightColor : Theme.primaryColor
+                color: arrItem.labelColor
             }
 
             Label{
@@ -175,8 +173,7 @@ BackgroundItem {
                 anchors.verticalCenter: parent.verticalCenter
                 text: ArrPlatform
                 //                color: theme.inverted ? (HasChangedArrPlatform ? "red" : "white") : (HasChangedArrPlatform ? "red" : "black")
-                color: connStepItem.highlighted ?
-                           Theme.highlightColor : Theme.primaryColor
+                color: arrItem.labelColor
             }
             Label{
                 id: arrStopLabel
@@ -185,8 +182,7 @@ BackgroundItem {
                 text: ArrStation
                 elide: Text.ElideRight
                 maximumLineCount: 2
-                color: connStepItem.highlighted ?
-                           Theme.highlightColor : Theme.primaryColor
+                color: arrItem.labelColor
             }
         }
     }

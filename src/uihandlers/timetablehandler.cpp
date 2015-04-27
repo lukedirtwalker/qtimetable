@@ -223,6 +223,16 @@ void TimeTableHandler::lookupConnection()
     }
 }
 
+void TimeTableHandler::searchEarlier()
+{
+    connHandler_->searchEarlier();
+}
+
+void TimeTableHandler::searchLater()
+{
+    connHandler_->searchLater();
+}
+
 void TimeTableHandler::depLookupFinished(StationListType items)
 {
     depStationModel_->replaceData(items);

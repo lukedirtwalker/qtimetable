@@ -20,14 +20,7 @@ Page{
             spacing: Theme.paddingLarge
 
             PageHeader {
-                title: qsTr("About")
-            }
-
-            Label {
-                id: versionInfo
-                width: parent.width
-                text: qsTr("Version: %1".arg(APP_VERSION))
-                wrapMode: Text.WordWrap
+                title: qsTr("QTimeTable %1").arg(APP_VERSION)
             }
 
             Label {

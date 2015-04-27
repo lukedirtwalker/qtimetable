@@ -6,100 +6,108 @@ Page {
     id: connectionsPage
 
     property alias model: searchSuggestionList.model
-    property alias from: overviewHeader.fromStationText
-    property alias to: overviewHeader.toStationText
-    property alias date: overviewHeader.date
-    property alias time: overviewHeader.time
+    property string from: ""
+    property string to: ""
+    property string date: ""
+    property string time: ""
 
     Component.onDestruction : {
         searchSuggestionList.model.clear()
     }
 
-    Column {
-        id: column
-        width: connectionsPage.width
-        spacing: Theme.paddingSmall
-
-        PageHeader {
-            title: qsTr("Connections")
-        }
-
-        ConnectionOverviewHeader {
-            id: overviewHeader
-        }
-
-        Item {
-            id: tableHeader
-
-            width: parent.width
-            height: Theme.itemSizeSmall
-
-            Row {
-                id: headerRow
-                anchors.left: parent.left
-                anchors.leftMargin: Theme.paddingLarge
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                spacing: Theme.paddingMedium
-                Label{
-                    id: depTimeLabel
-                    width: parent.width * 0.18
-                    text: qsTr("Dep")
-                }
-
-                Label{
-                    id: arrTimeLabel
-                    width: parent.width * 0.18
-                    text: qsTr("Arr")
-                }
-                Label{
-                    id: durTimeLabel
-                    width: parent.width * 0.18
-                    text: qsTr("Dur")
-                }
-                Label{
-                    id: chgLabel
-                    width: parent.width * 0.18
-                    text: qsTr("Chg")
-                }
-                Label {
-                    id: platLabel
-                    width: parent.width * 0.18
-                    text: qsTr("Plat.")
-                }
-            }
-
-            Separator {
-                height: 2
-                anchors {
-                    left: parent.left
-                    leftMargin: Theme.paddingLarge
-                    right: parent.right
-                    rightMargin: Theme.paddingLarge
-                    bottom: parent.bottom
-                }
-                color: Theme.primaryColor
-            }
-        }
-    }
     SilicaListView {
         id: searchSuggestionList
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: column.bottom
-            bottom: parent.bottom
+        anchors.fill: parent
+
+        header: Column {
+            id: column
+            width: connectionsPage.width
+            spacing: Theme.paddingSmall
+
+            PageHeader {
+                title: qsTr("Connections")
+            }
+
+            ConnectionOverviewHeader {
+                id: overviewHeader
+                fromStationText: connectionsPage.from
+                toStationText: connectionsPage.to
+                date: connectionsPage.date
+                time: connectionsPage.time
+            }
+
+            Item {
+                id: tableHeader
+
+                width: parent.width
+                height: Theme.itemSizeSmall
+
+                Row {
+                    id: headerRow
+                    anchors.left: parent.left
+                    anchors.leftMargin: Theme.paddingLarge
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    spacing: Theme.paddingMedium
+                    Label{
+                        id: depTimeLabel
+                        width: parent.width * 0.18
+                        text: qsTr("Dep")
+                        color: Theme.highlightColor
+                    }
+
+                    Label{
+                        id: arrTimeLabel
+                        width: parent.width * 0.18
+                        text: qsTr("Arr")
+                        color: Theme.highlightColor
+                    }
+                    Label{
+                        id: durTimeLabel
+                        width: parent.width * 0.18
+                        text: qsTr("Dur")
+                        color: Theme.highlightColor
+                    }
+                    Label{
+                        id: chgLabel
+                        width: parent.width * 0.18
+                        text: qsTr("Chg")
+                        color: Theme.highlightColor
+                    }
+                    Label {
+                        id: platLabel
+                        width: parent.width * 0.18
+                        text: qsTr("Plat.")
+                        color: Theme.highlightColor
+                    }
+                }
+            }
         }
+
 
         delegate: ConnectionOverviewItem {
             id: overviewItem
             onClicked: {
                 pageStack.push(Qt.resolvedUrl("ConnectionStep.qml"),
                                {"model" : searchSuggestionList.model.getConnectionSteps(index),
-                                   "from" : overviewHeader.fromStationText,
-                                   "to" : overviewHeader.toStationText,
+                                   "from" : connectionsPage.from,
+                                   "to" : connectionsPage.to,
                                    "time" : Qt.formatDateTime(dep, "hh:mm"),
                                    "date" : Qt.formatDateTime(dep, "dd.MM")})
+            }
+        }
+
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("Earlier")
+                onClicked: timeTableHandler.searchEarlier()
+            }
+        }
+
+        PushUpMenu {
+            MenuItem {
+                text: qsTr("Later")
+                onClicked:  timeTableHandler.searchLater()
             }
         }
     }

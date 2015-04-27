@@ -13,7 +13,7 @@ Name:       harbour-qtimetable
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    QTimeTable Swiss Train Timetable
-Version:    0.3
+Version:    0.4
 Release:    0
 Group:      Qt/Qt
 License:    LICENSE
@@ -70,7 +70,12 @@ desktop-file-install --delete-original       \
 
 # >> files
 %changelog
-* Mon Oct 27 2014 - Lukas <lukedirtwalker at gamil.com> 0.3-0
+* Wed Dec 24 2014 - Lukas <lukedirtwalker at gmail.com> 0.4-0
+-Add possibility to show ealier/later connections
+-Slightly change about page
+-Headers in detail and connections page are now scrolling away
+-Indication for connection steps
+* Mon Oct 27 2014 - Lukas <lukedirtwalker at gmail.com> 0.3-0
 -Save stations on exit option added
 -Add donation links
 -Show version in about page
