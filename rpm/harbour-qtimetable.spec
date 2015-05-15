@@ -13,12 +13,11 @@ Name:       harbour-qtimetable
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    QTimeTable Swiss Train Timetable
-Version:    0.4
+Version:    0.5
 Release:    0
 Group:      Qt/Qt
 License:    LICENSE
 Source0:    %{name}-%{version}.tar.bz2
-Source100:  harbour-qtimetable.yaml
 Requires:   sailfishsilica-qt5
 BuildRequires:  pkgconfig(sailfishapp)
 BuildRequires:  pkgconfig(Qt5Quick)
@@ -70,6 +69,11 @@ desktop-file-install --delete-original       \
 
 # >> files
 %changelog
+* Fri May 15 2015 - Lukas <lukedirtwalker at gmail.com> 0.5-0
+-Add busy indicator during lookup
+-Add favorite connection handling
+-Remove search button, just swipe from right to search connection
+-Merge settings and about page
 * Wed Dec 24 2014 - Lukas <lukedirtwalker at gmail.com> 0.4-0
 -Add possibility to show ealier/later connections
 -Slightly change about page
