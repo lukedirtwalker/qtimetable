@@ -42,7 +42,9 @@ Column{
                        {"searchText": station.text,
                            "type": listItem.type,
                            "typeString": listItem.typeString,
-                           "model" : listModel})
+                           "model" : listModel,
+                           "acceptDestination" : timeTablePage,
+                           "acceptDestinationAction" : PageStackAction.Pop})
         dialog.accepted.connect(stationSelected)
     }
 }

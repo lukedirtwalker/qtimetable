@@ -53,7 +53,7 @@ Dialog {
             text: stationSearch.text.length > 0 ? Theme.highlightText(model.stationName, stationSearch.text, Theme.highlightColor) : model.stationName
             onClicked: {
                 selectIndex = index;
-                searchDialog.accept()
+                pageStack.navigateForward()
             }
         }
     }
