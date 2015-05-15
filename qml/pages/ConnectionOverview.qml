@@ -102,13 +102,20 @@ Page {
                 text: qsTr("Earlier")
                 onClicked: timeTableHandler.searchEarlier()
             }
+            visible: !timeTableHandler.busy
         }
 
         PushUpMenu {
             MenuItem {
                 text: qsTr("Later")
-                onClicked:  timeTableHandler.searchLater()
+                onClicked: timeTableHandler.searchLater()
             }
+            visible: !timeTableHandler.busy
         }
+    }
+    BusyIndicator {
+        anchors.centerIn: parent
+        size: BusyIndicatorSize.Large
+        running: timeTableHandler.busy
     }
 }

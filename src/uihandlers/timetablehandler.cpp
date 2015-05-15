@@ -7,7 +7,7 @@
 
 TimeTableHandler::TimeTableHandler(QQmlContext *ctxt, QObject *parent)
     : QObject(parent), qmlContext_(ctxt),
-      depStation_{}, arrStation_{}, viaStation_{}, arrival_{false}
+      depStation_{}, arrStation_{}, viaStation_{}, arrival_{false}, busy_{false}
 {
     timeHandler_ = new TimeHandler(this);
     qmlContext_->setContextProperty("timeHandler", timeHandler_);
@@ -220,16 +220,22 @@ void TimeTableHandler::lookupConnection()
                                                 timeHandler_->getCurrentDateTime(),
                                                 arrival_);
         }
+        busy_ = true;
+        emit busyChanged();
     }
 }
 
 void TimeTableHandler::searchEarlier()
 {
+    busy_ = true;
+    emit busyChanged();
     connHandler_->searchEarlier();
 }
 
 void TimeTableHandler::searchLater()
 {
+    busy_ = true;
+    emit busyChanged();
     connHandler_->searchLater();
 }
 
@@ -250,16 +256,18 @@ void TimeTableHandler::viaLookupFinished(StationListType items)
 
 void TimeTableHandler::connectionLookedUp(eStatusID id)
 {
+    busy_ = false;
+    emit busyChanged();
     if(XML_ERROR_RESPONSE == id || HTML_ERROR_RESPONSE == id)
     {
         QString msg = connHandler_->getErrorMessage();
         qDebug() << "Connection lookup error" << msg;
-//        TODO emit lookupConnectionError(msg);
+        emit lookupConnectionError(msg);
     }
     else if(NO_CONNECTIONS_RESPONSE == id)
     {
         qDebug() << "Connection lookup no connections found";
-//      TODO   emit this->noConnectionsFound();
+        emit noConnectionsFound();
     }
     else
     {

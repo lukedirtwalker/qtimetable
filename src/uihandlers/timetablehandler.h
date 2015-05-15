@@ -21,6 +21,8 @@ public:
     TimeTableHandler(QQmlContext *ctxt, QObject *parent = 0);
     ~TimeTableHandler();
 
+    Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
+
     Q_INVOKABLE void startQuery(const QString &compare, const int type);
     Q_INVOKABLE void setStation(const int index, const int type);
     Q_INVOKABLE void clearStation(const int type);
@@ -45,6 +47,8 @@ public:
     bool saveStations() const { return saveStations_; }
     void setSaveStations(bool save);
 
+    bool busy() { return busy_; }
+
 
 public slots:
     void depLookupFinished(StationListType items);
@@ -59,6 +63,11 @@ signals:
     void viaStationChanged();
 
     void saveStationsChanged();
+
+    void lookupConnectionError(QString msg);
+    void noConnectionsFound();
+
+    void busyChanged();
 
 
 private:
@@ -79,6 +88,7 @@ private:
     bool arrival_;
 
     bool saveStations_;
+    bool busy_;
 };
 
 inline void TimeTableHandler::setArrival(bool arrival) { arrival_ = arrival;}
