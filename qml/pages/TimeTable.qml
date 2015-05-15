@@ -41,6 +41,7 @@ Page {
                         typeString: qsTr("Departure")
                         listModel: depStationModel
                         handler: timeTableHandler
+                        onStationSelected: adaptAttachPage()
                     }
 
                     TimeTableInput {
@@ -51,6 +52,18 @@ Page {
                         type: 1 // arr
                         typeString: qsTr("Arrival")
                         listModel: arrStationModel
+                        handler: timeTableHandler
+                        onStationSelected: adaptAttachPage()
+                    }
+
+                    TimeTableInput {
+                        id: viaStation
+                        labelText: qsTr("Via")
+                        stationText: qsTr("Location")
+                        text: timeTableHandler.viaStation
+                        type: 2 // via
+                        typeString: qsTr("Via")
+                        listModel: viaStationModel
                         handler: timeTableHandler
                     }
                 }
@@ -76,16 +89,6 @@ Page {
                         RotationAnimation { duration: 500; direction: RotationAnimation.Clockwise }
                     }
                 }
-            }
-            TimeTableInput {
-                id: viaStation
-                labelText: qsTr("Via")
-                stationText: qsTr("Location")
-                text: timeTableHandler.viaStation
-                type: 2 // via
-                typeString: qsTr("Via")
-                listModel: viaStationModel
-                handler: timeTableHandler
             }
 
             DepArrSwitch {
@@ -151,21 +154,6 @@ Page {
                 }
             }
 
-            Item {
-                id: spacer
-                width: 1
-                height: Theme.paddingLarge
-            }
-
-            Button {
-                id: searchButton
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("Search")
-                onClicked: {
-                    tryLookup()
-                }
-            }
-
             PageHeader {
                 title: qsTr("Favorites")
                 visible: favoritesRepeater.count
@@ -188,7 +176,8 @@ Page {
                         hasVia: HasViaStation
                         onClicked: {
                             timeTableHandler.setConnectionToFavoriteConnection(index)
-                            tryLookup()
+                            adaptAttachPage()
+                            pageStack.navigateForward()
                         }
                     }
                 }
@@ -217,32 +206,44 @@ Page {
         }
     }
 
-    Component.onCompleted: timeTableHandler.modelFavoriteConnections()
+    Component.onCompleted: {
+        timeTableHandler.modelFavoriteConnections()
+    }
 
-    function tryLookup() {
+    onStatusChanged: {
+        if (status === PageStatus.Active) {
+                adaptAttachPage();
+        }
+    }
+
+    function adaptAttachPage() {
         if(fromStation.text === "") {
-            pageStack.push(Qt.resolvedUrl("../components/SearchDialog.qml"),
+            pageStack.pushAttached(Qt.resolvedUrl("../components/SearchDialog.qml"),
                            {"searchText": fromStation.text,
                                "type": fromStation.type,
                                "typeString": fromStation.typeString,
-                               "model" : fromStation.listModel})
-            return
+                               "model" : fromStation.listModel,
+                               "acceptDestination" : timeTablePage,
+                               "acceptDestinationAction" : PageStackAction.Pop})
+            return 0
         }
         if(toStation.text === "") {
-            pageStack.push(Qt.resolvedUrl("../components/SearchDialog.qml"),
+            pageStack.pushAttached(Qt.resolvedUrl("../components/SearchDialog.qml"),
                            {"searchText": toStation.text,
                                "type": toStation.type,
                                "typeString": toStation.typeString,
-                               "model" : toStation.listModel})
-            return
+                               "model" : toStation.listModel,
+                               "acceptDestination" : timeTablePage,
+                               "acceptDestinationAction" : PageStackAction.Pop})
+            return 0
         }
 
-        timeTableHandler.lookupConnection()
-        pageStack.push(Qt.resolvedUrl("ConnectionOverview.qml"),
+        pageStack.pushAttached(Qt.resolvedUrl("ConnectionOverview.qml"),
                        {"model" : connectionModel,
                            "from": fromStation.text,
                            "to": toStation.text,
                            "date": Qt.formatDate(timeHandler.date, "dd.MM"),
                            "time": timeButton.value})
+        return 1
     }
 }

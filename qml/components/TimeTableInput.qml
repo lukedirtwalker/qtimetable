@@ -14,6 +14,8 @@ Column{
     property variant listModel
     property variant handler
 
+    signal stationSelected()
+
     Label{
         id: label
         anchors.left: parent.left
@@ -36,10 +38,11 @@ Column{
     }
 
     function openSearch() {
-        pageStack.push("SearchDialog.qml",
+        var dialog = pageStack.push("SearchDialog.qml",
                        {"searchText": station.text,
                            "type": listItem.type,
                            "typeString": listItem.typeString,
                            "model" : listModel})
+        dialog.accepted.connect(stationSelected)
     }
 }

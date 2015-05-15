@@ -11,6 +11,8 @@ Page {
     property string date: ""
     property string time: ""
 
+    Component.onCompleted: timeTableHandler.lookupConnection()
+
     Component.onDestruction : {
         searchSuggestionList.model.clear()
     }
