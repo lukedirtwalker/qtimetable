@@ -49,7 +49,8 @@ SOURCES += src/qtimetable.cpp \
     src/domin/station.cpp \
     src/domin/address.cpp \
     src/domin/journey.cpp \
-    src/util/settingshandler.cpp
+    src/util/settingshandler.cpp \
+    src/listitems/favoriteconnectionitem.cpp
 
 OTHER_FILES += qml/qtimetable.qml \
     qml/cover/CoverPage.qml \
@@ -70,7 +71,8 @@ OTHER_FILES += qml/qtimetable.qml \
     qml/components/ConnectionOverviewItem.qml \
     qml/components/ConnectionOverviewHeader.qml \
     qml/pages/ConnectionStep.qml \
-    qml/components/ConnectionStepItem.qml
+    qml/components/ConnectionStepItem.qml \
+    qml/components/FavoriteConnectionItem.qml
 HEADERS += \
     src/listitems/locationitem.h \
     src/listmodels/resultlistmodel.h \
@@ -106,5 +108,7 @@ HEADERS += \
     src/listmodels/connectionlistmodel.h \
     src/util/qdomnodeiterator.h \
     src/listmodels/connectionstepmodel.h \
-    src/util/settingshandler.h
+    src/util/settingshandler.h \
+    src/listitems/favoriteconnectionitem.h \
+    src/listmodels/favoriteconnectionmodel.h
 

@@ -13,6 +13,7 @@
 #include "timehandler.h"
 
 class SettingsHandler;
+class FavoriteConnectionModel;
 
 class TimeTableHandler : public QObject
 {
@@ -49,6 +50,13 @@ public:
 
     bool busy() { return busy_; }
 
+    //FAVORITE CONNECTION
+    Q_INVOKABLE void addFavoriteConnection();
+    Q_INVOKABLE void modelFavoriteConnections();
+    Q_INVOKABLE void setConnectionToFavoriteConnection(const int index);
+    Q_INVOKABLE void removeFavoriteConnection(const int dbId);
+    Q_INVOKABLE bool isFavoriteConnection() const;
+
 
 public slots:
     void depLookupFinished(StationListType items);
@@ -84,6 +92,8 @@ private:
     SBBConnectionHandler *connHandler_;
 
     SettingsHandler *settings_;
+
+    FavoriteConnectionModel *favoriteConnectionModel_;
 
     bool arrival_;
 

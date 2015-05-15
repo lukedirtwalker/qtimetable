@@ -99,6 +99,13 @@ Page {
 
         PullDownMenu {
             MenuItem {
+                text: qsTr("Add to favorites")
+                onClicked: timeTableHandler.addFavoriteConnection()
+                enabled: !timeTableHandler.isFavoriteConnection()
+                visible: enabled
+            }
+
+            MenuItem {
                 text: qsTr("Earlier")
                 onClicked: timeTableHandler.searchEarlier()
             }

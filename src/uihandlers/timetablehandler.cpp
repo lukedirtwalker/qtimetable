@@ -2,6 +2,7 @@
 
 #include "../listitems/locationitem.h"
 #include "../listmodels/resultlistmodel.h"
+#include "../listmodels/favoriteconnectionmodel.h"
 
 #include "../util/settingshandler.h"
 
@@ -50,6 +51,9 @@ TimeTableHandler::TimeTableHandler(QQmlContext *ctxt, QObject *parent)
     }
 
     saveStations_ = settings_->saveStations();
+
+    favoriteConnectionModel_ = new FavoriteConnectionModel(this);
+    qmlContext_->setContextProperty("favoritesModel", favoriteConnectionModel_);
 }
 
 TimeTableHandler::~TimeTableHandler()
@@ -289,4 +293,53 @@ void TimeTableHandler::setSaveStations(bool save)
     saveStations_ = save;
     settings_->setSaveStations(save);
     emit saveStationsChanged();
+}
+
+void TimeTableHandler::addFavoriteConnection()
+{
+    QVariant id = DatabaseHandler::getInstance().saveFavoriteConnection(depStation_, arrStation_, viaStation_);
+    if (id.isValid())
+    {
+        QString viaExtId = viaStation_ ? viaStation_->getExternalId() : "";
+        QString viaName = viaStation_ ? viaStation_->stationName() : "";
+        favoriteConnectionModel_->appendRow(QSharedPointer<FavoriteConnectionItem>::create(id.toInt(),
+                                                                   depStation_->getExternalId(), depStation_->stationName(),
+                                                                   arrStation_->getExternalId(), arrStation_->stationName(),
+                                                                   viaExtId, viaName));
+    }
+    else
+    {
+        modelFavoriteConnections();
+    }
+}
+
+void TimeTableHandler::modelFavoriteConnections()
+{
+    favoriteConnectionModel_->clear();
+    DatabaseHandler::getInstance().populateFavoritesConnections(favoriteConnectionModel_);
+}
+
+void TimeTableHandler::setConnectionToFavoriteConnection(int index)
+{
+    auto favoriteItem = favoriteConnectionModel_->at(index);
+    depStation_ = favoriteItem->depStationItem();
+    depStationName_ = depStation_->stationName();
+    emit depStationChanged();
+    arrStation_ = favoriteItem->arrStationItem();
+    arrStationName_ = arrStation_->stationName();
+    emit arrStationChanged();
+}
+
+void TimeTableHandler::removeFavoriteConnection(int dbId)
+{
+    DatabaseHandler::getInstance().removeFavoriteConnection(dbId);
+    int idx = -1;
+    for (int i = 0; i < favoriteConnectionModel_->rowCount() && idx == -1; ++i)
+        if (favoriteConnectionModel_->at(i)->dbId() == dbId) idx = i;
+    if (idx != -1) favoriteConnectionModel_->removeRow(idx);
+}
+
+bool TimeTableHandler::isFavoriteConnection() const
+{
+    return DatabaseHandler::getInstance().isFavoriteConnection(depStation_, arrStation_, viaStation_);
 }

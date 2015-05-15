@@ -165,6 +165,36 @@ Page {
                     tryLookup()
                 }
             }
+
+            PageHeader {
+                title: qsTr("Favorites")
+                visible: favoritesRepeater.count
+            }
+
+            Grid {
+                id: view
+                width: parent.width
+                clip: true
+                columns: 2
+                visible: favoritesRepeater.count
+
+                Repeater {
+                    id: favoritesRepeater
+                    model: favoritesModel
+                    delegate: FavoriteConnectionItem {
+                        depStation: DepStation
+                        arrStation: ArrStation
+                        viaStation: ViaStation
+                        hasVia: HasViaStation
+                        onClicked: {
+                            timeTableHandler.setConnectionToFavoriteConnection(index)
+                            tryLookup()
+                        }
+                    }
+                }
+            }
+
+            VerticalScrollDecorator { }
         }
 
         PullDownMenu {
@@ -186,6 +216,8 @@ Page {
             //            }
         }
     }
+
+    Component.onCompleted: timeTableHandler.modelFavoriteConnections()
 
     function tryLookup() {
         if(fromStation.text === "") {
