@@ -55,7 +55,6 @@ SOURCES += src/qtimetable.cpp \
 OTHER_FILES += qml/qtimetable.qml \
     qml/cover/CoverPage.qml \
     qml/pages/Help.qml \
-    qml/pages/About.qml \
     qml/pages/TimeTable.qml \
     qml/components/TimeTableInput.qml \
     qml/pages/Favorites.qml \
