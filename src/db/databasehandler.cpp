@@ -68,7 +68,7 @@ bool DatabaseHandler::openConnection(const QString &dbFile)
 //    delete other;
 //}
 
-LocationItem *DatabaseHandler::selectById(const int dbId)
+QSharedPointer<LocationItem> DatabaseHandler::selectById(const int dbId)
 {
     QString sqlQuery = QString("SELECT id,external_id,name,favorite FROM stations WHERE id=%1").arg(dbId);
     q_->prepare(sqlQuery);
@@ -76,7 +76,7 @@ LocationItem *DatabaseHandler::selectById(const int dbId)
     {
         qDebug() << "failure in DB query";
         qDebug() << q_->lastError();
-        return nullptr;
+        return QSharedPointer<LocationItem>();
     }
     if(!q_->next())
     {
@@ -84,11 +84,11 @@ LocationItem *DatabaseHandler::selectById(const int dbId)
     }
     else
     {
-        return new LocationItem(q_->value(0).toInt(), q_->value(1).toInt(),
-                                q_->value(2).toString(), "", "",
-                                q_->value(3).toBool());
+        return QSharedPointer<LocationItem>::create(q_->value(0).toInt(), q_->value(1).toInt(),
+                                                    q_->value(2).toString(), "", "",
+                                                    q_->value(3).toBool());
     }
-    return nullptr;
+    return QSharedPointer<LocationItem>();
 }
 
 void DatabaseHandler::changeFavorite(int id, bool favorite)

@@ -2,16 +2,13 @@
 #define SETTINGSHANDLER_H
 
 #include <QtCore/QSharedPointer>
-
-class QSettings;
+#include <QtCore/QSettings>
 
 class LocationItem;
 
 class SettingsHandler
 {
 public:
-    SettingsHandler();
-
     QSharedPointer<LocationItem> depStation();
     QSharedPointer<LocationItem> arrStation();
     QSharedPointer<LocationItem> viaStation();
@@ -24,7 +21,7 @@ public:
     void setSaveStations(const bool save);
 
 private:
-    QSettings *settings_;
+    QSettings settings_;
 
     QSharedPointer<LocationItem> stationItem(const QString &key);
     void setStationItem(const QString &groupKey, QSharedPointer<LocationItem> station);

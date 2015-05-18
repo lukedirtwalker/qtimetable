@@ -324,9 +324,16 @@ void TimeTableHandler::setConnectionToFavoriteConnection(int index)
     auto favoriteItem = favoriteConnectionModel_->at(index);
     depStation_ = favoriteItem->depStationItem();
     depStationName_ = depStation_->stationName();
-    emit depStationChanged();
     arrStation_ = favoriteItem->arrStationItem();
     arrStationName_ = arrStation_->stationName();
+
+    if (saveStations_)
+    {
+        settings_->setDepStation(depStation_);
+        settings_->setArrStation(arrStation_);
+    }
+
+    emit depStationChanged();
     emit arrStationChanged();
 }
 

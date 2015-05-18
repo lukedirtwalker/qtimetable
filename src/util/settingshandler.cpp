@@ -1,20 +1,11 @@
 #include "settingshandler.h"
 
-#include <QtCore/QSettings>
-
 #include "../listitems/locationitem.h"
-#include "../db/databasehandler.h"
 
 static const QString saveStations_ {"saveStations"};
 static const QString depStation_ {"depStation"};
 static const QString arrStation_ {"arrStation"};
 static const QString viaStation_ {"viaStation"};
-
-static const QString dbId_ {"dbId"};
-
-SettingsHandler::SettingsHandler()
-    : settings_{new QSettings()}
-{}
 
 QSharedPointer<LocationItem> SettingsHandler::depStation()
 {
@@ -48,31 +39,24 @@ void SettingsHandler::setViaStation(QSharedPointer<LocationItem> viaSave)
 
 bool SettingsHandler::saveStations() const
 {
-   return settings_->value(saveStations_, true).toBool();
+   return settings_.value(saveStations_, true).toBool();
 }
 
 void SettingsHandler::setSaveStations(const bool save)
 {
-    settings_->setValue(saveStations_, save);
+    settings_.setValue(saveStations_, save);
 }
 
 QSharedPointer<LocationItem> SettingsHandler::stationItem(const QString &key)
 {
-    settings_->beginGroup(key);
-    int id = settings_->value(dbId_, -1).toInt();
-    settings_->endGroup();
-    if (id > -1)
-        return QSharedPointer<LocationItem>(DatabaseHandler::getInstance().selectById(id));
-    return QSharedPointer<LocationItem>();
+    return LocationItem::createFromSettings(settings_, key);
 }
 
 void SettingsHandler::setStationItem(const QString &groupKey,
                                      QSharedPointer<LocationItem> station)
 {
-    settings_->beginGroup(groupKey);
     if (station)
-        settings_->setValue(dbId_, station->dbId());
+        station->saveToSettings(settings_, groupKey);
     else
-        settings_->setValue(dbId_, -1);
-    settings_->endGroup();
+        settings_.remove(groupKey);
 }

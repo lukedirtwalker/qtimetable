@@ -2,7 +2,15 @@
 
 #include "../db/databasehandler.h"
 
+#include <QtCore/QSharedPointer>
 #include <QDebug>
+
+const QString LocationItem::DATABASE_KEY_{"dbid"};
+const QString LocationItem::EXTERNAL_ID_KEY_{"extid"};
+const QString LocationItem::NAME_KEY_{"name"};
+const QString LocationItem::LATITUDE_KEY_{"lat"};
+const QString LocationItem::LONGITUDE_KEY_{"lot"};
+const QString LocationItem::TYPE_KEY_{"typ"};
 
 LocationItem::LocationItem(int dbId, int extId, const QString &name, QString longitude, QString latitude, bool favorite, QObject *parent)
     : ListItem(parent)
@@ -44,6 +52,38 @@ LocationItem::LocationItem(LocationItem *other)
     favorite_ = other->favorite();
     latitude_ = other->getLatitude();
     longitude_ = other->getLongitude();
+}
+
+QSharedPointer<LocationItem> LocationItem::createFromSettings(const QSettings &settings, const QString &groupKey)
+{
+    if (settings.contains(groupKey + "/" + NAME_KEY_))
+    {
+        int dbId = settings.value(groupKey + "/" + DATABASE_KEY_).toInt();
+        if (dbId > 0)
+            return DatabaseHandler::getInstance().selectById(dbId);
+        QString name = settings.value(groupKey + "/" + NAME_KEY_).toString();
+        QString extId = settings.value(groupKey + "/" + EXTERNAL_ID_KEY_).toString();
+        QString lat = settings.value(groupKey + "/" + LATITUDE_KEY_).toString();
+        QString lot = settings.value(groupKey + "/" + LONGITUDE_KEY_).toString();
+        // FIXME TYPE: QString typ = settings.value(groupKey + "/" + TYPE_KEY_);
+        return QSharedPointer<LocationItem>::create(dbId, extId, name, lot, lat);
+    }
+    else
+    {
+        return QSharedPointer<LocationItem>();
+    }
+}
+
+void LocationItem::saveToSettings(QSettings &settings, const QString &groupKey)
+{
+    settings.beginGroup(groupKey);
+    settings.setValue(DATABASE_KEY_, dbId_);
+    settings.setValue(EXTERNAL_ID_KEY_, extIdString_);
+    settings.setValue(NAME_KEY_, locationName_);
+    settings.setValue(LATITUDE_KEY_, latitude_);
+    settings.setValue(LONGITUDE_KEY_, longitude_);
+    settings.setValue(TYPE_KEY_, 0); // FIXME: We don't have this yet
+    settings.endGroup();
 }
 
 //LocationItem::LocationItem(SearchItem *other)

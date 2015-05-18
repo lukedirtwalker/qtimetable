@@ -3,6 +3,8 @@
 
 #include "listitem.h"
 
+class QSettings;
+
 class LocationItem : public ListItem
 {
     Q_OBJECT
@@ -10,7 +12,7 @@ class LocationItem : public ListItem
 public:
     LocationItem(QObject *parent = nullptr) : ListItem(parent){}
     explicit LocationItem(int dbId, int extId, const QString &name, QString longitude, QString latitude, bool favorite=0, QObject *parent=0);
-    explicit LocationItem(int dbId, const QString &extId, const QString &name, QString longitude, QString latitude, bool favorite, QObject *parent=0);
+    explicit LocationItem(int dbId, const QString &extId, const QString &name, QString longitude, QString latitude, bool favorite=false, QObject *parent=0);
     LocationItem(LocationItem* other);
 //    LocationItem(SearchItem* other);
 //    LocationItem(StationItemGeoAware* other);
@@ -20,6 +22,9 @@ public:
     QString getId() const;
 
     bool setData(const QVariant &value, int role);
+
+    void saveToSettings(QSettings &settings, const QString &groupKey);
+    static QSharedPointer<LocationItem> createFromSettings(const QSettings &settings, const QString &groupKey);
 
     QString stationName() const;
 //    ListItemType getListItemType() const;
@@ -50,6 +55,12 @@ private:
     QString longitude_;
 //    ListItemType mType;
 //    eLocationType mLocationType;
+    static const QString DATABASE_KEY_;
+    static const QString EXTERNAL_ID_KEY_;
+    static const QString NAME_KEY_;
+    static const QString LATITUDE_KEY_;
+    static const QString LONGITUDE_KEY_;
+    static const QString TYPE_KEY_;
 };
 
 #endif // LOCATIONITEM_H
