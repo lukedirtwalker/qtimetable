@@ -10,21 +10,21 @@ ConnectionItem::ConnectionItem(QDomNode domConnection, QObject *parent)
 {
     connectionSteps_ = new ConnectionStepModel(this); // needs parent to keep ownership
 
-    date_ = QDateTime::fromString(domConnection.toElement().elementsByTagName("Date").at(0).toElement().text().toLatin1(),"yyyyMMdd");
-    id_ = domConnection.toElement().attributeNode("id").value().trimmed().toLatin1();
+    date_ = QDateTime::fromString(domConnection.toElement().elementsByTagName(QStringLiteral("Date")).at(0).toElement().text().toLatin1(),"yyyyMMdd");
+    id_ = domConnection.toElement().attributeNode(QStringLiteral("id")).value().trimmed().toLatin1();
 
-    nrChanges_ = domConnection.toElement().elementsByTagName("Transfers").at(0).toElement().text().toInt();
+    nrChanges_ = domConnection.toElement().elementsByTagName(QStringLiteral("Transfers")).at(0).toElement().text().toInt();
 
-    QDomNodeList domStateInformations = domConnection.toElement().elementsByTagName("RtStateList");
+    QDomNodeList domStateInformations = domConnection.toElement().elementsByTagName(QStringLiteral("RtStateList"));
     hasCSInformation_ = domStateInformations.count();
     if(hasCSInformation_)
     {
         QDomNode domStateInformation = domStateInformations.at(0);
-        QDomNodeList domSingleStateInformationList = domStateInformation.toElement().elementsByTagName("RtState");
+        QDomNodeList domSingleStateInformationList = domStateInformation.toElement().elementsByTagName(QStringLiteral("RtState"));
         int n = domSingleStateInformationList.count();
         for(int i=0;i<n;i++)
         {
-            QString val = domSingleStateInformationList.at(i).toElement().attributeNode("value").value();
+            QString val = domSingleStateInformationList.at(i).toElement().attributeNode(QStringLiteral("value")).value();
             if(val == "HAS_DELAYINFO")
                 connectionStateInformations_.append(DELAY_INFO);
             else if(val == "WARNING")
@@ -40,32 +40,38 @@ ConnectionItem::ConnectionItem(QDomNode domConnection, QObject *parent)
         }
     }
 
-    QDomNode domDuration = domConnection.toElement().elementsByTagName("Duration").at(0);
-    QString d = domDuration.toElement().elementsByTagName("Time").at(0).toElement().text().toLatin1();
+    QDomNode domDuration = domConnection.toElement().elementsByTagName(QStringLiteral("Duration")).at(0);
+    QString d = domDuration.toElement().elementsByTagName(QStringLiteral("Time")).at(0).toElement().text().toLatin1();
     QTime t = QTime::fromString(d.mid(3),"hh:mm:ss");
     int days = d.left(2).toInt();
     duration_ = Duration(days*24*60*60+t.hour()*60*60+t.minute()*60+t.second());
 
     serviceDays_ = "";
-    QDomNode domServiceDays = domConnection.toElement().elementsByTagName("ServiceDays").at(0);
-    if(domServiceDays.toElement().elementsByTagName("RegularServiceText").count())
+    QDomNode domServiceDays = domConnection.toElement().elementsByTagName(QStringLiteral("ServiceDays")).at(0);
+    auto regServiceText = domServiceDays.toElement().elementsByTagName(QStringLiteral("RegularServiceText"));
+    if(regServiceText.count())
     {
         hasIrregularServiceDays_ = false;
-        serviceDays_ = domServiceDays.toElement().elementsByTagName("RegularServiceText").at(0).toElement().elementsByTagName("Text").at(0).toElement().text().trimmed().toLatin1();
-    }
-    else if(domServiceDays.toElement().elementsByTagName("IrregularServiceText").count())
-    {
-        hasIrregularServiceDays_ = true;
-        serviceDays_ = domServiceDays.toElement().elementsByTagName("IrregularServiceText").at(0).toElement().elementsByTagName("Text").at(0).toElement().text().trimmed().toLatin1();
+        serviceDays_ = regServiceText.at(0).toElement().elementsByTagName(QStringLiteral("Text")).at(0).toElement().text().trimmed().toLatin1();
     }
 
-    QDomNode domProducts = domConnection.toElement().elementsByTagName("Products").at(0);
-    QDomNodeList domProductList = domProducts.toElement().elementsByTagName("Product");
+    else
+    {
+        auto irregServiceText = domServiceDays.toElement().elementsByTagName(QStringLiteral("IrregularServiceText"));
+        if(irregServiceText.count())
+        {
+            hasIrregularServiceDays_ = true;
+            serviceDays_ = irregServiceText.at(0).toElement().elementsByTagName(QStringLiteral("Text")).at(0).toElement().text().trimmed().toLatin1();
+        }
+    }
+
+    QDomNode domProducts = domConnection.toElement().elementsByTagName(QStringLiteral("Products")).at(0);
+    QDomNodeList domProductList = domProducts.toElement().elementsByTagName(QStringLiteral("Product"));
 
     for(auto product : domProductList)
-        connectionVehicles_.append(product.toElement().attributeNode("cat").value().trimmed().toLatin1());
+        connectionVehicles_.append(product.toElement().attributeNode(QStringLiteral("cat")).value().trimmed().toLatin1());
 
-    QDomNodeList domConnectionSteps = domConnection.toElement().elementsByTagName("ConSection");
+    QDomNodeList domConnectionSteps = domConnection.toElement().elementsByTagName(QStringLiteral("ConSection"));
     for(auto conStep : domConnectionSteps)
         connectionSteps_->appendRow(QSharedPointer<ConnectionStepItem>(new ConnectionStepItem(conStep,date_)));
 

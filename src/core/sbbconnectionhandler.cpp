@@ -132,27 +132,26 @@ void SBBConnectionHandler::stopConnectionSearch()
 
 void SBBConnectionHandler::parseXMLResponse(QDomDocument xml)
 {
-    if(!xml.documentElement().elementsByTagName("Err").at(0).isNull())
+    auto errElement = xml.documentElement().elementsByTagName(QStringLiteral("Err")).at(0);
+    if(!errElement.isNull())
     {
-        QString errCode = xml.documentElement().elementsByTagName("Err")
-                .at(0).toElement().attributeNode("code").value();
+        QString errCode = errElement.toElement().attributeNode(QStringLiteral("code")).value();
         if(errCode == "K890")
             emit parsingFinished(NO_CONNECTIONS_RESPONSE);
         else
         {
             SBBErrorMessage_ = QString(errCode + " ");
-            SBBErrorMessage_ += xml.documentElement().elementsByTagName("Err")
-                    .at(0).toElement().attributeNode("text").value();
+            SBBErrorMessage_ += errElement.toElement().attributeNode(QStringLiteral("text")).value();
             emit parsingFinished(XML_ERROR_RESPONSE);
         }
         return;
     }
 
-    searchContext_ = xml.documentElement().elementsByTagName("ConResCtxt")
+    searchContext_ = xml.documentElement().elementsByTagName(QStringLiteral("ConResCtxt"))
             .at(0).toElement().text().toLatin1();
 
     QDomNodeList domConnections = xml.documentElement()
-            .elementsByTagName("Connection");
+            .elementsByTagName(QStringLiteral("Connection"));
     if(!domConnections.count())
     {
         emit parsingFinished(XML_PARSING_ERROR);
@@ -180,12 +179,12 @@ void SBBConnectionHandler::parseXMLResponse(QDomDocument xml)
 
 void SBBConnectionHandler::parseHTMLResponse(QString html)
 {
-    QString titleStartTag = "<title>";
-    QString titleEndTag = "</title>";
+    static const QLatin1String titleStartTag = QLatin1String("<title>");
+    static const QLatin1String titleEndTag = QLatin1String("</title>");
 
     if(html.contains(titleStartTag))
     {
-        int start = html.indexOf(titleStartTag)+titleStartTag.length();
+        int start = html.indexOf(titleStartTag)+titleStartTag.size();
         int end = html.indexOf(titleEndTag);
         SBBErrorMessage_ = html.mid(start,end-start);
     }

@@ -12,11 +12,11 @@ ConnectionStepItem::ConnectionStepItem(QDomNode domConnectionStep, QDateTime dat
 //    el.save(stream, 4);
 //    qDebug() << elString;
 
-    QDomNode domDeparture = el.elementsByTagName("Departure").at(0).toElement().elementsByTagName("BasicStop").at(0);
-    QDomNodeList domJourney = el.elementsByTagName("Journey");
-    QDomNodeList domWalk = el.elementsByTagName("Walk");
-    QDomNodeList domFoot = el.elementsByTagName("GisRoute");
-    QDomNode domArrival = el.elementsByTagName("Arrival").at(0).toElement().elementsByTagName("BasicStop").at(0);
+    QDomNode domDeparture = el.elementsByTagName(QStringLiteral("Departure")).at(0).toElement().elementsByTagName(QStringLiteral("BasicStop")).at(0);
+    QDomNodeList domJourney = el.elementsByTagName(QStringLiteral("Journey"));
+    QDomNodeList domWalk = el.elementsByTagName(QStringLiteral("Walk"));
+    QDomNodeList domFoot = el.elementsByTagName(QStringLiteral("GisRoute"));
+    QDomNode domArrival = el.elementsByTagName(QStringLiteral("Arrival")).at(0).toElement().elementsByTagName(QStringLiteral("BasicStop")).at(0);
 
     departure_ = new StopItem(domDeparture,date, this);
     arrival_ = new StopItem(domArrival,date, this);

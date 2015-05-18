@@ -14,7 +14,7 @@ Name:       harbour-qtimetable
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    QTimeTable Swiss Train Timetable
 Version:    0.5
-Release:    1
+Release:    2
 Group:      Qt/Qt
 License:    LICENSE
 Source0:    %{name}-%{version}.tar.bz2
@@ -69,6 +69,8 @@ desktop-file-install --delete-original       \
 
 # >> files
 %changelog
+* Fri May 18 2015 - Lukas <lukedirtwalker at gmail.com> 0.5-2
+-Fix saving stations on exit
 * Fri May 15 2015 - Lukas <lukedirtwalker at gmail.com> 0.5-1
 -Add busy indicator during lookup
 -Add favorite connection handling
