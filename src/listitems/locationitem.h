@@ -50,7 +50,7 @@ public:
 
     bool setData(const QVariant &value, int role);
 
-    void saveToSettings(QSettings &settings, const QString &groupKey);
+    void saveToSettings(QSettings &settings, const QString &groupKey) const;
     static QSharedPointer<LocationItem> createFromSettings(const QSettings &settings, const QString &groupKey);
 
     QString stationName() const;

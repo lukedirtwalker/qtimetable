@@ -42,8 +42,8 @@
 #include "../util/qdomnodeiterator.h"
 
 void SBBConnectionHandler::startConnectionSearch(
-        QSharedPointer<LocationItem> depStation,
-        QSharedPointer<LocationItem> arrStation,
+        const LocationItem* depStation,
+        const LocationItem* arrStation,
         QDateTime d, bool isArrival)
 {
     searchContext_ = "";
@@ -78,10 +78,9 @@ void SBBConnectionHandler::startConnectionSearch(
     state_ = H_STARTED;
 }
 
-void SBBConnectionHandler::startConnectionSearch(
-        QSharedPointer<LocationItem> depStation,
-        QSharedPointer<LocationItem> arrStation,
-        QSharedPointer<LocationItem> viaStation,
+void SBBConnectionHandler::startConnectionSearch(const LocationItem *depStation,
+        const LocationItem *arrStation,
+        const LocationItem *viaStation,
         QDateTime d, bool isArrival)
 {
     searchContext_ = "";

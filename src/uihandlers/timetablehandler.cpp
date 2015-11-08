@@ -58,21 +58,18 @@ TimeTableHandler::TimeTableHandler(QQmlContext *ctxt, QObject *parent)
 
     // settings
     settings_ = new SettingsHandler();
-    if (auto dep = settings_->depStation())
+    if (depStation_ = settings_->depStation())
     {
-        depStation_ = dep;
         depStationName_ = depStation_->stationName();
         emit depStationChanged();
     }
-    if (auto arr = settings_->arrStation())
+    if (arrStation_ = settings_->arrStation())
     {
-        arrStation_ = arr;
         arrStationName_ = arrStation_->stationName();
         emit arrStationChanged();
     }
-    if (auto via = settings_->viaStation())
+    if (viaStation_ = settings_->viaStation())
     {
-        viaStation_ = via;
         viaStationName_ = viaStation_->stationName();
         emit viaStationChanged();
     }
@@ -142,11 +139,11 @@ void TimeTableHandler::setStation(int index, int type)
             depStation_ = depStationModel_->at(index);
             depStationName_ = depStation_->stationName();
             if (saveStations_)
-                settings_->setDepStation(depStation_);
+                settings_->setDepStation(depStation_.data());
         } else {
             depStationName_ = "";
             if (saveStations_)
-                settings_->setDepStation(QSharedPointer<LocationItem>());
+                settings_->setDepStation(nullptr);
         }
         qDebug() << "dep station changed: " << depStationName_;
         emit depStationChanged();
@@ -156,11 +153,11 @@ void TimeTableHandler::setStation(int index, int type)
             arrStation_ = arrStationModel_->at(index);
             arrStationName_ = arrStation_->stationName();
             if (saveStations_)
-                settings_->setArrStation(arrStation_);
+                settings_->setArrStation(arrStation_.data());
         } else {
             arrStationName_ = "";
             if (saveStations_)
-                 settings_->setArrStation(QSharedPointer<LocationItem>());
+                 settings_->setArrStation(nullptr);
         }
         emit arrStationChanged();
         break;
@@ -169,11 +166,11 @@ void TimeTableHandler::setStation(int index, int type)
             viaStation_ = viaStationModel_->at(index);
             viaStationName_ = viaStation_->stationName();
             if (saveStations_)
-                settings_->setViaStation(viaStation_);
+                settings_->setViaStation(viaStation_.data());
         } else {
             viaStationName_ = "";
             if (saveStations_)
-                 settings_->setViaStation(QSharedPointer<LocationItem>());
+                 settings_->setViaStation(nullptr);
         }
         emit viaStationChanged();
         break;
@@ -189,21 +186,21 @@ void TimeTableHandler::clearStation(int type)
         depStation_.clear();
         depStationName_ = "";
         if (saveStations_)
-             settings_->setDepStation(QSharedPointer<LocationItem>());
+             settings_->setDepStation(nullptr);
         emit depStationChanged();
         break;
     case 1:
         arrStation_.clear();
         arrStationName_ = "";
         if (saveStations_)
-             settings_->setArrStation(QSharedPointer<LocationItem>());
+             settings_->setArrStation(nullptr);
         emit arrStationChanged();
         break;
     case 2:
         viaStation_.clear();
         viaStationName_ = "";
         if (saveStations_)
-             settings_->setViaStation(QSharedPointer<LocationItem>());
+             settings_->setViaStation(nullptr);
         emit viaStationChanged();
         break;
     default:
@@ -217,17 +214,14 @@ bool TimeTableHandler::switchStations()
     if(depStation_ || arrStation_) {
         depStationModel_->clear();
         arrStationModel_->clear();
-        QSharedPointer<LocationItem> temp = depStation_;
-        depStation_ = arrStation_;
-        arrStation_ = temp;
-        QString tempName = depStationName_;
-        depStationName_ = arrStationName_;
-        arrStationName_ = tempName;
+
+        std::swap(depStation_, arrStation_);
+        std::swap(depStationName_, arrStationName_);
 
         if (saveStations_)
         {
-            settings_->setDepStation(depStation_);
-            settings_->setArrStation(arrStation_);
+            settings_->setDepStation(depStation_.data());
+            settings_->setArrStation(arrStation_.data());
         }
 
         emit depStationChanged();
@@ -243,11 +237,11 @@ void TimeTableHandler::lookupConnection()
     // TODO
     if(depStation_ && arrStation_) {
         if(viaStation_) {
-            connHandler_->startConnectionSearch(depStation_, arrStation_, viaStation_,
+            connHandler_->startConnectionSearch(depStation_.data(), arrStation_.data(), viaStation_.data(),
                                                 timeHandler_->getCurrentDateTime(),
                                                 arrival_);
         } else {
-            connHandler_->startConnectionSearch(depStation_, arrStation_,
+            connHandler_->startConnectionSearch(depStation_.data(), arrStation_.data(),
                                                 timeHandler_->getCurrentDateTime(),
                                                 arrival_);
         }
@@ -356,8 +350,8 @@ void TimeTableHandler::setConnectionToFavoriteConnection(int index)
 
     if (saveStations_)
     {
-        settings_->setDepStation(depStation_);
-        settings_->setArrStation(arrStation_);
+        settings_->setDepStation(depStation_.data());
+        settings_->setArrStation(arrStation_.data());
     }
 
     emit depStationChanged();

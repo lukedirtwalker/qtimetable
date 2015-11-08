@@ -49,17 +49,17 @@ QSharedPointer<LocationItem> SettingsHandler::viaStation()
     return stationItem(viaStation_);
 }
 
-void SettingsHandler::setDepStation(QSharedPointer<LocationItem> depSave)
+void SettingsHandler::setDepStation(const LocationItem* depSave)
 {
     setStationItem(depStation_, depSave);
 }
 
-void SettingsHandler::setArrStation(QSharedPointer<LocationItem> arrSave)
+void SettingsHandler::setArrStation(const LocationItem *arrSave)
 {
     setStationItem(arrStation_, arrSave);
 }
 
-void SettingsHandler::setViaStation(QSharedPointer<LocationItem> viaSave)
+void SettingsHandler::setViaStation(const LocationItem *viaSave)
 {
     setStationItem(viaStation_, viaSave);
 }
@@ -79,8 +79,7 @@ QSharedPointer<LocationItem> SettingsHandler::stationItem(const QString &key)
     return LocationItem::createFromSettings(settings_, key);
 }
 
-void SettingsHandler::setStationItem(const QString &groupKey,
-                                     QSharedPointer<LocationItem> station)
+void SettingsHandler::setStationItem(const QString &groupKey, const LocationItem* station)
 {
     if (station)
         station->saveToSettings(settings_, groupKey);

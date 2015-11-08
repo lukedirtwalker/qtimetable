@@ -39,13 +39,13 @@ class SBBConnectionHandler : public SBBHandler
 public:
     SBBConnectionHandler(QObject *parent = nullptr) : SBBHandler(parent) {}
 
-    void startConnectionSearch(QSharedPointer<LocationItem> depStation,
-                               QSharedPointer<LocationItem> arrStation,
+    void startConnectionSearch(const LocationItem *depStation,
+                               const LocationItem *arrStation,
                                QDateTime d, bool isArrival);
 
-    void startConnectionSearch(QSharedPointer<LocationItem> depStation,
-                               QSharedPointer<LocationItem> arrStation,
-                               QSharedPointer<LocationItem> viaStation,
+    void startConnectionSearch(const LocationItem *depStation,
+                               const LocationItem *arrStation,
+                               const LocationItem *viaStation,
                                QDateTime d, bool isArrival);
 
     void searchEarlier();

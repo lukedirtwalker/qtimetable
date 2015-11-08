@@ -101,7 +101,7 @@ QSharedPointer<LocationItem> LocationItem::createFromSettings(const QSettings &s
     }
 }
 
-void LocationItem::saveToSettings(QSettings &settings, const QString &groupKey)
+void LocationItem::saveToSettings(QSettings &settings, const QString &groupKey) const
 {
     settings.beginGroup(groupKey);
     settings.setValue(DATABASE_KEY_, dbId_);

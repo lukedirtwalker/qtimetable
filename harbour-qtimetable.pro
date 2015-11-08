@@ -20,7 +20,7 @@ INSTALLS += desktop icon database
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 
-QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += src/qtimetable.cpp \
     src/listitems/locationitem.cpp \

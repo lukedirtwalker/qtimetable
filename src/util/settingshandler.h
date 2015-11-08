@@ -40,9 +40,9 @@ public:
     QSharedPointer<LocationItem> arrStation();
     QSharedPointer<LocationItem> viaStation();
 
-    void setDepStation(QSharedPointer<LocationItem> depSave);
-    void setArrStation(QSharedPointer<LocationItem> arrSave);
-    void setViaStation(QSharedPointer<LocationItem> viaSave);
+    void setDepStation(const LocationItem *depSave);
+    void setArrStation(const LocationItem *arrSave);
+    void setViaStation(const LocationItem *viaSave);
 
     bool saveStations() const;
     void setSaveStations(const bool save);
@@ -51,7 +51,7 @@ private:
     QSettings settings_;
 
     QSharedPointer<LocationItem> stationItem(const QString &key);
-    void setStationItem(const QString &groupKey, QSharedPointer<LocationItem> station);
+    void setStationItem(const QString &groupKey, const LocationItem *station);
 };
 
 #endif // SETTINGSHANDLER_H
