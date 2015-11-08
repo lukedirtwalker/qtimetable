@@ -37,45 +37,44 @@ SBBConnectionQuery::~SBBConnectionQuery()
 {
     delete start_;
     delete destination_;
-    if(via_)
-        delete via_;
+    delete via_;
     delete date_;
     delete flags_;
 }
 
-QDomElement SBBConnectionQuery::getProdElement()
+QDomElement SBBConnectionQuery::getProdElement(QDomDocument& doc)
 {
-    QDomElement prod = createElement("Prod");
+    QDomElement prod = doc.createElement("Prod");
     prod.setAttribute("prod","1111111111000000");
     return prod;
 }
 
 QDomDocument SBBConnectionQuery::toXML()
 {
-    clear();
-    QDomElement reqC = queryContainer_.toXML(*this);
-    QDomElement conReq = createElement(domStaticElementName_);
+    QDomDocument doc;
+    QDomElement reqC = queryContainer_.toXML(doc);
+    QDomElement conReq = doc.createElement(domStaticElementName_);
 
-    QDomElement start = createElement("Start");
-    start.appendChild(start_->toXML(*this));
-    start.appendChild(getProdElement());
+    QDomElement start = doc.createElement("Start");
+    start.appendChild(start_->toXML(doc));
+    start.appendChild(getProdElement(doc));
     conReq.appendChild(start);
 
-    QDomElement destination = createElement("Dest");
-    destination.appendChild(destination_->toXML(*this));
+    QDomElement destination = doc.createElement("Dest");
+    destination.appendChild(destination_->toXML(doc));
     conReq.appendChild(destination);
 
     if(via_)
     {
-        QDomElement via = createElement("Via");
-        via.appendChild(via_->toXML(*this));
-        via.appendChild(getProdElement());
+        QDomElement via = doc.createElement("Via");
+        via.appendChild(via_->toXML(doc));
+        via.appendChild(getProdElement(doc));
         conReq.appendChild(via);
     }
 
-    conReq.appendChild(date_->toXML(*this));
-    conReq.appendChild(flags_->toXML(*this));
+    conReq.appendChild(date_->toXML(doc));
+    conReq.appendChild(flags_->toXML(doc));
     reqC.appendChild(conReq);
-    appendChild(reqC);
-    return *this;
+    doc.appendChild(reqC);
+    return doc;
 }

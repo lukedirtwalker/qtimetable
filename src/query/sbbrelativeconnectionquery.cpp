@@ -28,9 +28,9 @@
 #include "sbbrelativeconnectionquery.h"
 
 SBBRelativeConnectionQuery::SBBRelativeConnectionQuery(QString context, eTimeType type)
+    : SBBQuery{"ConScrReq"}, mContext{context}
 {
-    this->initXMLFields();
-    this->mContext = context;
+    initXMLFields();
     QString t;
     switch(type)
     {
@@ -40,28 +40,24 @@ SBBRelativeConnectionQuery::SBBRelativeConnectionQuery(QString context, eTimeTyp
     domStaticElementAttributes_["scrDir"] = t;
 }
 
-SBBRelativeConnectionQuery::~SBBRelativeConnectionQuery()
-{
-
-}
+SBBRelativeConnectionQuery::~SBBRelativeConnectionQuery() {}
 
 void SBBRelativeConnectionQuery::initXMLFields()
 {
-    domStaticElementName_ = "ConScrReq";
     domStaticElementAttributes_.insert("scrDir","");
     domStaticElementAttributes_.insert("nrCons","4");
 }
 
 QDomDocument SBBRelativeConnectionQuery::toXML()
 {
-    this->clear();
-    QDomElement reqC = queryContainer_.toXML(*this);
-    QDomElement conScrReq = Serializable::toXML(*this);
-    QDomElement conResCtxt = this->createElement("ConResCtxt");
-    QDomText t = this->createTextNode(this->mContext);
+    QDomDocument doc;
+    QDomElement reqC = queryContainer_.toXML(doc);
+    QDomElement conScrReq = Serializable::toXML(doc);
+    QDomElement conResCtxt = doc.createElement("ConResCtxt");
+    QDomText t = doc.createTextNode(mContext);
     conResCtxt.appendChild(t);
     conScrReq.appendChild(conResCtxt);
     reqC.appendChild(conScrReq);
-    this->appendChild(reqC);
-    return *this;
+    doc.appendChild(reqC);
+    return doc;
 }

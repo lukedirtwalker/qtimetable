@@ -29,7 +29,7 @@
 
 QDomDocument SBBQuery::toXML()
 {
-    clear();
-    appendChild(queryContainer_.toXML(*this));
-    return *this;
+    QDomDocument doc;
+    doc.appendChild(queryContainer_.toXML(doc));
+    return doc;
 }

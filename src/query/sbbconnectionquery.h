@@ -44,7 +44,7 @@ public:
     virtual QDomDocument toXML();
 
 private:
-    QDomElement getProdElement();
+    QDomElement getProdElement(QDomDocument &doc);
 
     Serializable *start_;
     Serializable *destination_;

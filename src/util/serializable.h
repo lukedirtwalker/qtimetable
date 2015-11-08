@@ -34,8 +34,9 @@
 class Serializable
 {
 public:
-    Serializable(QString elemName = "") : domStaticElementName_(elemName) {}
+    Serializable(const QString &elemName = {}) : domStaticElementName_{elemName} {}
 
+    virtual ~Serializable();
     virtual QDomElement toXML(QDomDocument &query);
 
 protected:

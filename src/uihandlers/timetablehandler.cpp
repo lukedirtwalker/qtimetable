@@ -304,7 +304,7 @@ void TimeTableHandler::connectionLookedUp(eStatusID id)
     {
 
         QList<QSharedPointer<ConnectionItem> > connections = connHandler_->getAvailableConnections();
-        for(auto cur : connections)
+        for(auto& cur : connections)
         {
             if(cur->hasConnectionStateInformation())
                 cur->setConnectionStateInfo(1);

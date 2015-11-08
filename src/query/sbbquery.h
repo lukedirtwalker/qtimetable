@@ -32,11 +32,10 @@
 
 #include "sbbquerycontainer.h"
 
-class SBBQuery : public QDomDocument, public Serializable
+class SBBQuery : public Serializable
 {
 public:
-    SBBQuery(QString domElemName = "") : QDomDocument(),
-        Serializable(domElemName) {}
+    SBBQuery(QString domElemName = "") : Serializable{domElemName} {}
     virtual ~SBBQuery() {}
 
     virtual QDomDocument toXML();

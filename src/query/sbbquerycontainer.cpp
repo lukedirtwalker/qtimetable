@@ -32,11 +32,11 @@
 //using namespace QtMobility;
 
 SBBQueryContainer::SBBQueryContainer()
+    : Serializable{"ReqC"}
 {
     // TODO device info
 //    QSystemInfo info;
 //    QSystemDeviceInfo dInfo;
-    domStaticElementName_ = "ReqC";
     domStaticElementAttributes_.insert("lang","EN");
 //    domStaticElementAttributes_.insert("prod",QString(dInfo.manufacturer() + " " + dInfo.model()));
     domStaticElementAttributes_.insert("prod", "Jolla Jolla");
