@@ -100,20 +100,26 @@ Page {
                     anchors.verticalCenter: parent.verticalCenter
                     width: Theme.iconSizeMedium
                     height: width;
-                    icon.source: "image://theme/icon-m-mobile-network"
+                    icon.source: "image://theme/icon-m-shuffle"
                     onClicked: {
                         if(timeTableHandler.switchStations()) {
                             oppDirection.state == "rotated" ? oppDirection.state = "" : oppDirection.state = "rotated"
                         }
                     }
+                    icon.transform: Rotation{
+                        id: rotation
+                        axis{x: 1; y: 0; z: 0}
+                        origin.x: oppDirection.width/2
+                        origin.y: oppDirection.height/2
+                    }
 
                     states: State {
                         name: "rotated"
-                        PropertyChanges { target: oppDirection; rotation: 180 }
+                        PropertyChanges { target: rotation;  angle: 180}
                     }
 
                     transitions: Transition {
-                        RotationAnimation { duration: 500; direction: RotationAnimation.Clockwise }
+                        NumberAnimation { target: rotation; properties: "angle"; duration: 250; easing.type: Easing.InOutQuad }
                     }
                 }
             }
