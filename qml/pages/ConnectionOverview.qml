@@ -38,7 +38,11 @@ Page {
     property string date: ""
     property string time: ""
 
-    Component.onCompleted: timeTableHandler.lookupConnection()
+    onStatusChanged: {
+        // We only want to lookup the connection if the page is activating and we come from the timetable page.
+        if (status === PageStatus.Activating && pageStack.depth === 2)
+            timeTableHandler.lookupConnection()
+    }
 
     Component.onDestruction : {
         searchSuggestionList.model.clear()
