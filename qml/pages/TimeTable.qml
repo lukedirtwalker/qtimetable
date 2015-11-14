@@ -91,6 +91,7 @@ Page {
                         typeString: qsTr("Via")
                         listModel: viaStationModel
                         handler: timeTableHandler
+                        onStationSelected: adaptAttachPage()
                     }
                 }
 
@@ -105,6 +106,7 @@ Page {
                         if(timeTableHandler.switchStations()) {
                             oppDirection.state == "rotated" ? oppDirection.state = "" : oppDirection.state = "rotated"
                         }
+                        adaptAttachPage()
                     }
                     icon.transform: Rotation{
                         id: rotation
