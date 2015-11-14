@@ -65,6 +65,7 @@ desktop-file-install --delete-original       \
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/86x86/apps/%{name}.png
+%{_datadir}/lipstick/notificationcategories/harbour.qtimetable.error.conf
 #%{_datadir}/data/stations.db
 
 # >> files

@@ -15,7 +15,11 @@ PKGCONFIG += sailfishapp
 
 database.files = stations.db
 database.path = /usr/share/harbour-qtimetable/data
-INSTALLS += desktop icon database
+
+notification.files = notifications/harbour.qtimetable.error.conf
+notification.path = /usr/share/lipstick/notificationcategories
+
+INSTALLS += desktop icon database notification
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 

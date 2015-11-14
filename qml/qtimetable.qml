@@ -57,12 +57,28 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import org.nemomobile.notifications 1.0
 import "pages"
 
 ApplicationWindow
 {
     initialPage: Qt.resolvedUrl("pages/TimeTable.qml")
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
+
+    Notification {
+        id: infoBanner
+        category: "harbour.qtimetable.error"
+
+        function showError(message) {
+            infoBanner.previewBody = "QTimetable";
+            infoBanner.previewSummary = message;
+            infoBanner.publish();
+        }
+
+        function showMessage(message) {
+            showError(message);
+        }
+    }
 
 }
 

@@ -154,4 +154,19 @@ Page {
         size: BusyIndicatorSize.Large
         running: timeTableHandler.busy
     }
+
+    Connections {
+        target: timeTableHandler
+        onNoConnectionsFound: {
+            infoBanner.showError(qsTr("No connections found"))
+            if (connectionsPage.status === PageStatus.Active)
+                pageStack.pop()
+        }
+
+        onLookupConnectionError: {
+            infoBanner.showError(qsTr("Error in lookup: " + msg))
+            if (connectionsPage.status === PageStatus.Active)
+                pageStack.pop()
+        }
+    }
 }
