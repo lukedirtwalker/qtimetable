@@ -98,6 +98,7 @@ Page {
                 IconButton {
                     id: oppDirection
                     anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenterOffset: -parent.height / 4 + height / 2
                     width: Theme.iconSizeMedium
                     height: width;
                     icon.source: "image://theme/icon-m-shuffle"
