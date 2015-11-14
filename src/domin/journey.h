@@ -36,8 +36,8 @@ class Journey
 {
 public:
     Journey() : hasMOT_{false} {}
-    Journey(QString meansOfTransportation);
-    Journey(QDomNode domJourney, QDateTime date, bool isWalk = false);
+    Journey(const QString &meansOfTransportation);
+    Journey(const QDomNode &domJourney, QDateTime date, bool isWalk = false);
     ~Journey();
 
     inline QString getMeansOfTransport() const;
@@ -52,8 +52,8 @@ public:
 
 
 private:
-    void createWalk(QDomNode domWalk, QDateTime date);
-    void createJourney(QDomNode domJourney, QDateTime date);
+    void createWalk(const QDomNode &domWalk, QDateTime date);
+    void createJourney(const QDomNode &domJourney, QDateTime date);
     QList<StopItem*> stopovers_;
     QString direction_;
     QString meansOfTransport_;

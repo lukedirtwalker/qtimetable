@@ -37,7 +37,7 @@ class ConnectionStepItem : public ListItem
 public:
     ConnectionStepItem(QObject *parent = nullptr) : ListItem(parent),
     departure_{nullptr}, arrival_{nullptr}, journey_{nullptr} {}
-    ConnectionStepItem(QDomNode domConnectionStep, QDateTime date, QObject *parent = nullptr);
+    ConnectionStepItem(const QDomNode &domConnectionStep, QDateTime date, QObject *parent = nullptr);
     ~ConnectionStepItem();
 
     QList<StopItem *> getStopovers();

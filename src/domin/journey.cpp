@@ -32,13 +32,13 @@
 #include <QDebug>
 #include <QStringList>
 
-Journey::Journey(QString meansOfTransportation)
+Journey::Journey(const QString &meansOfTransportation)
     : meansOfTransport_(meansOfTransportation)
 {
     hasMOT_ = !meansOfTransport_.isEmpty();
 }
 
-Journey::Journey(QDomNode domJourney, QDateTime date, bool isWalk) : hasMOT_{false}
+Journey::Journey(const QDomNode &domJourney, QDateTime date, bool isWalk) : hasMOT_{false}
 {
     if(isWalk)
         createWalk(domJourney, date);
@@ -55,7 +55,7 @@ Journey::~Journey()
     }
 }
 
-void Journey::createWalk(QDomNode domWalk, QDateTime date)
+void Journey::createWalk(const QDomNode &domWalk, QDateTime date)
 {
     Q_UNUSED(date)
 //    <Walk length="181">
@@ -75,13 +75,13 @@ void Journey::createWalk(QDomNode domWalk, QDateTime date)
     // TODO There are som translation strings in here (meters, min)
     meansOfTransportDetail_ = domWalk.attributes().namedItem("length").nodeValue().append(" meters");
 
-    domWalk = domWalk.firstChild();
-    while(!domWalk.isNull())
+    auto domWalkChild = domWalk.firstChild();
+    while(!domWalkChild.isNull())
     {
-        QString t = domWalk.toElement().tagName();
+        QString t = domWalkChild.toElement().tagName();
         if("Duration" == t)
         {
-            QString timeString = domWalk.toElement().elementsByTagName("Time")
+            QString timeString = domWalkChild.toElement().elementsByTagName("Time")
                     .at(0).toElement().text().trimmed();
             // XXX: We assume that we only have to walk at most 59 mins...
             // also days are ignored
@@ -91,38 +91,38 @@ void Journey::createWalk(QDomNode domWalk, QDateTime date)
         }
         else if("JourneyAttributeList" == t)
         {
-            meansOfTransport_ = domWalk.toElement()
+            meansOfTransport_ = domWalkChild.toElement()
                     .elementsByTagName("JourneyAttribute").at(0).toElement()
                     .elementsByTagName("Attribute").at(0).toElement()
                     .elementsByTagName("Text").at(0).toElement()
                     .text().trimmed();
             hasMOT_ = !meansOfTransport_.isEmpty();
         }
-        domWalk = domWalk.nextSibling();
+        domWalkChild = domWalkChild.nextSibling();
     }
 
 }
 
-void Journey::createJourney(QDomNode domJourney, QDateTime date)
+void Journey::createJourney(const QDomNode &domJourney, QDateTime date)
 {
-    domJourney = domJourney.firstChild();
-    while(!domJourney.isNull())
+    auto domJourneyChild = domJourney.firstChild();
+    while(!domJourneyChild.isNull())
     {
-        QString t = domJourney.toElement().tagName();
+        QString t = domJourneyChild.toElement().tagName();
         if(t == "JHandle")
         {
-            jHandlecycle_ = domJourney.toElement().attributeNode("cycle")
+            jHandlecycle_ = domJourneyChild.toElement().attributeNode("cycle")
                     .value().trimmed().toLatin1();
-            jHandlepuic_ = domJourney.toElement().attributeNode("puic")
+            jHandlepuic_ = domJourneyChild.toElement().attributeNode("puic")
                     .value().trimmed().toLatin1();
-            jHandletNr_ = domJourney.toElement().attributeNode("tNr")
+            jHandletNr_ = domJourneyChild.toElement().attributeNode("tNr")
                     .value().trimmed().toLatin1();
         }
         else if(t == "JourneyAttributeList")
         {
-            QDomNodeList domJourneyAttributes = domJourney.toElement()
+            QDomNodeList domJourneyAttributes = domJourneyChild.toElement()
                     .elementsByTagName("JourneyAttribute");
-            for(auto domJ : domJourneyAttributes)
+            for(const auto& domJ : domJourneyAttributes)
             {
                 QDomElement domJourneyAttribute = domJ.toElement().
                         elementsByTagName("Attribute").at(0).toElement();
@@ -148,7 +148,7 @@ void Journey::createJourney(QDomNode domJourney, QDateTime date)
                     if(1 == code)
                     {
                         QDomNodeList variants = domJourneyAttribute.elementsByTagName("AttributeVariant");
-                        for(auto node : variants)
+                        for(const auto& node : variants)
                         {
                             if(node.attributes().namedItem("type").nodeValue() == "NORMAL")
                             {
@@ -160,7 +160,7 @@ void Journey::createJourney(QDomNode domJourney, QDateTime date)
                     else if(2 == code)
                     {
                         QDomNodeList variants = domJourneyAttribute.elementsByTagName("AttributeVariant");
-                        for(auto node : variants)
+                        for(const auto& node : variants)
                         {
                             if(node.attributes().namedItem("type").nodeValue() == "NORMAL")
                             {
@@ -173,11 +173,11 @@ void Journey::createJourney(QDomNode domJourney, QDateTime date)
         }
         else if(t == "PassList")
         {
-            QDomNodeList domBasicStops = domJourney.toElement()
+            QDomNodeList domBasicStops = domJourneyChild.toElement()
                     .elementsByTagName("BasicStop");
             for(auto stop : domBasicStops)
                 stopovers_.append(new StopItem(stop, date));
         }
-        domJourney = domJourney.nextSibling();
+        domJourneyChild = domJourneyChild.nextSibling();
     }
 }

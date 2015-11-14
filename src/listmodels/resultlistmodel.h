@@ -57,6 +57,16 @@ public:
 
     bool setData(const QModelIndex &index, const QVariant &value, int role);
 
+    using iterator = typename QList<QSharedPointer<ItemType>>::Iterator;
+    using const_iterator = typename QList<QSharedPointer<ItemType>>::ConstIterator;
+
+    iterator begin() { return dataList_.begin(); }
+    const_iterator begin() const { return dataList_.begin(); }
+    const_iterator cbegin() const { return dataList_.cbegin(); }
+    iterator end() { return dataList_.end(); }
+    const_iterator end() const { return dataList_.end(); }
+    const_iterator cend() const { return dataList_.cend(); }
+
 private:
     ItemType* prototype_;
     QList<QSharedPointer<ItemType> > dataList_;

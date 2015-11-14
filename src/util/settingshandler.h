@@ -47,6 +47,9 @@ public:
     bool saveStations() const;
     void setSaveStations(const bool save);
 
+    bool showWalkInDepTime() const;
+    void setShowWalkInDepTime(bool show);
+
 private:
     QSettings settings_;
 

@@ -46,6 +46,15 @@ Page{
             }
 
             TextSwitch {
+                checked: timeHandler.showWalkInDepTime
+                text: qsTr("Account for walk times")
+                description: qsTr("For some connections the first step is to walk to a station. If this setting is on the departure time in the connection page accounts for this walking time. If it is off it shows the departure time of the train.")
+                onClicked: {
+                    timeTableHandler.showWalkInDepTime = checked
+                }
+            }
+
+            TextSwitch {
                 checked: timeTableHandler.saveStations
                 text: "Save stations on Exit"
                 onClicked: {

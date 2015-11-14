@@ -27,10 +27,13 @@
 
 #include "connectionitem.h"
 
+#include <algorithm>
+
 #include <QDomNode>
 #include <QDebug>
 
 #include "../util/qdomnodeiterator.h"
+#include "../util/settingshandler.h"
 
 ConnectionItem::ConnectionItem(QDomNode domConnection, QObject *parent)
     : ListItem(parent)
@@ -95,12 +98,12 @@ ConnectionItem::ConnectionItem(QDomNode domConnection, QObject *parent)
     QDomNode domProducts = domConnection.toElement().elementsByTagName(QStringLiteral("Products")).at(0);
     QDomNodeList domProductList = domProducts.toElement().elementsByTagName(QStringLiteral("Product"));
 
-    for(auto product : domProductList)
+    for(const auto &product : domProductList)
         connectionVehicles_.append(product.toElement().attributeNode(QStringLiteral("cat")).value().trimmed().toLatin1());
 
     QDomNodeList domConnectionSteps = domConnection.toElement().elementsByTagName(QStringLiteral("ConSection"));
-    for(auto conStep : domConnectionSteps)
-        connectionSteps_->appendRow(QSharedPointer<ConnectionStepItem>(new ConnectionStepItem(conStep,date_)));
+    for(const auto &conStep : domConnectionSteps)
+        connectionSteps_->appendRow(QSharedPointer<ConnectionStepItem>(new ConnectionStepItem(conStep, date_)));
 
     createOverview();
 }
@@ -149,11 +152,10 @@ void ConnectionItem::createOverview()
     int maxFirst = 0;
     int maxSecond = 0;
     int count = connectionSteps_->rowCount();
-    for(int i = 0; i < count; ++i)
+    for(const auto &step : *connectionSteps_)
     {
-        auto cur = connectionSteps_->at(i);
-        maxFirst = qMax(maxFirst,cur->getUtilisationFirst());
-        maxSecond = qMax(maxSecond,cur->getUtilisationSecond());
+        maxFirst = std::max(maxFirst, step->getUtilisationFirst());
+        maxSecond = std::max(maxSecond, step->getUtilisationSecond());
     }
     utilisationFirst_ = maxFirst;
     utilisationSecond_ = maxSecond;
@@ -170,9 +172,19 @@ void ConnectionItem::createOverview()
         else
             start = false;
     }
-    auto tmp = cur;
-    platform_ = tmp->getDepPlatform();
-    hasChangedDeparturePlatform_ = tmp->hasChangedDeparturePlatform();
-    departureTime_ = tmp->getDepTime();
+    platform_ = cur->getDepPlatform();
+    hasChangedDeparturePlatform_ = cur->hasChangedDeparturePlatform();
+    departureTime_ = cur->getDepTime();
     arrivalTime_ = connectionSteps_->at(count - 1)->getArrTime();
+
+    if (SettingsHandler().showWalkInDepTime())
+    {
+        // TODO the Walk below is language dependent
+        auto firstNonWalk = std::find_if(connectionSteps_->begin(), connectionSteps_->end(),
+            [](const QSharedPointer<ConnectionStepItem> &connStep) {
+                return !connStep->hasMeansOfTransportation() || connStep->getMeansOfTransport() != "Walk";
+            });
+        if (firstNonWalk != connectionSteps_->end())
+            departureTime_ = (*firstNonWalk)->getDepTime();
+    }
 }

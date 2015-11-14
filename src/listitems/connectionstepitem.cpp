@@ -29,7 +29,7 @@
 
 #include <QDebug>
 
-ConnectionStepItem::ConnectionStepItem(QDomNode domConnectionStep, QDateTime date, QObject *parent)
+ConnectionStepItem::ConnectionStepItem(const QDomNode &domConnectionStep, QDateTime date, QObject *parent)
     : ListItem(parent)
 {
     QDomElement el = domConnectionStep.toElement();
@@ -63,8 +63,7 @@ ConnectionStepItem::ConnectionStepItem(QDomNode domConnectionStep, QDateTime dat
 
 ConnectionStepItem::~ConnectionStepItem()
 {
-    if(journey_)
-        delete journey_;
+    delete journey_;
 }
 
 QVariant ConnectionStepItem::data(int role) const

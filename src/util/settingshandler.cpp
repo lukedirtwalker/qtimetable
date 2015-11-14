@@ -29,6 +29,7 @@
 
 #include "../listitems/locationitem.h"
 
+static const QString showWalkInDepTime_ {"showWalkInDepTime"};
 static const QString saveStations_ {"saveStations"};
 static const QString depStation_ {"depStation"};
 static const QString arrStation_ {"arrStation"};
@@ -72,6 +73,16 @@ bool SettingsHandler::saveStations() const
 void SettingsHandler::setSaveStations(const bool save)
 {
     settings_.setValue(saveStations_, save);
+}
+
+bool SettingsHandler::showWalkInDepTime() const
+{
+    return settings_.value(showWalkInDepTime_, false).toBool();
+}
+
+void SettingsHandler::setShowWalkInDepTime(bool show)
+{
+    settings_.setValue(showWalkInDepTime_, show);
 }
 
 QSharedPointer<LocationItem> SettingsHandler::stationItem(const QString &key)

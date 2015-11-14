@@ -316,6 +316,17 @@ void TimeTableHandler::setSaveStations(bool save)
     emit saveStationsChanged();
 }
 
+bool TimeTableHandler::showWalkInDepTime() const
+{
+    return settings_->showWalkInDepTime();
+}
+
+void TimeTableHandler::setShowWalkInDepTime(bool show)
+{
+    settings_->setShowWalkInDepTime(show);
+    emit showWalkInDepTimeChanged();
+}
+
 void TimeTableHandler::addFavoriteConnection()
 {
     QVariant id = DatabaseHandler::getInstance().saveFavoriteConnection(depStation_, arrStation_, viaStation_);

@@ -67,6 +67,7 @@ public:
     Q_PROPERTY(QString viaStation READ viaStationName NOTIFY viaStationChanged())
 
     Q_PROPERTY(bool saveStations READ saveStations WRITE setSaveStations NOTIFY saveStationsChanged)
+    Q_PROPERTY(bool showWalkInDepTime READ showWalkInDepTime WRITE setShowWalkInDepTime NOTIFY showWalkInDepTimeChanged)
 
     Q_INVOKABLE QString depStationName() { return depStationName_;}
     Q_INVOKABLE QString arrStationName() { return arrStationName_;}
@@ -74,6 +75,9 @@ public:
 
     bool saveStations() const { return saveStations_; }
     void setSaveStations(bool save);
+
+    bool showWalkInDepTime() const;
+    void setShowWalkInDepTime(bool show);
 
     bool busy() { return busy_; }
 
@@ -98,6 +102,7 @@ signals:
     void viaStationChanged();
 
     void saveStationsChanged();
+    void showWalkInDepTimeChanged();
 
     void lookupConnectionError(QString msg);
     void noConnectionsFound();
