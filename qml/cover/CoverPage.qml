@@ -59,23 +59,12 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 CoverBackground {
-    Label {
-        id: label
+    Image {
+        source: "background.png"
         anchors.centerIn: parent
-        text: "QTimetable"
+
+        opacity: 0.2
     }
-
-//    CoverActionList {
-//        id: coverAction
-
-//        CoverAction {
-//            iconSource: "image://theme/icon-cover-next"
-//        }
-
-//        CoverAction {
-//            iconSource: "image://theme/icon-cover-pause"
-//        }
-//    }
 }
 
 
