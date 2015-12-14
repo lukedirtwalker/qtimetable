@@ -42,6 +42,14 @@ Page {
         // We only want to lookup the connection if the page is activating and we come from the timetable page.
         if (status === PageStatus.Activating && pageStack.depth === 2)
             timeTableHandler.lookupConnection()
+        if (status === PageStatus.Active) {
+            coverState = "overview"
+            coverData = {
+                from: connectionsPage.from,
+                to: connectionsPage.to,
+                connections: connectionsPage.model
+            }
+        }
     }
 
     Component.onDestruction : {

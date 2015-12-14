@@ -60,11 +60,82 @@ import Sailfish.Silica 1.0
 
 CoverBackground {
     Image {
+        id: backgroundImage
         source: "background.png"
         anchors.centerIn: parent
 
         opacity: 0.2
     }
+
+    Column {
+        id: overviewColumn
+
+        width: parent.width
+        visible: false
+        spacing: Theme.paddingMedium
+
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            margins: Theme.paddingMedium
+        }
+
+        Label {
+            id: fromLabel
+            text: coverData ? coverData.from : ""
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+            truncationMode: TruncationMode.Fade
+        }
+
+        Label {
+            id: toLabel
+            text: coverData ? coverData.to : ""
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+            truncationMode: TruncationMode.Fade
+        }
+
+        Repeater {
+            id: connections
+            model: coverData ? coverData.connections : null
+            width: parent.width
+            delegate: Row {
+                width: parent.width - 2 * Theme.paddingMedium
+
+                Label {
+                    width: parent.width / 3
+                    text: Qt.formatTime(dep,"hh:mm")
+                }
+                Label {
+                    width: parent.width / 3
+                    text: plat
+                }
+            }
+        }
+    }
+
+    states: [
+        State {
+            name: "empty"
+            when: coverState === "empty"
+            PropertyChanges { target: backgroundImage; visible: true; }
+            PropertyChanges { target: overviewColumn; visible: false; }
+        },
+        State {
+            name: "overview"
+            when: coverState === "overview"
+            PropertyChanges {
+                target: overviewColumn
+                visible: true
+            }
+        }
+    ]
 }
 
 

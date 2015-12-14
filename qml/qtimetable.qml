@@ -62,8 +62,12 @@ import "pages"
 
 ApplicationWindow
 {
+    property string coverState: "empty"
+    property var coverData
+
     initialPage: Qt.resolvedUrl("pages/TimeTable.qml")
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
+
 
     Notification {
         id: infoBanner
